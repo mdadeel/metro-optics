@@ -1,0 +1,168 @@
+/* ============================================
+   PROFILE SETTINGS - Metro Urban Luxury
+   Clean, Sharp Form Inputs and Tabs
+   ============================================ */
+
+/* Override or Extend ProfilePages.css specific to Settings if needed */
+/* Currently ProfilePages.css handles generic forms nicely */
+
+/* Tab Navigation Override for Sharpness */
+.settings-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--color-gray-200);
+    background: white;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    overflow: hidden;
+}
+
+.settings-tab-btn {
+    flex: 1;
+    padding: var(--space-4) var(--space-6);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-gray-600);
+    transition: all var(--transition-fast);
+    font-size: 0.9375rem;
+}
+
+.settings-tab-btn:hover {
+    background-color: var(--color-gray-50);
+    color: var(--color-gray-900);
+}
+
+.settings-tab-btn.active {
+    border-bottom-color: var(--color-gray-900);
+    color: var(--color-gray-900);
+    font-weight: var(--font-weight-bold);
+    background-color: var(--color-gray-50);
+}
+
+/* Settings Container */
+.settings-container {
+    background: white;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+}
+
+.settings-content {
+    padding: var(--space-8);
+}
+
+.settings-section-title {
+    font-family: var(--font-family-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    margin-bottom: var(--space-6);
+}
+
+/* Form Elements Refinement */
+.settings-label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-gray-700);
+    margin-bottom: var(--space-2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.settings-input {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-sm); /* Sharp */
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.settings-input:focus {
+    outline: none;
+    border-color: var(--color-gray-900);
+    box-shadow: 0 0 0 1px var(--color-gray-900);
+}
+
+.settings-input:disabled {
+    background-color: var(--color-gray-50);
+    color: var(--color-gray-500);
+    cursor: not-allowed;
+}
+
+/* Save Button */
+.settings-save-btn {
+    margin-top: var(--space-6);
+    padding: var(--space-4) var(--space-8);
+    background: var(--color-gray-900);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.875rem;
+}
+
+.settings-save-btn:hover {
+    background: black;
+    transform: translateY(-1px);
+}
+
+/* Toggle Password Button */
+.password-toggle-btn {
+    position: absolute;
+    right: var(--space-3);
+    top: 38px; /* Adjust based on label height */
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-gray-500);
+    padding: 0;
+}
+
+.password-toggle-btn:hover {
+    color: var(--color-gray-900);
+}
+
+/* Notification Toggle */
+.notification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-4);
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-4);
+}
+
+.notification-label h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-gray-900);
+    margin: 0 0 4px 0;
+}
+
+.notification-label p {
+    font-size: 0.875rem;
+    color: var(--color-gray-600);
+    margin: 0;
+}
+
+.notification-checkbox {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--color-gray-900);
+    cursor: pointer;
+}

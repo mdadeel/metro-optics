@@ -1,0 +1,224 @@
+/* ============================================
+   METRO MODERN PRODUCT CARD
+   Minimalist, Sharp, Always-visible CTA
+   ============================================ */
+
+.product-card {
+    position: relative;
+    background: var(--color-white);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    transition: all var(--transition-normal);
+    border: 1px solid transparent;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    /* Button is relative, so no bottom padding needed for absolute positioning */
+}
+
+/* Hover State: Subtle lift and border */
+.product-card:hover {
+    border-color: var(--color-gray-200);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+
+/* Link area for image and info */
+.product-card-link-img-info {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    /* Allow to take available space */
+}
+
+
+/* Image Area */
+.product-card-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1/1;
+    /* Square for Metro look */
+    background-color: var(--color-gray-50);
+    overflow: hidden;
+}
+
+.product-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.product-card:hover .product-card-image {
+    transform: scale(1.05);
+}
+
+/* Badge Pills */
+.product-badge-group {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 2;
+}
+
+.product-badge {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 2px;
+    /* Sharp pills */
+    letter-spacing: 0.05em;
+}
+
+.badge-sale {
+    background-color: var(--color-error);
+    color: white;
+}
+
+.badge-new {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+/* Floating Action Buttons (Wishlist/QuickView) */
+/* Floating Action Buttons (Wishlist/QuickView) */
+.product-actions-floating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 2;
+    /* Visible by default on Mobile/Tablet */
+    opacity: 1;
+    transform: translateX(0);
+    transition: all 0.3s ease;
+}
+
+/* On Desktop: Hide and show on hover */
+@media (min-width: 1024px) {
+    .product-actions-floating {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+
+    .product-card:hover .product-actions-floating {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.action-btn-float {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: white;
+    border: 1px solid var(--color-gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-gray-700);
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.action-btn-float:hover {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+
+/* Content Info */
+.product-card-info {
+    padding: 12px 10px 15px;
+    text-align: left;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-card-category {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--color-gray-500);
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.product-card-title {
+    font-family: var(--font-family-serif);
+    /* Luxury Font */
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-gray-900);
+    margin-bottom: 6px;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-card-price-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    /* Ensure it sits at the bottom of the info area */
+    padding-top: 8px;
+}
+
+.product-price {
+    font-family: var(--font-family-sans);
+    font-weight: 600;
+    color: var(--color-gray-900);
+    font-size: 15px;
+}
+
+.product-price-original {
+    text-decoration: line-through;
+    color: var(--color-gray-400);
+    font-size: 13px;
+}
+
+/* Always Visible Add to Cart Button */
+.btn-add-to-cart-fixed {
+    width: 100%;
+    padding: 12px 15px;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-radius: 0;
+    /* Flush with bottom */
+    margin-top: auto;
+    /* Push to bottom if container grows */
+}
+
+.btn-add-to-cart-fixed:hover {
+    background: var(--color-primary-dark);
+    color: white;
+    /* Explicitly ensure text remains white */
+}
+
+.btn-add-to-cart-fixed svg {
+    stroke: currentColor;
+    /* Ensure icon uses text color */
+}

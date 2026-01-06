@@ -1,0 +1,135 @@
+/* ============================================
+   FEATURED PRODUCTS SECTION
+   Static grid layout - Mobile First
+   ============================================ */
+
+.featured-products {
+    padding: var(--space-8) 0;
+    /* Reduced padding for mobile */
+    background-color: var(--color-gray-50);
+}
+
+@media (min-width: 768px) {
+    .featured-products {
+        padding: var(--space-16) 0;
+    }
+}
+
+.featured-products-container {
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+
+/* Header */
+.featured-products-header {
+    display: flex;
+    flex-direction: column;
+    /* Stack on mobile */
+    align-items: flex-start;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+@media (min-width: 640px) {
+    .featured-products-header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: var(--space-8);
+    }
+}
+
+.featured-products-title {
+    font-size: var(--font-size-2xl);
+    /* Smaller on mobile */
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+    margin-bottom: var(--space-2);
+}
+
+@media (min-width: 768px) {
+    .featured-products-title {
+        font-size: var(--font-size-3xl);
+    }
+}
+
+.featured-products-subtitle {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+}
+
+@media (min-width: 768px) {
+    .featured-products-subtitle {
+        font-size: var(--font-size-base);
+    }
+}
+
+.featured-products-view-all {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    /* Smaller buttons mobile */
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    text-decoration: none;
+    border-radius: var(--radius-lg);
+    font-weight: var(--font-weight-semibold);
+    transition: background-color var(--transition-fast);
+    white-space: nowrap;
+    align-self: flex-start;
+    /* Left align on mobile stack */
+    font-size: var(--font-size-sm);
+}
+
+@media (min-width: 640px) {
+    .featured-products-view-all {
+        padding: var(--space-3) var(--space-6);
+        font-size: var(--font-size-base);
+        align-self: auto;
+    }
+
+    .featured-products-view-all:hover {
+        background-color: var(--color-primary-dark);
+    }
+}
+
+.featured-products-card-wrapper {
+    width: 100%;
+}
+
+/* Grid Layout */
+.featured-products-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    /* 1 column for tiny screens */
+    gap: var(--space-4);
+}
+
+/* Large Mobile / Phablet */
+@media (min-width: 480px) {
+    .featured-products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-4);
+    }
+}
+
+/* Tablet & Desktop (768px+) */
+@media (min-width: 768px) {
+    .featured-products-grid {
+        grid-template-columns: repeat(4, 1fr);
+        /* 4 columns on Tablet & up */
+        gap: var(--space-4);
+        /* Tighter gap */
+        justify-content: center;
+        /* Ensure centering */
+    }
+}
+
+/* Large Desktop (Optional: looser gap) */
+@media (min-width: 1280px) {
+    .featured-products-grid {
+        gap: var(--space-6);
+    }
+}

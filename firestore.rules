@@ -1,0 +1,95 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user owns the resource
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+    
+    // ==========================================
+    // USERS COLLECTION
+    // ==========================================
+    match /users/{userId} {
+      // Users can only read their own document
+      // Admins can read any user document
+      allow read: if isOwner(userId) || isAdmin();
+      
+      // Users can create their own document during registration
+      allow create: if isOwner(userId) && 
+        request.resource.data.role == 'customer'; // Prevent self-assignment of admin role
+      
+      // Users can update their own document, but cannot change role
+      // Safely check role using get() to handle cases where role might be missing (legacy data)
+      allow update: if isOwner(userId) && 
+        request.resource.data.get('role', 'customer') == resource.data.get('role', 'customer');
+      
+      // Only admins can delete user documents
+      allow delete: if isAdmin();
+    }
+    
+    // ==========================================
+    // ORDERS COLLECTION
+    // ==========================================
+    match /orders/{orderId} {
+      // Users can read their own orders, admins can read all
+      allow read: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || isAdmin());
+      
+      // Authenticated users can create orders for themselves
+      allow create: if isAuthenticated() && 
+        request.resource.data.userId == request.auth.uid;
+      
+      // Only admins can update orders (status changes, etc.)
+      allow update: if isAdmin();
+      
+      // Only admins can delete orders
+      allow delete: if isAdmin();
+    }
+    
+    // ==========================================
+    // PRODUCTS COLLECTION (if exists)
+    // ==========================================
+    match /products/{productId} {
+      // Anyone can read products (public catalog)
+      allow read: if true;
+      
+      // Only admins can create/update/delete products
+      allow write: if isAdmin();
+    }
+    
+    // ==========================================
+    // SITE SETTINGS (if exists)
+    // ==========================================
+    match /settings/{settingId} {
+      // Anyone can read settings (public)
+      allow read: if true;
+      
+      // Only admins can modify settings
+      allow write: if isAdmin();
+    }
+    
+    // ==========================================
+    // WISHLIST COLLECTION (if exists)
+    // ==========================================
+    match /wishlists/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+    
+    // ==========================================
+    // DEFAULT DENY
+    // Any collection not explicitly defined above is denied
+    // ==========================================
+  }
+}

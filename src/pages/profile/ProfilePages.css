@@ -1,0 +1,414 @@
+/* ============================================
+   PROFILE PAGES - Metro Urban Luxury
+   Dashboard, Orders, Wishlist, Settings
+   ============================================ */
+
+/* ========== Dashboard Grid Layout ========== */
+.profile-dashboard {
+    width: 100%;
+}
+
+.dashboard-welcome {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.dashboard-welcome h1 {
+    font-family: var(--font-family-serif);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    margin: 0 0 0.5rem 0;
+    line-height: 1;
+}
+
+.dashboard-welcome p {
+    color: var(--color-gray-500);
+    margin: 0;
+    font-size: 1rem;
+}
+
+.dashboard-date {
+    color: var(--color-gray-400);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+/* ========== Main Content (Left) ========== */
+.dashboard-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Stats Row */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+    .stats-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.dashboard-stat-card {
+    background: white;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-sm);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.2s;
+}
+
+.dashboard-stat-card:hover {
+    border-color: var(--color-gray-400);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.stat-icon-wrapper.blue { background-color: var(--color-gray-900); }
+.stat-icon-wrapper.orange { background-color: var(--color-warning-dark); }
+.stat-icon-wrapper.green { background-color: var(--color-success-dark); }
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-gray-500);
+    font-weight: 600;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    line-height: 1;
+    margin-top: 4px;
+}
+
+/* Dashboard Section (Table) */
+.dashboard-section {
+    background: white;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-sm);
+    padding: 1.5rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+    font-family: var(--font-family-serif);
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.view-all-link {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-gray-900);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dashboard-table-wrapper {
+    overflow-x: auto;
+}
+
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+}
+
+.dashboard-table th {
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-gray-200);
+    color: var(--color-gray-500);
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.dashboard-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-gray-100);
+    color: var(--color-gray-700);
+}
+
+.dashboard-table tr:last-child td {
+    border-bottom: none;
+}
+
+.font-mono { font-family: monospace; }
+.font-bold { font-weight: 600; color: var(--color-gray-900); }
+
+.status-badge-sm {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.status-badge-sm.pending { background: #fff7ed; color: #9a3412; }
+.status-badge-sm.processing { background: #eff6ff; color: #1e40af; }
+.status-badge-sm.shipped { background: #faf5ff; color: #6b21a8; }
+.status-badge-sm.delivered { background: #f0fdf4; color: #166534; }
+.status-badge-sm.cancelled { background: #fef2f2; color: #991b1b; }
+
+.table-action-link {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-gray-900);
+    text-decoration: none;
+}
+
+.table-action-link:hover {
+    text-decoration: underline;
+}
+
+.dashboard-empty {
+    text-align: center;
+    padding: 2rem;
+    color: var(--color-gray-500);
+}
+
+/* ========== Sidebar Content (Right) ========== */
+.dashboard-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.dashboard-card {
+    background: white;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-sm);
+    padding: 1.5rem;
+}
+
+/* User Card */
+.user-card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.user-avatar-large {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-full);
+    background: var(--color-gray-900);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.user-details h3 {
+    font-size: 1.125rem;
+    margin: 0;
+    font-weight: 700;
+}
+
+.user-details p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--color-gray-500);
+}
+
+.btn-outline-sm {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-gray-700);
+    text-decoration: none;
+    width: 100%;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-outline-sm:hover {
+    background: var(--color-gray-50);
+    border-color: var(--color-gray-400);
+}
+
+/* Wishlist Widget */
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.widget-header h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-gray-500);
+}
+
+.wishlist-summary {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.big-number {
+    display: block;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    line-height: 1;
+}
+
+.subtitle {
+    font-size: 0.875rem;
+    color: var(--color-gray-500);
+}
+
+.btn-full-width {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--color-gray-900);
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    transition: background 0.2s;
+}
+
+.btn-full-width:hover {
+    background: black;
+}
+
+/* Spending Widget */
+.spending-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    margin-bottom: 0.25rem;
+}
+
+.spending-note {
+    font-size: 0.875rem;
+    color: var(--color-gray-500);
+    margin: 0;
+}
+
+/* Support Widget */
+.support-widget {
+    text-align: center;
+    background: var(--color-gray-50);
+    border: none;
+}
+
+.support-icon {
+    margin-bottom: 1rem;
+    color: var(--color-gray-900);
+}
+
+.support-widget h3 {
+    font-family: var(--font-family-serif);
+    font-size: 1.25rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.support-widget p {
+    font-size: 0.875rem;
+    color: var(--color-gray-600);
+    margin-bottom: 1.5rem;
+}
+
+.btn-link {
+    color: var(--color-gray-900);
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+/* ========== Other Pages (Address, Wishlist) ========== */
+/* Reusing generic classes */
+.profile-header h1 { font-family: var(--font-family-serif); font-size: 2rem; }
+.address-grid, .wishlist-grid { display: grid; gap: 1.5rem; }
+@media (min-width: 768px) { .address-grid { grid-template-columns: repeat(2, 1fr); } .wishlist-grid { grid-template-columns: repeat(3, 1fr); } }
+
+.address-card, .wishlist-item {
+    background: white;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-sm);
+    padding: 1.5rem;
+    position: relative;
+}
+
+.address-card.add-new {
+    border: 2px dashed var(--color-gray-300);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: var(--color-gray-50);
+}
+
+.address-card.add-new:hover {
+    border-color: var(--color-gray-900);
+    background: white;
+}

@@ -1,0 +1,145 @@
+/* ============================================
+   ADDRESS BOOK PAGE - Profile Section
+   ============================================ */
+
+.address-book-page {
+    /* Inherits main layout from ProfileLayout */
+}
+
+.address-book-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.address-book-header h1 {
+    font-family: var(--font-family-serif);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    margin: 0 0 0.5rem 0;
+}
+
+.address-book-header p {
+    color: var(--color-gray-500);
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* Addresses Grid - uses generic .address-grid from ProfilePages.css */
+/* Address Card - uses generic .address-card from ProfilePages.css */
+
+.address-card.default .default-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.25rem 0.75rem;
+    background: var(--color-gray-900);
+    color: var(--color-white);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    z-index: 10;
+}
+
+.address-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed var(--color-gray-100);
+}
+
+.address-type {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--color-gray-500);
+}
+
+.address-content h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    margin: 0 0 0.5rem 0;
+}
+
+.address-content p {
+    font-size: 0.9375rem;
+    color: var(--color-gray-700);
+    margin: 0;
+}
+
+.address-phone {
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--color-gray-700);
+}
+
+
+.address-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--color-gray-100);
+}
+
+.address-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.address-action-btn.edit {
+    background-color: var(--color-white);
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-300);
+}
+
+.address-action-btn.edit:hover {
+    border-color: var(--color-gray-500);
+    color: var(--color-gray-900);
+    background-color: var(--color-gray-50);
+}
+
+.address-action-btn.delete {
+    background-color: var(--color-error);
+    color: var(--color-white);
+    border: 1px solid var(--color-error);
+}
+
+.address-action-btn.delete:hover {
+    background-color: var(--color-error-dark);
+    border-color: var(--color-error-dark);
+}
+
+/* Add New Address Card - uses generic .address-card.add-new from ProfilePages.css */
+.address-card.add-new .add-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    background: var(--color-gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    color: var(--color-gray-900);
+}
+
+.address-card.add-new h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-gray-900);
+    margin: 0;
+}

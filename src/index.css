@@ -1,0 +1,43 @@
+/* Metro Optics - Main Stylesheet */
+/* Clinical Minimalism Design System */
+
+/* 1. CSS Variables (Design Tokens) */
+@import './styles/variables.css';
+
+/* 2. Base Styles (Reset & Global Elements) */
+@import './styles/base.css';
+
+/* 3. Utility Classes */
+@import './styles/utilities.css';
+
+/* 4. Component Styles */
+@import './styles/components/button.css';
+@import './styles/components/navbar.css';
+@import './styles/components/product-card.css';
+@import './styles/components/hero-section.css';
+@import './styles/components/footer.css';
+@import './styles/components/featured-categories.css';
+@import './styles/components/featured-products.css';
+@import './styles/components/why-choose-us.css';
+@import './styles/components/product-quick-view.css';
+@import './styles/components/cart-drawer.css';
+@import './components/StatCard.css';
+@import './components/ChartWidget.css';
+
+/* 5. Page Styles */
+@import './styles/pages/home.css';
+@import './styles/pages/contact.css';
+@import './styles/pages/about.css';
+@import './styles/pages/faq.css';
+@import './styles/pages/shop.css';
+@import './styles/pages/product-details.css';
+@import './styles/pages/checkout.css';
+@import './styles/pages/order-tracking.css';
+@import './styles/pages/invoice.css';
+
+/* 6. Admin Styles */
+@import './styles/admin/wordpress.css';
+@import './styles/admin/dashboard.css';
+@import './styles/admin/layout.css';
+@import './styles/admin/orders.css';
+@import './styles/admin/cms.css';

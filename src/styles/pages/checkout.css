@@ -1,0 +1,408 @@
+/* ============================================
+   CHECKOUT PAGE - Metro Urban Luxury
+   Minimalist, Sharp, High Contrast
+   ============================================ */
+
+.checkout-page {
+    min-height: 100vh;
+    background-color: var(--color-gray-50);
+    padding: var(--space-8) 0;
+}
+
+.checkout-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+
+/* ========== Progress Stepper ========== */
+.checkout-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-12);
+    position: relative;
+}
+
+.checkout-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    position: relative;
+    z-index: 2;
+}
+
+.checkout-step-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full); /* Circles are okay for steps */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 1px solid var(--color-gray-300);
+    color: var(--color-gray-500);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.checkout-step.completed .checkout-step-icon {
+    background: var(--color-gray-900);
+    border-color: var(--color-gray-900);
+    color: white;
+}
+
+.checkout-step.active .checkout-step-icon {
+    background: var(--color-white);
+    border-color: var(--color-gray-900);
+    color: var(--color-gray-900);
+    box-shadow: 0 0 0 1px var(--color-gray-900); /* Double ring effect */
+}
+
+.checkout-step-label {
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    color: var(--color-gray-500);
+    margin-top: var(--space-2);
+}
+
+.checkout-step.active .checkout-step-label {
+    color: var(--color-gray-900);
+}
+
+.checkout-step-divider {
+    flex: 1;
+    height: 1px;
+    background: var(--color-gray-300);
+    margin: 0 var(--space-4);
+    position: relative;
+    top: -14px;
+}
+
+.checkout-step-divider.completed {
+    background: var(--color-gray-900);
+}
+
+/* ========== Form Sections ========== */
+.checkout-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+}
+
+.checkout-section {
+    background: white;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-sm); /* Sharp */
+    padding: var(--space-8);
+}
+
+.checkout-section-title {
+    font-family: var(--font-family-serif);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    margin: 0 0 var(--space-6) 0;
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--color-gray-100);
+}
+
+.checkout-fields {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+}
+
+@media (min-width: 768px) {
+    .checkout-fields {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.checkout-field-full {
+    grid-column: 1 / -1;
+}
+
+/* Form Inputs */
+.checkout-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.checkout-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    color: var(--color-gray-600);
+    margin-bottom: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.checkout-input,
+.checkout-textarea {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-sm); /* Sharp */
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.checkout-input:focus,
+.checkout-textarea:focus {
+    outline: none;
+    border-color: var(--color-gray-900);
+}
+
+.checkout-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* ========== Payment Options ========== */
+.checkout-payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.checkout-payment-option {
+    position: relative;
+    padding: var(--space-5);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-sm); /* Sharp */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.checkout-payment-option:hover {
+    border-color: var(--color-gray-400);
+}
+
+.checkout-payment-option.active {
+    border-color: var(--color-gray-900);
+    background-color: var(--color-gray-50);
+}
+
+.checkout-payment-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.checkout-payment-radio {
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--color-gray-400);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkout-payment-option.active .checkout-payment-radio {
+    border-color: var(--color-gray-900);
+}
+
+.checkout-payment-radio-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--color-gray-900);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.checkout-payment-option.active .checkout-payment-radio-dot {
+    opacity: 1;
+}
+
+.checkout-payment-icon {
+    font-size: 24px;
+}
+
+.checkout-payment-label {
+    font-family: var(--font-family-serif);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-gray-900);
+    margin: 0;
+}
+
+.checkout-payment-desc {
+    font-size: 0.85rem;
+    color: var(--color-gray-500);
+    margin: 4px 0 0 0;
+}
+
+/* bKash Details */
+.checkout-bkash-details {
+    margin-top: var(--space-5);
+    padding: var(--space-5);
+    background: white;
+    border-top: 1px solid var(--color-gray-200);
+}
+
+.checkout-bkash-number {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3);
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-4);
+}
+
+.checkout-bkash-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--color-gray-500);
+}
+
+.checkout-bkash-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #e2136e; /* Keep bKash brand color but minimal */
+    font-family: monospace;
+    margin: 0;
+}
+
+.checkout-copy-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-gray-500);
+}
+
+.checkout-copy-btn:hover {
+    color: var(--color-gray-900);
+}
+
+.checkout-bkash-input {
+    width: 100%;
+    padding: var(--space-3);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-sm);
+    font-family: monospace;
+    margin-top: var(--space-2);
+}
+
+/* ========== Order Summary ========== */
+.checkout-summary {
+    background: white;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-sm);
+    padding: var(--space-6);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-2) 0;
+    font-size: 0.95rem;
+    color: var(--color-gray-600);
+}
+
+.summary-row.total {
+    font-family: var(--font-family-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    padding-top: var(--space-4);
+    margin-top: var(--space-4);
+    border-top: 1px solid var(--color-gray-200);
+}
+
+/* ========== Action Buttons ========== */
+.checkout-actions {
+    display: flex;
+    gap: var(--space-4);
+    margin-top: var(--space-8);
+}
+
+.checkout-btn-back {
+    flex: 1;
+    padding: var(--space-4);
+    background: white;
+    color: var(--color-gray-900);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.checkout-btn-back:hover {
+    border-color: var(--color-gray-900);
+}
+
+.checkout-btn-submit {
+    flex: 2;
+    padding: var(--space-4);
+    background: var(--color-gray-900);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.checkout-btn-submit:hover:not(:disabled) {
+    background: black;
+    transform: translateY(-1px);
+}
+
+.checkout-btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Loading State */
+.checkout-btn-submit.loading {
+    color: transparent;
+    position: relative;
+}
+
+.checkout-btn-submit.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ========== Empty State ========== */
+.checkout-empty {
+    text-align: center;
+    padding: var(--space-16) 0;
+}
+
+.checkout-empty h2 {
+    font-family: var(--font-family-serif);
+    font-size: 2rem;
+    margin: var(--space-4) 0;
+}

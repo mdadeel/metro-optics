@@ -1,0 +1,111 @@
+/* ============================================
+   WHY CHOOSE US SECTION
+   ============================================ */
+
+.why-choose-us {
+    padding: var(--space-16) 0;
+    background-color: var(--color-white);
+}
+
+.why-choose-us-container {
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+
+/* Header */
+.why-choose-us-header {
+    text-align: center;
+    margin-bottom: var(--space-12);
+}
+
+.why-choose-us-title {
+    font-family: var(--font-family-serif); /* Luxury Font */
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+    margin-bottom: var(--space-3);
+}
+
+.why-choose-us-subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--color-gray-600);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Grid */
+.why-choose-us-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+}
+
+@media (min-width: 640px) {
+    .why-choose-us-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .why-choose-us-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-8);
+    }
+}
+
+/* Card */
+.why-choose-us-card {
+    text-align: center;
+    padding: var(--space-6);
+    background-color: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-sm); /* Sharp radius */
+    transition: all var(--transition-normal);
+}
+
+.why-choose-us-card:hover {
+    border-color: var(--color-gray-400);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+}
+
+.why-choose-us-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--space-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-gray-50);
+    color: var(--color-gray-900);
+    border-radius: var(--radius-full); /* Circle remains for icons */
+    transition: all var(--transition-normal);
+}
+
+.why-choose-us-card:hover .why-choose-us-icon-wrapper {
+    background-color: var(--color-gray-900);
+    color: var(--color-white);
+}
+
+.why-choose-us-icon {
+    transition: transform var(--transition-fast);
+}
+
+.why-choose-us-card:hover .why-choose-us-icon {
+    transform: scale(1.1);
+}
+
+.why-choose-us-card-title {
+    font-family: var(--font-family-serif);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+    margin-bottom: var(--space-3);
+}
+
+.why-choose-us-card-description {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+    line-height: var(--line-height-relaxed);
+}

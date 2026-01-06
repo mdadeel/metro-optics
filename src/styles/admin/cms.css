@@ -1,0 +1,112 @@
+/* ============================================
+   ADMIN CMS
+   Content management forms and sections
+   ============================================ */
+
+.admin-cms-form {
+    background-color: var(--color-white);
+    border-radius: var(--radius-sm); /* Sharp radius */
+    box-shadow: var(--shadow-sm);
+    padding: var(--space-8);
+}
+
+.admin-cms-section {
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.admin-cms-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.admin-cms-section-title {
+    font-family: var(--font-family-serif); /* Applied Serif Font */
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-900);
+    margin-bottom: var(--space-6);
+}
+
+.admin-cms-field {
+    margin-bottom: var(--space-6);
+}
+
+.admin-cms-label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-gray-700);
+    margin-bottom: var(--space-2);
+}
+
+.admin-cms-input,
+.admin-cms-textarea,
+.admin-cms-select {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-sm); /* Sharp radius */
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.admin-cms-input:focus,
+.admin-cms-textarea:focus,
+.admin-cms-select:focus {
+    border-color: var(--color-primary);
+}
+
+.admin-cms-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.admin-cms-image-upload {
+    border: 2px dashed var(--color-gray-300);
+    border-radius: var(--radius-sm); /* Sharp radius */
+    padding: var(--space-8);
+    text-align: center;
+    cursor: pointer;
+    transition: border-color var(--transition-fast);
+}
+
+.admin-cms-image-upload:hover {
+    border-color: var(--color-primary);
+}
+
+.admin-cms-actions {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: flex-end;
+    margin-top: var(--space-8);
+}
+
+.admin-cms-btn {
+    padding: var(--space-3) var(--space-6);
+    font-weight: var(--font-weight-semibold);
+    border: none;
+    border-radius: var(--radius-sm); /* Sharp radius */
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.admin-cms-btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.admin-cms-btn-primary:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.admin-cms-btn-secondary {
+    background-color: var(--color-gray-200);
+    color: var(--color-gray-700);
+}
+
+.admin-cms-btn-secondary:hover {
+    background-color: var(--color-gray-300);
+}

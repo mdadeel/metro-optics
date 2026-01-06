@@ -1,0 +1,8 @@
+/* Tailwind CSS for shadcn UI components only */
+/* Import auth pages that use Tailwind */
+@import '../pages/AuthPages.css';
+@import '../pages/CartPage.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

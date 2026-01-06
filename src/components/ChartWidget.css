@@ -1,0 +1,86 @@
+/* ChartWidget Component Styles */
+.chart-widget {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+}
+
+.chart-widget-header {
+    margin-bottom: 20px;
+}
+
+.chart-widget-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.chart-widget-body {
+    position: relative;
+}
+
+.chart-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Line Chart Styles */
+.chart-area {
+    fill: #dbeafe;
+    opacity: 0.3;
+}
+
+.chart-line {
+    fill: none;
+    stroke: #2563eb;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.chart-point {
+    fill: #2563eb;
+}
+
+/* Bar Chart Styles */
+.chart-bar {
+    fill: #2563eb;
+    transition: fill 0.2s ease;
+}
+
+.chart-bar:hover {
+    fill: #1d4ed8;
+}
+
+/* Labels */
+.chart-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding: 0 4px;
+}
+
+.chart-label {
+    flex: 1;
+    text-align: center;
+}
+
+.chart-label-text {
+    font-size: 11px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .chart-widget {
+        padding: 16px;
+    }
+
+    .chart-label-text {
+        font-size: 10px;
+    }
+}

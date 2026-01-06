@@ -1,0 +1,73 @@
+/* ============================================
+   BUTTON COMPONENT STYLES
+   ============================================ */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-tight);
+    border-radius: var(--radius-sm); /* Adjusted for sharper Metro look */
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Primary Button */
+.btn-primary {
+    background-color: var(--color-gray-900);
+    color: var(--color-white);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--color-gray-800);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+/* Secondary Button */
+.btn-secondary {
+    background-color: var(--color-white);
+    color: var(--color-gray-900);
+    border: 1px solid var(--color-gray-300);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: var(--color-gray-50);
+    border-color: var(--color-gray-400);
+}
+
+/* Icon Button */
+.btn-icon {
+    padding: var(--space-2);
+    border-radius: var(--radius-default);
+}
+
+/* Button Sizes */
+.btn-sm {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-xs);
+}
+
+.btn-lg {
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--font-size-base);
+}
+
+/* Full Width Button */
+.btn-block {
+    width: 100%;
+}

@@ -1,0 +1,104 @@
+/* ============================================
+   ADMIN LAYOUT
+   Sidebar navigation and main content area
+   ============================================ */
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--color-gray-50);
+}
+
+/* Sidebar */
+.admin-sidebar {
+    width: 260px;
+    background-color: var(--color-gray-900);
+    color: var(--color-white);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    left: 0;
+    top: 0;
+    z-index: 40;
+}
+
+.admin-sidebar-header {
+    padding: var(--space-6);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-sidebar-logo {
+    font-family: var(--font-family-serif); /* Applied Serif Font */
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white); /* Changed to white for dark background */
+    text-decoration: none;
+}
+
+.admin-sidebar-nav {
+    flex: 1;
+    padding: var(--space-4);
+}
+
+.admin-nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    border-radius: var(--radius-sm); /* Sharp radius */
+    transition: all var(--transition-fast);
+    margin-bottom: var(--space-2);
+}
+
+.admin-nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--color-white);
+}
+
+.admin-nav-item.active {
+    background-color: var(--color-primary); /* Use primary (black) */
+    color: var(--color-white);
+}
+
+/* Content */
+.admin-content {
+    flex: 1;
+    margin-left: 260px;
+    padding: var(--space-8)
+}
+
+.admin-header {
+    background-color: var(--color-white);
+    padding: var(--space-6);
+    border-radius: var(--radius-sm); /* Sharp radius */
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-8);
+}
+
+.admin-header-title {
+    font-family: var(--font-family-serif); /* Applied Serif Font */
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+    margin: 0;
+}
+
+/* Mobile */
+@media (max-width: 1023px) {
+    .admin-sidebar {
+        transform: translateX(-100%);
+        transition: transform var(--transition-normal);
+    }
+
+    .admin-sidebar.open {
+        transform: translateX(0);
+    }
+
+    .admin-content {
+        margin-left: 0;
+    }
+}

@@ -1,0 +1,105 @@
+/* ============================================
+   SEARCH BAR - Metro Urban Luxury
+   Minimalist, Sharp, High Contrast
+   ============================================ */
+
+.search-bar {
+    width: 100%;
+    max-width: 500px;
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-sm); /* Sharp Metro radius */
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+
+.search-input-wrapper:hover {
+    background: white;
+    border-color: var(--color-gray-400);
+}
+
+.search-input-wrapper:focus-within {
+    background: white;
+    border-color: var(--color-gray-900);
+    /* Removed shadow for cleaner look */
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    color: var(--color-gray-400);
+    pointer-events: none;
+    transition: color 0.2s ease;
+}
+
+.search-input-wrapper:focus-within .search-icon {
+    color: var(--color-gray-700);
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 3rem;
+    border: none;
+    background: transparent;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    outline: none;
+    color: var(--color-gray-900);
+    transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+    color: var(--color-gray-400);
+    transition: color 0.2s ease;
+}
+
+.search-input:focus::placeholder {
+    color: var(--color-gray-300);
+}
+
+.search-clear {
+    position: absolute;
+    right: 0.625rem;
+    padding: 0.375rem;
+    background: none;
+    border: none;
+    color: var(--color-gray-400);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.search-clear:hover {
+    color: var(--color-gray-900);
+    background: var(--color-gray-100);
+}
+
+.search-clear:focus-visible {
+    outline: 2px solid var(--color-gray-900);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .search-bar {
+        max-width: 100%;
+    }
+
+    .search-input {
+        font-size: 16px;
+        /* Prevents zoom on iOS */
+        padding: 0.6875rem 2.75rem;
+    }
+}

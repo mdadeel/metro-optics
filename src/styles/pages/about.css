@@ -1,0 +1,197 @@
+/* ============================================
+   ABOUT PAGE
+   ============================================ */
+
+.about-page {
+    min-height: calc(100vh - 200px);
+    background-color: var(--color-white);
+}
+
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+
+/* Hero */
+.about-hero {
+    text-align: center;
+    padding: var(--space-16) 0 var(--space-12);
+    background: linear-gradient(135deg, rgba(0, 128, 128, 0.05) 0%, rgba(0, 128, 128, 0.02) 100%);
+}
+
+.about-title {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+    margin-bottom: var(--space-4);
+}
+
+.about-subtitle {
+    font-size: var(--font-size-xl);
+    color: var(--color-gray-600);
+}
+
+/* Sections */
+.about-section {
+    padding: var(--space-12) 0;
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.about-section:last-child {
+    border-bottom: none;
+}
+
+.about-section-title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+    text-align: center;
+    margin-bottom: var(--space-8);
+}
+
+/* Story */
+.about-story-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-text {
+    font-size: var(--font-size-lg);
+    color: var(--color-gray-700);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--space-6);
+}
+
+/* Values Grid */
+.about-values {
+    background-color: var(--color-gray-50);
+    margin-left: calc(-1 * var(--space-6));
+    margin-right: calc(-1 * var(--space-6));
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+}
+
+.about-values-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .about-values-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.about-value-card {
+    background-color: var(--color-white);
+    padding: var(--space-6);
+    border-radius: var(--radius-default);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+}
+
+.about-value-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--space-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 128, 128, 0.1);
+    color: var(--color-primary);
+    border-radius: var(--radius-full);
+}
+
+.about-value-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+    margin-bottom: var(--space-3);
+}
+
+.about-value-text {
+    color: var(--color-gray-600);
+    line-height: var(--line-height-relaxed);
+}
+
+/* Stats */
+.about-stats {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    margin-left: calc(-1 * var(--space-6));
+    margin-right: calc(-1 * var(--space-6));
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+}
+
+.about-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .about-stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.about-stat {
+    text-align: center;
+    color: var(--color-white);
+}
+
+.about-stat-number {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-2);
+}
+
+.about-stat-label {
+    font-size: var(--font-size-sm);
+    opacity: 0.9;
+}
+
+/* Features */
+.about-features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.about-feature {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+}
+
+.about-feature-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 128, 128, 0.1);
+    color: var(--color-primary);
+    border-radius: var(--radius-lg);
+}
+
+.about-feature-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+    margin-bottom: var(--space-2);
+}
+
+.about-feature-text {
+    color: var(--color-gray-600);
+    line-height: var(--line-height-relaxed);
+}

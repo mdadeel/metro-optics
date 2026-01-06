@@ -1,0 +1,125 @@
+/* Settings Page Styles */
+.settings-page {
+    padding: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Settings Form */
+.settings-form {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+}
+
+/* Settings Section */
+.settings-section {
+    padding: 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.settings-section:last-of-type {
+    border-bottom: none;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Settings Grid */
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+/* Form Field */
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-field.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.form-field input {
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.form-field input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+/* Settings Footer */
+.settings-footer {
+    padding: 20px 24px;
+    background: #f9fafb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.save-success {
+    color: #059669;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-save {
+    padding: 10px 20px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+.btn-save:hover {
+    background: #1d4ed8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .settings-page {
+        padding: 16px;
+    }
+
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .settings-footer {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+}

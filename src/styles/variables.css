@@ -1,0 +1,152 @@
+/* ============================================
+   CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+   Metro Optics Purple Gradient Theme
+   ============================================ */
+
+:root {
+    /* Colors - Metro "Urban Luxury" Theme (Black/White/Silver) */
+    --color-primary: #111111;
+    /* Jet Black */
+    --color-primary-light: #333333;
+    --color-primary-dark: #000000;
+
+    --color-secondary: #FFFFFF;
+    /* White */
+    --color-secondary-light: #F3F4F6;
+
+    --color-accent: #E0E0E0;
+    /* Silver/Grey */
+
+    /* Brand Gradients - Subtle Monochrome */
+    --gradient-primary: linear-gradient(135deg, #111111 0%, #333333 100%);
+    --gradient-primary-hover: linear-gradient(135deg, #000000 0%, #222222 100%);
+
+    --color-white: #FFFFFF;
+    --color-gray-50: #F9FAFB;
+    --color-gray-100: #F3F4F6;
+    --color-gray-200: #E5E7EB;
+    --color-gray-300: #D1D5DB;
+    --color-gray-400: #9CA3AF;
+    --color-gray-500: #6B7280;
+    --color-gray-600: #4B5563;
+    --color-gray-700: #374151;
+    --color-gray-800: #1F2937;
+    --color-gray-900: #111827;
+
+    --color-success: #10B981;
+    --color-success-light: #D1FAE5;
+    --color-success-dark: #059669;
+
+    --color-warning: #F59E0B;
+    --color-warning-light: #FEF3C7;
+    --color-warning-dark: #D97706;
+
+    --color-error: #EF4444;
+    --color-error-light: #FEE2E2;
+    --color-error-dark: #DC2626;
+
+    --color-info: #3B82F6;
+    --color-info-light: #DBEAFE;
+    --color-info-dark: #2563EB;
+
+    /* Typography */
+    --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-family-serif: 'Playfair Display', 'Georgia', serif; /* Premium Headings */
+
+    --font-size-xs: 0.75rem;
+    /* 12px */
+    --font-size-sm: 0.875rem;
+    /* 14px */
+    --font-size-base: 1rem;
+    /* 16px */
+    --font-size-lg: 1.125rem;
+    /* 18px */
+    --font-size-xl: 1.25rem;
+    /* 20px */
+    --font-size-2xl: 1.5rem;
+    /* 24px */
+    --font-size-3xl: 1.875rem;
+    /* 30px */
+    --font-size-4xl: 2.25rem;
+    /* 36px */
+    --font-size-5xl: 3rem;
+    /* 48px */
+
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    --line-height-tight: 1.25;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+
+    /* Spacing Scale */
+    --space-1: 0.25rem;
+    /* 4px */
+    --space-2: 0.5rem;
+    /* 8px */
+    --space-3: 0.75rem;
+    /* 12px */
+    --space-4: 1rem;
+    /* 16px */
+    --space-5: 1.25rem;
+    /* 20px */
+    --space-6: 1.5rem;
+    /* 24px */
+    --space-8: 2rem;
+    /* 32px */
+    --space-10: 2.5rem;
+    /* 40px */
+    --space-12: 3rem;
+    /* 48px */
+    --space-16: 4rem;
+    /* 64px */
+    --space-20: 5rem;
+    /* 80px */
+    --space-24: 6rem;
+    /* 96px */
+
+    /* Border Radius - Urban Sharpness */
+    --radius-sm: 0.25rem;
+    /* 4px */
+    --radius-default: 0.25rem;
+    /* 4px - Sharper for Metro look */
+    --radius-lg: 0.5rem;
+    /* 8px */
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Z-Index Scale */
+    --z-base: 0;
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+
+    /* Breakpoints (for JS usage or container queries) */
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+
+    /* Container Max Width */
+    --container-max-width: 1280px;
+    /* 7xl */
+}

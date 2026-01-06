@@ -1,0 +1,147 @@
+/* Error Boundary Styles - Metro Design */
+.error-boundary {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-gray-50); /* Light gray background */
+    padding: 2rem;
+}
+
+.error-content {
+    background: white;
+    border-radius: var(--radius-sm); /* Sharp corners */
+    padding: 3rem;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    box-shadow: var(--shadow-xl); /* Retain some shadow for pop-out effect */
+    border: 1px solid var(--color-gray-200);
+}
+
+.error-icon {
+    color: var(--color-error); /* Keep error red */
+    margin: 0 auto 1.5rem;
+    display: block;
+}
+
+.error-content h1 {
+    font-family: var(--font-family-serif);
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 0 1rem 0;
+    color: var(--color-gray-900);
+}
+
+.error-content p {
+    font-size: 0.95rem;
+    color: var(--color-gray-600);
+    margin: 0 0 2rem 0;
+    line-height: 1.5;
+}
+
+/* Error Details (Dev Mode) */
+.error-details {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: var(--color-gray-50);
+    border-radius: var(--radius-sm);
+    text-align: left;
+    font-size: 0.875rem;
+    border: 1px solid var(--color-gray-200);
+}
+
+.error-details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--color-error);
+    margin-bottom: 0.5rem;
+    user-select: none;
+}
+
+.error-details summary:hover {
+    color: var(--color-error-dark);
+}
+
+.error-details pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 0.75rem;
+    color: var(--color-error-dark);
+    margin-top: 0.5rem;
+    overflow-x: auto;
+}
+
+/* Action Buttons */
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.error-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm); /* Sharp corners */
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.error-button.primary {
+    background: var(--color-gray-900); /* Solid black */
+    color: white;
+    box-shadow: var(--shadow-md); /* Muted shadow */
+}
+
+.error-button.primary:hover {
+    background: black;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.error-button.secondary {
+    background: white;
+    color: var(--color-gray-900);
+    border-color: var(--color-gray-300);
+}
+
+.error-button.secondary:hover {
+    background: var(--color-gray-50);
+    border-color: var(--color-gray-900);
+    color: var(--color-gray-900);
+}
+
+.error-button svg {
+    flex-shrink: 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+    .error-content {
+        padding: 2rem 1.5rem;
+    }
+
+    .error-content h1 {
+        font-size: 1.25rem;
+    }
+
+    .error-icon {
+        font-size: 48px;
+    }
+
+    .error-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .error-button {
+        width: 100%;
+        justify-content: center;
+    }
+}

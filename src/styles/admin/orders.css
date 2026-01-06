@@ -1,0 +1,89 @@
+/* ============================================
+   ADMIN ORDERS
+   Orders table and management
+   ============================================ */
+
+.admin-orders-filters {
+    display: flex;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+}
+
+.admin-orders-filter-btn {
+    padding: var(--space-2) var(--space-4);
+    background-color: var(--color-white);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-sm); /* Sharp radius */
+    color: var(--color-gray-700);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.admin-orders-filter-btn:hover {
+    border-color: var(--color-primary);
+}
+
+.admin-orders-filter-btn.active {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.admin-orders-table-wrapper {
+    background-color: var(--color-white);
+    border-radius: var(--radius-sm); /* Sharp radius */
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.admin-orders-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-orders-table thead {
+    background-color: var(--color-gray-50);
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.admin-orders-table th {
+    padding: var(--space-4);
+    text-align: left;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-700);
+    font-size: var(--font-size-sm);
+}
+
+.admin-orders-table td {
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--color-gray-100);
+}
+
+.admin-orders-table tbody tr:hover {
+    background-color: var(--color-gray-50);
+}
+
+.admin-order-actions {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.admin-order-btn {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-size-sm);
+    border: none;
+    border-radius: var(--radius-sm); /* Sharp radius */
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.admin-order-btn-view {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.admin-order-btn-view:hover {
+    background-color: var(--color-primary-dark);
+}

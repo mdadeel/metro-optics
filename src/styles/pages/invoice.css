@@ -1,0 +1,268 @@
+/* ============================================
+   INVOICE PAGE - Metro Modern Redesign
+   Minimalist, Sharp, Print-optimized
+   ============================================ */
+
+.invoice-page {
+    min-height: 100vh;
+    background-color: var(--color-gray-50);
+    padding: var(--space-8) 0;
+}
+
+/* Actions Bar (Back & Print) */
+.invoice-actions-bar {
+    max-width: 800px;
+    margin: 0 auto var(--space-6);
+    padding: 0 var(--space-6);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.invoice-back-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-gray-600);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.invoice-back-link:hover {
+    color: var(--color-gray-900);
+}
+
+.invoice-print-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    background-color: var(--color-gray-900);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.invoice-print-btn:hover {
+    background-color: black;
+}
+
+/* Main Container */
+.invoice-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    /* Sharp corners for paper-like feel */
+    border-radius: var(--radius-sm); 
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-12);
+    position: relative;
+}
+
+/* Header */
+.invoice-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-12);
+    padding-bottom: var(--space-8);
+    border-bottom: 2px solid var(--color-gray-900);
+}
+
+.invoice-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-family-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    margin-bottom: var(--space-4);
+}
+
+.invoice-company-address {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-500);
+    line-height: 1.6;
+}
+
+.invoice-title {
+    font-family: var(--font-family-serif);
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    text-align: right;
+    margin: 0 0 var(--space-2) 0;
+    letter-spacing: 0.05em;
+}
+
+.invoice-meta {
+    text-align: right;
+    font-family: monospace;
+    color: var(--color-gray-500);
+    font-size: 0.9rem;
+}
+
+/* Addresses Grid */
+.invoice-addresses {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+    margin-bottom: var(--space-12);
+}
+
+.invoice-address h3, .invoice-payment-info h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-gray-400);
+    margin-bottom: var(--space-4);
+    font-weight: 700;
+}
+
+.invoice-customer-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    margin-bottom: var(--space-2);
+}
+
+.invoice-address p {
+    margin: 0;
+    color: var(--color-gray-600);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* Payment Badge */
+.payment-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+}
+
+.payment-badge.cod {
+    background-color: var(--color-gray-100);
+    color: var(--color-gray-900);
+    border: 1px solid var(--color-gray-200);
+}
+
+.payment-badge.bkash {
+    background-color: #fce4ec; /* Light pink */
+    color: #c2185b; /* bKash brand color dark */
+    border: 1px solid #f8bbd0;
+}
+
+.trx-id {
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: var(--color-gray-500);
+    margin-top: 4px;
+}
+
+/* Table */
+.invoice-table-wrapper {
+    margin-bottom: var(--space-12);
+}
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.invoice-table th {
+    text-align: left;
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--color-gray-200);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-gray-400);
+    font-weight: 700;
+}
+
+.invoice-table td {
+    padding: var(--space-6) 0;
+    border-bottom: 1px solid var(--color-gray-100);
+    color: var(--color-gray-900);
+    vertical-align: top;
+}
+
+.item-name {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.item-meta {
+    font-size: 0.85rem;
+    color: var(--color-gray-500);
+}
+
+.invoice-table .text-center { text-align: center; }
+.invoice-table .text-right { text-align: right; }
+
+/* Totals */
+.invoice-footer-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: var(--space-12);
+}
+
+.invoice-totals {
+    width: 300px;
+}
+
+.invoice-total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-2) 0;
+    font-size: 0.95rem;
+    color: var(--color-gray-600);
+}
+
+.invoice-total-row.final {
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 2px solid var(--color-gray-900);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+}
+
+/* Thank You */
+.invoice-thank-you {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    background-color: var(--color-gray-50);
+    padding: var(--space-6);
+    border-radius: var(--radius-sm);
+    color: var(--color-gray-900);
+    font-weight: 600;
+    font-family: var(--font-family-serif);
+    font-size: 1.1rem;
+}
+
+/* Print Styles */
+@media print {
+    .invoice-actions-bar {
+        display: none;
+    }
+    .invoice-page {
+        padding: 0;
+        background: white;
+    }
+    .invoice-container {
+        box-shadow: none;
+        padding: 0;
+    }
+}
