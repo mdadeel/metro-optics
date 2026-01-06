@@ -53,5 +53,10 @@
     "tailwindcss": "^4.1.17",
     "tailwindcss-animate": "^1.0.7",
     "vite": "^7.2.4"
+  },
+  "overrides": {
+    "react-helmet-async": {
+      "react": "$react"
+    }
   }
 }

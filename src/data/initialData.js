@@ -1,4 +1,6 @@
 export const initialSiteSettings = {
+    siteTitle: "Metro Optics",
+    logoUrl: "/logo.png",
     heroTitle: "See the World Clearly",
     heroSubtitle: "Premium Optical Glasses & Sunglasses",
     heroImage: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=2080&auto=format&fit=crop",

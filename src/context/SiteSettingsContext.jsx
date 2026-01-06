@@ -20,9 +20,11 @@ export const SiteSettingsProvider = ({ children }) => {
         try {
             const saved = localStorage.getItem('siteSettings_v1');
             const parsed = saved ? JSON.parse(saved) : initialSiteSettings;
+            // Always merge with initialSiteSettings to pick up new default fields
+            const merged = { ...initialSiteSettings, ...parsed };
             // Ensure pages object exists
-            if (!parsed.pages) parsed.pages = defaultPages;
-            return parsed;
+            if (!merged.pages) merged.pages = defaultPages;
+            return merged;
         } catch (error) {
             console.error('Error parsing site settings from localStorage:', error);
             // Return default settings on error
