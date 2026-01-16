@@ -3,9 +3,10 @@ import { useCart } from '../context/CartContext';
 import { useOrders } from '../context/OrderContext';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Check, Copy, Truck, CreditCard, ShoppingBag, ArrowLeft, ArrowRight, Phone, Mail, MapPin, User, Banknote, Smartphone } from 'lucide-react';
+import { Check, Copy, Truck, CreditCard, ShoppingBag, ArrowLeft, ArrowRight, Phone, Mail, MapPin, User, Banknote, Smartphone, AlertCircle } from 'lucide-react';
 import { sanitizeString, sanitizePhone, sanitizeEmail, sanitizeTransactionId } from '../lib/sanitize';
 import { toast } from 'sonner';
+import SEO from '../components/SEO';
 import '../styles/pages/checkout.css';
 
 // Get bKash number from environment variable (more secure than hardcoding)
@@ -28,6 +29,104 @@ const Checkout = () => {
     const [bkashData, setBkashData] = useState({ number: '', trxId: '' });
     const [copied, setCopied] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [fieldErrors, setFieldErrors] = useState({});
+    const [touched, setTouched] = useState({});
+
+    // Validation functions
+    const validators = {
+        name: (value) => {
+            if (!value.trim()) return 'Full name is required';
+            if (value.trim().length < 2) return 'Name must be at least 2 characters';
+            return '';
+        },
+        phone: (value) => {
+            if (!value.trim()) return 'Phone number is required';
+            const phoneRegex = /^(\+88)?01[3-9]\d{8}$/;
+            if (!phoneRegex.test(value.replace(/\s/g, ''))) return 'Please enter a valid BD phone number';
+            return '';
+        },
+        email: (value) => {
+            if (!value) return 'Email is required';
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) return 'Please enter a valid email address';
+            return '';
+        },
+        address: (value) => {
+            if (!value.trim()) return 'Delivery address is required';
+            if (value.trim().length < 10) return 'Please enter a complete address (House, Road, Area)';
+            return '';
+        },
+        bkashNumber: (value) => {
+            if (paymentMethod !== 'bKash') return '';
+            if (!value.trim()) return 'bKash number is required';
+            const phoneRegex = /^(\+88)?01[3-9]\d{8}$/;
+            if (!phoneRegex.test(value.replace(/\s/g, ''))) return 'Invalid bKash number';
+            return '';
+        },
+        trxId: (value) => {
+            if (paymentMethod !== 'bKash') return '';
+            if (!value.trim()) return 'Transaction ID is required';
+            if (value.trim().length < 8) return 'Invalid Transaction ID';
+            return '';
+        }
+    };
+
+    const validateStep1 = () => {
+        const errors = {};
+        errors.name = validators.name(formData.name);
+        errors.phone = validators.phone(formData.phone);
+        errors.email = validators.email(formData.email);
+        errors.address = validators.address(formData.address);
+
+        // Filter out empty errors
+        const activeErrors = Object.keys(errors).reduce((acc, key) => {
+            if (errors[key]) acc[key] = errors[key];
+            return acc;
+        }, {});
+
+        setFieldErrors(prev => ({ ...prev, ...activeErrors }));
+        return Object.keys(activeErrors).length === 0;
+    };
+
+    const validateStep2 = () => {
+        if (paymentMethod !== 'bKash') return true;
+
+        const errors = {};
+        errors.bkashNumber = validators.bkashNumber(bkashData.number);
+        errors.trxId = validators.trxId(bkashData.trxId);
+
+        const activeErrors = Object.keys(errors).reduce((acc, key) => {
+            if (errors[key]) acc[key] = errors[key];
+            return acc;
+        }, {});
+
+        setFieldErrors(prev => ({ ...prev, ...activeErrors }));
+        return Object.keys(activeErrors).length === 0;
+    };
+
+    const handleBlur = (field, value) => {
+        setTouched(prev => ({ ...prev, [field]: true }));
+        const validatorName = field === 'number' ? 'bkashNumber' : field;
+        if (validators[validatorName]) {
+            setFieldErrors(prev => ({ ...prev, [field]: validators[validatorName](value) }));
+        }
+    };
+
+    const handleChange = (field, value, isBkash = false) => {
+        if (isBkash) {
+            setBkashData(prev => ({ ...prev, [field]: value }));
+        } else {
+            setFormData(prev => ({ ...prev, [field]: value }));
+        }
+
+        // Clear error when typing
+        if (touched[field]) {
+            const validatorName = field === 'number' ? 'bkashNumber' : field;
+            if (validators[validatorName]) {
+                setFieldErrors(prev => ({ ...prev, [field]: validators[validatorName](value) }));
+            }
+        }
+    };
 
     const subtotal = getCartTotal();
     const shipping = 100;
@@ -45,13 +144,28 @@ const Checkout = () => {
 
         // Prevent double submission - set loading immediately
         if (loading) return;
-        setLoading(true);
 
         if (step === 1) {
-            setStep(2);
-            setLoading(false);
+            // Mark Step 1 fields as touched
+            setTouched({ name: true, email: true, phone: true, address: true });
+
+            if (validateStep1()) {
+                setStep(2);
+                setTouched({}); // Reset touched for next step
+                window.scrollTo(0, 0);
+            }
             return;
         }
+
+        // Validate Step 2 (if bKash)
+        if (paymentMethod === 'bKash') {
+            setTouched({ number: true, trxId: true });
+            if (!validateStep2()) {
+                return;
+            }
+        }
+
+        setLoading(true);
 
         try {
             // Sanitize all user inputs to prevent XSS attacks
@@ -98,6 +212,10 @@ const Checkout = () => {
     if (cart.length === 0) {
         return (
             <div className="checkout-page">
+                <SEO
+                    title="Checkout"
+                    description="Secure checkout for your Metro Optics order. Complete your purchase with confidence."
+                />
                 <div className="checkout-container">
                     <div className="checkout-empty">
                         <ShoppingBag size={64} color="#111827" />
@@ -117,6 +235,10 @@ const Checkout = () => {
 
     return (
         <div className="checkout-page">
+            <SEO
+                title="Checkout"
+                description="Secure checkout for your Metro Optics order. Complete your purchase with confidence."
+            />
             <div className="checkout-container">
                 {/* Progress Stepper */}
                 <div className="checkout-progress">
@@ -142,58 +264,94 @@ const Checkout = () => {
                             <h2 className="checkout-section-title">Shipping Information</h2>
                             <div className="checkout-fields">
                                 <div className="checkout-field">
-                                    <label className="checkout-label">
-                                        <User size={16} /> Full Name
+                                    <label htmlFor="name" className="checkout-label">
+                                        <User size={16} aria-hidden="true" /> Full Name
                                     </label>
                                     <input
+                                        id="name"
                                         type="text"
-                                        required
                                         value={formData.name}
-                                        onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                        className="checkout-input"
+                                        onChange={e => handleChange('name', e.target.value)}
+                                        onBlur={e => handleBlur('name', e.target.value)}
+                                        className={`checkout-input ${touched.name && fieldErrors.name ? 'input-error' : ''}`}
                                         placeholder="John Doe"
+                                        aria-invalid={touched.name && fieldErrors.name ? 'true' : 'false'}
+                                        aria-describedby={fieldErrors.name ? 'name-error' : undefined}
                                     />
+                                    {touched.name && fieldErrors.name && (
+                                        <div id="name-error" className="field-error" role="alert">
+                                            <AlertCircle size={14} aria-hidden="true" />
+                                            {fieldErrors.name}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="checkout-field">
-                                    <label className="checkout-label">
-                                        <Phone size={16} /> Phone Number
+                                    <label htmlFor="phone" className="checkout-label">
+                                        <Phone size={16} aria-hidden="true" /> Phone Number
                                     </label>
                                     <input
+                                        id="phone"
                                         type="tel"
-                                        required
                                         value={formData.phone}
-                                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                                        className="checkout-input"
+                                        onChange={e => handleChange('phone', e.target.value)}
+                                        onBlur={e => handleBlur('phone', e.target.value)}
+                                        className={`checkout-input ${touched.phone && fieldErrors.phone ? 'input-error' : ''}`}
                                         placeholder="+880 1700000000"
+                                        aria-invalid={touched.phone && fieldErrors.phone ? 'true' : 'false'}
+                                        aria-describedby={fieldErrors.phone ? 'phone-error' : undefined}
                                     />
+                                    {touched.phone && fieldErrors.phone && (
+                                        <div id="phone-error" className="field-error" role="alert">
+                                            <AlertCircle size={14} aria-hidden="true" />
+                                            {fieldErrors.phone}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="checkout-field checkout-field-full">
-                                    <label className="checkout-label">
-                                        <Mail size={16} /> Email Address
+                                    <label htmlFor="email" className="checkout-label">
+                                        <Mail size={16} aria-hidden="true" /> Email Address
                                     </label>
                                     <input
+                                        id="email"
                                         type="email"
-                                        required
                                         value={formData.email}
-                                        onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                        className="checkout-input"
+                                        onChange={e => handleChange('email', e.target.value)}
+                                        onBlur={e => handleBlur('email', e.target.value)}
+                                        className={`checkout-input ${touched.email && fieldErrors.email ? 'input-error' : ''}`}
                                         placeholder="john@example.com"
+                                        aria-invalid={touched.email && fieldErrors.email ? 'true' : 'false'}
+                                        aria-describedby={fieldErrors.email ? 'email-error' : undefined}
                                     />
+                                    {touched.email && fieldErrors.email && (
+                                        <div id="email-error" className="field-error" role="alert">
+                                            <AlertCircle size={14} aria-hidden="true" />
+                                            {fieldErrors.email}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="checkout-field checkout-field-full">
-                                    <label className="checkout-label">
-                                        <MapPin size={16} /> Delivery Address
+                                    <label htmlFor="address" className="checkout-label">
+                                        <MapPin size={16} aria-hidden="true" /> Delivery Address
                                     </label>
                                     <textarea
-                                        required
+                                        id="address"
                                         value={formData.address}
-                                        onChange={e => setFormData({ ...formData, address: e.target.value })}
-                                        className="checkout-textarea"
+                                        onChange={e => handleChange('address', e.target.value)}
+                                        onBlur={e => handleBlur('address', e.target.value)}
+                                        className={`checkout-textarea ${touched.address && fieldErrors.address ? 'input-error' : ''}`}
                                         placeholder="House/Flat, Road, Area, City"
+                                        aria-invalid={touched.address && fieldErrors.address ? 'true' : 'false'}
+                                        aria-describedby={fieldErrors.address ? 'address-error' : undefined}
                                     />
+                                    {touched.address && fieldErrors.address && (
+                                        <div id="address-error" className="field-error" role="alert">
+                                            <AlertCircle size={14} aria-hidden="true" />
+                                            {fieldErrors.address}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -244,40 +402,59 @@ const Checkout = () => {
                                             <div className="checkout-bkash-number">
                                                 <div>
                                                     <span className="checkout-bkash-label">Send Money to:</span>
-                                                    <p className="checkout-bkash-value">01700000000</p>
+                                                    <p className="checkout-bkash-value">{BKASH_NUMBER}</p>
                                                 </div>
                                                 <button
                                                     type="button"
                                                     onClick={handleCopyNumber}
                                                     className="checkout-copy-btn"
                                                     title="Copy number"
+                                                    aria-label="Copy bKash number"
                                                 >
-                                                    {copied ? <Check size={18} /> : <Copy size={18} />}
+                                                    {copied ? <Check size={18} aria-hidden="true" /> : <Copy size={18} aria-hidden="true" />}
                                                 </button>
                                             </div>
 
                                             <div className="checkout-field">
-                                                <label className="checkout-label">Your bKash Number</label>
+                                                <label htmlFor="bkash-number" className="checkout-label">Your bKash Number</label>
                                                 <input
+                                                    id="bkash-number"
                                                     type="tel"
-                                                    required
                                                     value={bkashData.number}
-                                                    onChange={e => setBkashData({ ...bkashData, number: e.target.value })}
-                                                    className="checkout-bkash-input"
+                                                    onChange={e => handleChange('number', e.target.value, true)}
+                                                    onBlur={e => handleBlur('number', e.target.value)}
+                                                    className={`checkout-bkash-input ${touched.number && fieldErrors.bkashNumber ? 'input-error' : ''}`}
                                                     placeholder="01XXXXXXXXX"
+                                                    aria-invalid={touched.number && fieldErrors.bkashNumber ? 'true' : 'false'}
+                                                    aria-describedby={fieldErrors.bkashNumber ? 'bkash-number-error' : undefined}
                                                 />
+                                                {touched.number && fieldErrors.bkashNumber && (
+                                                    <div id="bkash-number-error" className="field-error" role="alert">
+                                                        <AlertCircle size={14} aria-hidden="true" />
+                                                        {fieldErrors.bkashNumber}
+                                                    </div>
+                                                )}
                                             </div>
 
                                             <div className="checkout-field">
-                                                <label className="checkout-label">Transaction ID</label>
+                                                <label htmlFor="bkash-trx-id" className="checkout-label">Transaction ID</label>
                                                 <input
+                                                    id="bkash-trx-id"
                                                     type="text"
-                                                    required
                                                     value={bkashData.trxId}
-                                                    onChange={e => setBkashData({ ...bkashData, trxId: e.target.value })}
-                                                    className="checkout-bkash-input"
+                                                    onChange={e => handleChange('trxId', e.target.value, true)}
+                                                    onBlur={e => handleBlur('trxId', e.target.value)}
+                                                    className={`checkout-bkash-input ${touched.trxId && fieldErrors.trxId ? 'input-error' : ''}`}
                                                     placeholder="8N7A5B3C2D"
+                                                    aria-invalid={touched.trxId && fieldErrors.trxId ? 'true' : 'false'}
+                                                    aria-describedby={fieldErrors.trxId ? 'trx-id-error' : undefined}
                                                 />
+                                                {touched.trxId && fieldErrors.trxId && (
+                                                    <div id="trx-id-error" className="field-error" role="alert">
+                                                        <AlertCircle size={14} aria-hidden="true" />
+                                                        {fieldErrors.trxId}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     )}

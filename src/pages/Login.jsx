@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Mail, Lock, Eye, EyeOff, Loader2, ArrowLeft, AlertCircle } from 'lucide-react';
+import SEO from '../components/SEO';
 import './AuthPages.css';
 
 const Login = () => {
@@ -105,6 +106,10 @@ const Login = () => {
 
     return (
         <div className="auth-page">
+            <SEO
+                title="Sign In"
+                description="Sign in to your Metro Optics account to track orders, manage your wishlist, and checkout faster."
+            />
             <div className="auth-page-navbar">
                 <Link to="/" className="auth-navbar-home">
                     <ArrowLeft size={20} />

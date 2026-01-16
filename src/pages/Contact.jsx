@@ -1,6 +1,7 @@
 import { Mail, Phone, MapPin, Clock, Send, AlertCircle, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useSiteSettings } from '../context/SiteSettingsContext';
+import SEO from '../components/SEO';
 
 const Contact = () => {
     const { settings, getPage } = useSiteSettings();
@@ -101,6 +102,10 @@ const Contact = () => {
 
     return (
         <div className="contact-page">
+            <SEO
+                title="Contact Us"
+                description="Get in touch with Metro Optics directly. Our support team is ready to answer your questions and assist with your eyewear needs."
+            />
             <div className="contact-container">
                 {/* Header */}
                 <div className="contact-header">

@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { getEnhancedProduct, getRelatedProducts } from '../data/productEnhancements';
 import PrescriptionForm from '@/components/PrescriptionForm';
+import SEO from '../components/SEO';
 import './ProductDetailsPage.css';
 
 const ProductDetails = () => {
@@ -113,6 +114,14 @@ const ProductDetails = () => {
 
     return (
         <div className="product-details-page">
+            <SEO
+                title={product.name}
+                description={product.description}
+                image={product.image}
+                url={`/product/${product.id}`}
+                keywords={`${product.category}, ${product.brand || 'eyewear'}, glasses`}
+                type="product"
+            />
             {/* Breadcrumb */}
             <div className="breadcrumb">
                 <Link to="/">Home</Link>

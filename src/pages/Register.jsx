@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Mail, Lock, Eye, EyeOff, Loader2, User, Check, X, ArrowLeft, AlertCircle } from 'lucide-react';
+import SEO from '../components/SEO';
 import './AuthPages.css';
 
 const Register = () => {
@@ -140,6 +141,10 @@ const Register = () => {
 
     return (
         <div className="auth-page">
+            <SEO
+                title="Create Account"
+                description="Create a Metro Optics account to unlock exclusive features, faster checkout, and personalized recommendations."
+            />
             <div className="auth-page-navbar">
                 <Link to="/" className="auth-navbar-home">
                     <ArrowLeft size={20} />
@@ -157,73 +162,102 @@ const Register = () => {
                         <p className="auth-subtitle">Join the vision of premium clarity</p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="auth-form">
+                    <form onSubmit={handleSubmit} className="auth-form" noValidate>
                         {error && (
-                            <div className="auth-error">
+                            <div className="auth-error" role="alert">
+                                <AlertCircle size={16} aria-hidden="true" />
                                 {error}
                             </div>
                         )}
 
                         <div className="form-group">
-                            <label className="text-sm font-medium">Full Name</label>
+                            <label htmlFor="register-name" className="text-sm font-medium">Full Name</label>
                             <div className="input-wrapper">
-                                <User className="input-icon" size={18} />
+                                <User className="input-icon" size={18} aria-hidden="true" />
                                 <input
+                                    id="register-name"
                                     type="text"
-                                    required
                                     autoComplete="name"
                                     value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    onChange={(e) => handleChange('name', e.target.value)}
+                                    onBlur={() => handleBlur('name')}
                                     placeholder="John Doe"
-                                    className="input-with-icon"
+                                    className={`input-with-icon ${touched.name && fieldErrors.name ? 'input-error' : ''}`}
                                     disabled={isLoading || isGoogleLoading}
+                                    aria-invalid={touched.name && fieldErrors.name ? 'true' : 'false'}
+                                    aria-describedby={fieldErrors.name ? 'name-error' : undefined}
                                 />
                             </div>
+                            {touched.name && fieldErrors.name && (
+                                <div id="name-error" className="field-error" role="alert">
+                                    <AlertCircle size={14} aria-hidden="true" />
+                                    {fieldErrors.name}
+                                </div>
+                            )}
                         </div>
 
                         <div className="form-group">
-                            <label className="text-sm font-medium">Email Address</label>
+                            <label htmlFor="register-email" className="text-sm font-medium">Email Address</label>
                             <div className="input-wrapper">
-                                <Mail className="input-icon" size={18} />
+                                <Mail className="input-icon" size={18} aria-hidden="true" />
                                 <input
+                                    id="register-email"
                                     type="email"
-                                    required
                                     autoComplete="email"
                                     value={formData.email}
-                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                    onChange={(e) => handleChange('email', e.target.value)}
+                                    onBlur={() => handleBlur('email')}
                                     placeholder="name@example.com"
-                                    className="input-with-icon"
+                                    className={`input-with-icon ${touched.email && fieldErrors.email ? 'input-error' : ''}`}
                                     disabled={isLoading || isGoogleLoading}
+                                    aria-invalid={touched.email && fieldErrors.email ? 'true' : 'false'}
+                                    aria-describedby={fieldErrors.email ? 'email-error' : undefined}
                                 />
                             </div>
+                            {touched.email && fieldErrors.email && (
+                                <div id="email-error" className="field-error" role="alert">
+                                    <AlertCircle size={14} aria-hidden="true" />
+                                    {fieldErrors.email}
+                                </div>
+                            )}
                         </div>
 
                         <div className="form-group">
-                            <label className="text-sm font-medium">Password</label>
+                            <label htmlFor="register-password" className="text-sm font-medium">Password</label>
                             <div className="input-wrapper">
-                                <Lock className="input-icon" size={18} />
+                                <Lock className="input-icon" size={18} aria-hidden="true" />
                                 <input
+                                    id="register-password"
                                     type={showPassword ? 'text' : 'password'}
-                                    required
                                     autoComplete="new-password"
                                     value={formData.password}
-                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                    onChange={(e) => handleChange('password', e.target.value)}
+                                    onBlur={() => handleBlur('password')}
                                     placeholder="Create a strong password"
-                                    className="input-with-icon"
+                                    className={`input-with-icon ${touched.password && fieldErrors.password ? 'input-error' : ''}`}
                                     disabled={isLoading || isGoogleLoading}
+                                    aria-invalid={touched.password && fieldErrors.password ? 'true' : 'false'}
+                                    aria-describedby="password-requirements"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
                                     className="password-toggle"
                                     disabled={isLoading || isGoogleLoading}
+                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                                 >
-                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
                                 </button>
                             </div>
+                            {touched.password && fieldErrors.password && (
+                                <div className="field-error" role="alert">
+                                    <AlertCircle size={14} aria-hidden="true" />
+                                    {fieldErrors.password}
+                                </div>
+                            )}
                             {formData.password && (
-                                <div className="password-strength">
-                                    <div className="strength-bars">
+                                <div className="password-strength" id="password-requirements">
+                                    <div className="strength-bars" role="progressbar" aria-valuenow={passwordStrength.strength} aria-valuemin="0" aria-valuemax="4">
                                         {[1, 2, 3, 4].map((level) => (
                                             <div
                                                 key={level}
@@ -244,29 +278,33 @@ const Register = () => {
                         </div>
 
                         <div className="form-group">
-                            <label className="text-sm font-medium">Confirm Password</label>
+                            <label htmlFor="register-confirm-password" className="text-sm font-medium">Confirm Password</label>
                             <div className="input-wrapper">
-                                <Lock className="input-icon" size={18} />
+                                <Lock className="input-icon" size={18} aria-hidden="true" />
                                 <input
+                                    id="register-confirm-password"
                                     type={showConfirmPassword ? 'text' : 'password'}
-                                    required
                                     autoComplete="new-password"
                                     value={formData.confirmPassword}
-                                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                                    onChange={(e) => handleChange('confirmPassword', e.target.value)}
+                                    onBlur={() => handleBlur('confirmPassword')}
                                     placeholder="Confirm your password"
-                                    className="input-with-icon"
+                                    className={`input-with-icon ${touched.confirmPassword && fieldErrors.confirmPassword ? 'input-error' : ''}`}
                                     disabled={isLoading || isGoogleLoading}
+                                    aria-invalid={touched.confirmPassword && fieldErrors.confirmPassword ? 'true' : 'false'}
+                                    aria-describedby={fieldErrors.confirmPassword ? 'confirm-password-error' : undefined}
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                     className="password-toggle"
                                     disabled={isLoading || isGoogleLoading}
+                                    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                                 >
-                                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    {showConfirmPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
                                 </button>
                                 {formData.confirmPassword && (
-                                    <div className="absolute right-12 flex items-center">
+                                    <div className="password-match-indicator" aria-hidden="true">
                                         {formData.password === formData.confirmPassword ? (
                                             <Check size={16} color="#10b981" />
                                         ) : (
@@ -275,6 +313,12 @@ const Register = () => {
                                     </div>
                                 )}
                             </div>
+                            {touched.confirmPassword && fieldErrors.confirmPassword && (
+                                <div id="confirm-password-error" className="field-error" role="alert">
+                                    <AlertCircle size={14} aria-hidden="true" />
+                                    {fieldErrors.confirmPassword}
+                                </div>
+                            )}
                         </div>
 
                         <div className="checkbox-group">
@@ -282,14 +326,22 @@ const Register = () => {
                                 type="checkbox"
                                 id="terms"
                                 checked={formData.acceptTerms}
-                                onChange={(e) => setFormData({ ...formData, acceptTerms: e.target.checked })}
-                                required
+                                onChange={(e) => handleChange('acceptTerms', e.target.checked)}
+                                onBlur={() => handleBlur('acceptTerms')}
                                 disabled={isLoading || isGoogleLoading}
+                                aria-invalid={touched.acceptTerms && fieldErrors.acceptTerms ? 'true' : 'false'}
+                                aria-describedby={fieldErrors.acceptTerms ? 'terms-error' : undefined}
                             />
                             <label htmlFor="terms" className="checkbox-label">
                                 I accept the <Link to="/terms" className="auth-link">Terms</Link> and <Link to="/privacy" className="auth-link">Privacy Policy</Link>
                             </label>
                         </div>
+                        {touched.acceptTerms && fieldErrors.acceptTerms && (
+                            <div id="terms-error" className="field-error" role="alert">
+                                <AlertCircle size={14} aria-hidden="true" />
+                                {fieldErrors.acceptTerms}
+                            </div>
+                        )}
 
                         <button
                             type="submit"

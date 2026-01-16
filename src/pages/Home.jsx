@@ -3,6 +3,7 @@ import FeaturedCategories from '../components/FeaturedCategories';
 import FeaturedProducts from '../components/FeaturedProducts';
 import WhyChooseUs from '../components/WhyChooseUs';
 import ProductQuickView from '../components/ProductQuickView';
+import SEO from '../components/SEO';
 import { useState } from 'react';
 
 const Home = () => {
@@ -21,6 +22,10 @@ const Home = () => {
 
     return (
         <main role="main" id="main-content">
+            <SEO
+                title="Home"
+                description="Premium eyewear, sunglasses and contact lenses in Bangladesh. Shop the latest trends with free shipping and 7-day returns."
+            />
             {/* Hero Banner */}
             <HeroSection />
 
