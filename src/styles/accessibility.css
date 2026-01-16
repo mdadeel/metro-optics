@@ -17,22 +17,22 @@
 
 .skip-link:focus {
     top: 1rem;
-    outline: 3px solid var(--color-primary-dark);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--color-focus-ring);
+    outline-offset: var(--focus-ring-offset);
 }
 
 /* Enhanced Focus Indicators */
 :focus-visible {
-    outline: 3px solid var(--color-primary);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--color-focus-ring);
+    outline-offset: var(--focus-ring-offset);
     border-radius: 4px;
 }
 
 /* Specific focus styles for buttons */
 button:focus-visible,
 a:focus-visible {
-    outline: 3px solid var(--color-primary);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--color-focus-ring);
+    outline-offset: var(--focus-ring-offset);
 }
 
 /* Remove default outline for mouse users */
@@ -44,7 +44,90 @@ a:focus-visible {
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-focus-ring);
     outline-offset: 1px;
-    border-color: var(--color-primary);
+    border-color: var(--color-focus-ring);
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   Respect user's motion preferences
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================
+   TOUCH TARGET SIZES
+   Minimum 44x44px for accessibility
+   ============================================ */
+.touch-target {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+/* Ensure interactive elements have adequate touch targets on mobile */
+@media (pointer: coarse) {
+
+    button,
+    a,
+    input[type="checkbox"],
+    input[type="radio"],
+    select {
+        min-height: 44px;
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+        min-width: 44px;
+    }
+}
+
+/* ============================================
+   SCREEN READER UTILITIES
+   ============================================ */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* ============================================
+   HIGH CONTRAST MODE SUPPORT
+   ============================================ */
+@media (forced-colors: active) {
+
+    .btn-primary,
+    .btn-secondary {
+        border: 2px solid currentColor;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+        outline: 3px solid currentColor;
+    }
 }

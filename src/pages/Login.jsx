@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Mail, Lock, Eye, EyeOff, Loader2, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Loader2, ArrowLeft, AlertCircle } from 'lucide-react';
 import './AuthPages.css';
 
 const Login = () => {
@@ -13,6 +13,8 @@ const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
     const [error, setError] = useState('');
+    const [fieldErrors, setFieldErrors] = useState({});
+    const [touched, setTouched] = useState({});
 
     const [formData, setFormData] = useState({
         email: '',
@@ -22,9 +24,60 @@ const Login = () => {
 
     const from = location.state?.from?.pathname || '/';
 
+    // Validation functions
+    const validateEmail = (email) => {
+        if (!email) return 'Email is required';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) return 'Please enter a valid email address';
+        return '';
+    };
+
+    const validatePassword = (password) => {
+        if (!password) return 'Password is required';
+        if (password.length < 6) return 'Password must be at least 6 characters';
+        return '';
+    };
+
+    const validateForm = () => {
+        const errors = {
+            email: validateEmail(formData.email),
+            password: validatePassword(formData.password)
+        };
+        setFieldErrors(errors);
+        return !errors.email && !errors.password;
+    };
+
+    const handleBlur = (field) => {
+        setTouched(prev => ({ ...prev, [field]: true }));
+        const validators = { email: validateEmail, password: validatePassword };
+        if (validators[field]) {
+            setFieldErrors(prev => ({ ...prev, [field]: validators[field](formData[field]) }));
+        }
+    };
+
+    const handleChange = (field, value) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+        // Clear error when user starts typing
+        if (touched[field]) {
+            const validators = { email: validateEmail, password: validatePassword };
+            if (validators[field]) {
+                setFieldErrors(prev => ({ ...prev, [field]: validators[field](value) }));
+            }
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+
+        // Mark all fields as touched
+        setTouched({ email: true, password: true });
+
+        // Validate form
+        if (!validateForm()) {
+            return;
+        }
+
         setIsLoading(true);
 
         try {
@@ -77,50 +130,69 @@ const Login = () => {
                         )}
 
                         <div className="form-group">
-                            <label className="text-sm font-medium">Email Address</label>
+                            <label htmlFor="login-email" className="text-sm font-medium">Email Address</label>
                             <div className="input-wrapper">
-                                <Mail className="input-icon" size={18} />
+                                <Mail className="input-icon" size={18} aria-hidden="true" />
                                 <input
+                                    id="login-email"
                                     type="email"
-                                    required
                                     autoComplete="email"
                                     value={formData.email}
-                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                    onChange={(e) => handleChange('email', e.target.value)}
+                                    onBlur={() => handleBlur('email')}
                                     placeholder="name@example.com"
-                                    className="input-with-icon"
+                                    className={`input-with-icon ${touched.email && fieldErrors.email ? 'input-error' : ''}`}
                                     disabled={isLoading || isGoogleLoading}
+                                    aria-invalid={touched.email && fieldErrors.email ? 'true' : 'false'}
+                                    aria-describedby={fieldErrors.email ? 'email-error' : undefined}
                                 />
                             </div>
+                            {touched.email && fieldErrors.email && (
+                                <div id="email-error" className="field-error" role="alert">
+                                    <AlertCircle size={14} aria-hidden="true" />
+                                    {fieldErrors.email}
+                                </div>
+                            )}
                         </div>
 
                         <div className="form-group">
                             <div className="flex justify-between items-center">
-                                <label className="text-sm font-medium">Password</label>
-                                <Link to="/forgot-password" size="sm" className="auth-link text-xs">
+                                <label htmlFor="login-password" className="text-sm font-medium">Password</label>
+                                <Link to="/forgot-password" className="auth-link text-xs">
                                     Forgot password?
                                 </Link>
                             </div>
                             <div className="input-wrapper">
-                                <Lock className="input-icon" size={18} />
+                                <Lock className="input-icon" size={18} aria-hidden="true" />
                                 <input
+                                    id="login-password"
                                     type={showPassword ? 'text' : 'password'}
-                                    required
                                     autoComplete="current-password"
                                     value={formData.password}
-                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                    onChange={(e) => handleChange('password', e.target.value)}
+                                    onBlur={() => handleBlur('password')}
                                     placeholder="••••••••"
-                                    className="input-with-icon"
+                                    className={`input-with-icon ${touched.password && fieldErrors.password ? 'input-error' : ''}`}
                                     disabled={isLoading || isGoogleLoading}
+                                    aria-invalid={touched.password && fieldErrors.password ? 'true' : 'false'}
+                                    aria-describedby={fieldErrors.password ? 'password-error' : undefined}
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
                                     className="password-toggle"
                                     disabled={isLoading || isGoogleLoading}
+                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                                 >
-                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
                                 </button>
                             </div>
+                            {touched.password && fieldErrors.password && (
+                                <div id="password-error" className="field-error" role="alert">
+                                    <AlertCircle size={14} aria-hidden="true" />
+                                    {fieldErrors.password}
+                                </div>
+                            )}
                         </div>
 
                         <div className="checkbox-group">

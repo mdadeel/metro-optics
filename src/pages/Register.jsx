@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Mail, Lock, Eye, EyeOff, Loader2, User, Check, X, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Loader2, User, Check, X, ArrowLeft, AlertCircle } from 'lucide-react';
 import './AuthPages.css';
 
 const Register = () => {
@@ -13,6 +13,8 @@ const Register = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
     const [error, setError] = useState('');
+    const [fieldErrors, setFieldErrors] = useState({});
+    const [touched, setTouched] = useState({});
 
     const [formData, setFormData] = useState({
         name: '',
@@ -21,6 +23,65 @@ const Register = () => {
         confirmPassword: '',
         acceptTerms: false
     });
+
+    // Validation functions
+    const validators = {
+        name: (value) => {
+            if (!value.trim()) return 'Full name is required';
+            if (value.trim().length < 2) return 'Name must be at least 2 characters';
+            return '';
+        },
+        email: (value) => {
+            if (!value) return 'Email is required';
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) return 'Please enter a valid email address';
+            return '';
+        },
+        password: (value) => {
+            if (!value) return 'Password is required';
+            if (value.length < 8) return 'Password must be at least 8 characters';
+            return '';
+        },
+        confirmPassword: (value) => {
+            if (!value) return 'Please confirm your password';
+            if (value !== formData.password) return 'Passwords do not match';
+            return '';
+        },
+        acceptTerms: (value) => {
+            if (!value) return 'You must accept the terms and conditions';
+            return '';
+        }
+    };
+
+    const validateForm = () => {
+        const errors = {};
+        Object.keys(validators).forEach(field => {
+            errors[field] = validators[field](formData[field]);
+        });
+        setFieldErrors(errors);
+        return !Object.values(errors).some(error => error);
+    };
+
+    const handleBlur = (field) => {
+        setTouched(prev => ({ ...prev, [field]: true }));
+        if (validators[field]) {
+            setFieldErrors(prev => ({ ...prev, [field]: validators[field](formData[field]) }));
+        }
+    };
+
+    const handleChange = (field, value) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+        // Re-validate confirmPassword when password changes
+        if (field === 'password' && touched.confirmPassword) {
+            setFieldErrors(prev => ({
+                ...prev,
+                password: validators.password(value),
+                confirmPassword: value !== formData.confirmPassword ? 'Passwords do not match' : ''
+            }));
+        } else if (touched[field] && validators[field]) {
+            setFieldErrors(prev => ({ ...prev, [field]: validators[field](value) }));
+        }
+    };
 
     // Password strength indicator
     const getPasswordStrength = (password) => {
@@ -44,18 +105,11 @@ const Register = () => {
         e.preventDefault();
         setError('');
 
-        if (formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match');
-            return;
-        }
+        // Mark all fields as touched
+        setTouched({ name: true, email: true, password: true, confirmPassword: true, acceptTerms: true });
 
-        if (formData.password.length < 8) {
-            setError('Password must be at least 8 characters');
-            return;
-        }
-
-        if (!formData.acceptTerms) {
-            setError('Please accept the terms and conditions');
+        // Validate form
+        if (!validateForm()) {
             return;
         }
 

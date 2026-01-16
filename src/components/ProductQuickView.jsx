@@ -1,5 +1,5 @@
 import { X, ShoppingCart, Heart, Star } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 
@@ -7,6 +7,50 @@ const ProductQuickView = ({ product, isOpen, onClose }) => {
     const [quantity, setQuantity] = useState(1);
     const [selectedColor, setSelectedColor] = useState(product?.variants?.colors?.[0] || null);
     const { addToCart } = useCart();
+    const modalRef = useRef(null);
+    const closeButtonRef = useRef(null);
+    const previousActiveElement = useRef(null);
+
+    // Store the previously focused element and focus the modal on open
+    useEffect(() => {
+        if (isOpen) {
+            previousActiveElement.current = document.activeElement;
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+            // Focus the close button when modal opens
+            setTimeout(() => closeButtonRef.current?.focus(), 0);
+        }
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isOpen]);
+
+    // Return focus to the trigger element when modal closes
+    useEffect(() => {
+        if (!isOpen && previousActiveElement.current) {
+            previousActiveElement.current.focus();
+        }
+    }, [isOpen]);
+
+    // Focus trap - keep focus within modal
+    const handleTabKey = useCallback((e) => {
+        if (!modalRef.current) return;
+
+        const focusableElements = modalRef.current.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+        }
+    }, []);
 
     if (!isOpen || !product) return null;
 
@@ -24,14 +68,17 @@ const ProductQuickView = ({ product, isOpen, onClose }) => {
                 size={16}
                 className={index < Math.floor(rating) ? 'star-filled' : 'star-empty'}
                 fill={index < Math.floor(rating) ? 'currentColor' : 'none'}
+                aria-hidden="true"
             />
         ));
     };
 
-    // Close on ESC key
+    // Handle keyboard events
     const handleKeyDown = (e) => {
         if (e.key === 'Escape') {
             onClose();
+        } else if (e.key === 'Tab') {
+            handleTabKey(e);
         }
     };
 
@@ -45,16 +92,18 @@ const ProductQuickView = ({ product, isOpen, onClose }) => {
             aria-labelledby="quick-view-title"
         >
             <div
+                ref={modalRef}
                 className="quick-view-modal"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Close Button */}
                 <button
+                    ref={closeButtonRef}
                     onClick={onClose}
                     className="quick-view-close"
                     aria-label="Close quick view"
                 >
-                    <X size={24} />
+                    <X size={24} aria-hidden="true" />
                 </button>
 
                 <div className="quick-view-content">

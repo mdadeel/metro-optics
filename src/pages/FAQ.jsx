@@ -144,25 +144,40 @@ const FAQ = () => {
                                 {category.questions.map((item, questionIndex) => {
                                     const key = `${categoryIndex}-${questionIndex}`;
                                     const isOpen = openIndex === key;
+                                    const buttonId = `faq-btn-${key}`;
+                                    const panelId = `faq-panel-${key}`;
 
                                     return (
                                         <div key={questionIndex} className="faq-item">
                                             <button
+                                                id={buttonId}
                                                 onClick={() => toggleQuestion(categoryIndex, questionIndex)}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter' || e.key === ' ') {
+                                                        e.preventDefault();
+                                                        toggleQuestion(categoryIndex, questionIndex);
+                                                    }
+                                                }}
                                                 className="faq-question"
                                                 aria-expanded={isOpen}
+                                                aria-controls={panelId}
                                             >
                                                 <span className="faq-question-text">{item.q}</span>
                                                 <ChevronDown
                                                     className={`faq-icon ${isOpen ? 'open' : ''}`}
                                                     size={20}
+                                                    aria-hidden="true"
                                                 />
                                             </button>
-                                            {isOpen && (
-                                                <div className="faq-answer">
-                                                    <p>{item.a}</p>
-                                                </div>
-                                            )}
+                                            <div
+                                                id={panelId}
+                                                role="region"
+                                                aria-labelledby={buttonId}
+                                                className={`faq-answer ${isOpen ? 'faq-answer-open' : ''}`}
+                                                hidden={!isOpen}
+                                            >
+                                                <p>{item.a}</p>
+                                            </div>
                                         </div>
                                     );
                                 })}

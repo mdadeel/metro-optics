@@ -15,7 +15,7 @@ build/
 .env.test.local
 .env.production.local
 api.md
-
+DESIGN PROBLEMS.md
 # Logs
 logs/
 *.log

@@ -1,11 +1,11 @@
-import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Send, AlertCircle, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 
 const Contact = () => {
     const { settings, getPage } = useSiteSettings();
     const pageContent = getPage('contact');
-    
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -13,23 +13,90 @@ const Contact = () => {
         message: ''
     });
     const [submitted, setSubmitted] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [fieldErrors, setFieldErrors] = useState({});
+    const [touched, setTouched] = useState({});
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // TODO: Integrate with backend/email service
-        console.log('Contact form submitted:', formData);
-        setSubmitted(true);
-        setTimeout(() => {
-            setSubmitted(false);
-            setFormData({ name: '', email: '', subject: '', message: '' });
-        }, 3000);
+    // Validation functions
+    const validators = {
+        name: (value) => {
+            if (!value.trim()) return 'Name is required';
+            if (value.trim().length < 2) return 'Name must be at least 2 characters';
+            return '';
+        },
+        email: (value) => {
+            if (!value) return 'Email is required';
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) return 'Please enter a valid email address';
+            return '';
+        },
+        subject: (value) => {
+            if (!value.trim()) return 'Subject is required';
+            if (value.trim().length < 3) return 'Subject must be at least 3 characters';
+            return '';
+        },
+        message: (value) => {
+            if (!value.trim()) return 'Message is required';
+            if (value.trim().length < 10) return 'Message must be at least 10 characters';
+            return '';
+        }
+    };
+
+    const validateForm = () => {
+        const errors = {};
+        Object.keys(validators).forEach(field => {
+            errors[field] = validators[field](formData[field]);
+        });
+        setFieldErrors(errors);
+        return !Object.values(errors).some(error => error);
+    };
+
+    const handleBlur = (field) => {
+        setTouched(prev => ({ ...prev, [field]: true }));
+        if (validators[field]) {
+            setFieldErrors(prev => ({ ...prev, [field]: validators[field](formData[field]) }));
+        }
     };
 
     const handleChange = (e) => {
+        const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
-            [e.target.name]: e.target.value
+            [name]: value
         }));
+        // Clear error when user starts typing
+        if (touched[name] && validators[name]) {
+            setFieldErrors(prev => ({ ...prev, [name]: validators[name](value) }));
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Mark all fields as touched
+        setTouched({ name: true, email: true, subject: true, message: true });
+
+        // Validate form
+        if (!validateForm()) {
+            return;
+        }
+
+        setIsLoading(true);
+
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // TODO: Integrate with backend/email service
+        console.log('Contact form submitted:', formData);
+        setIsLoading(false);
+        setSubmitted(true);
+
+        setTimeout(() => {
+            setSubmitted(false);
+            setFormData({ name: '', email: '', subject: '', message: '' });
+            setTouched({});
+            setFieldErrors({});
+        }, 3000);
     };
 
     return (
@@ -111,7 +178,7 @@ const Contact = () => {
                                 </p>
                             </div>
                         ) : (
-                            <form onSubmit={handleSubmit} className="contact-form">
+                            <form onSubmit={handleSubmit} className="contact-form" noValidate>
                                 <div className="contact-form-group">
                                     <label htmlFor="name" className="contact-form-label">Your Name</label>
                                     <input
@@ -120,10 +187,19 @@ const Contact = () => {
                                         name="name"
                                         value={formData.name}
                                         onChange={handleChange}
-                                        required
-                                        className="contact-form-input"
+                                        onBlur={() => handleBlur('name')}
+                                        className={`contact-form-input ${touched.name && fieldErrors.name ? 'input-error' : ''}`}
                                         placeholder="John Doe"
+                                        disabled={isLoading}
+                                        aria-invalid={touched.name && fieldErrors.name ? 'true' : 'false'}
+                                        aria-describedby={fieldErrors.name ? 'name-error' : undefined}
                                     />
+                                    {touched.name && fieldErrors.name && (
+                                        <div id="name-error" className="field-error" role="alert">
+                                            <AlertCircle size={14} aria-hidden="true" />
+                                            {fieldErrors.name}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="contact-form-group">
@@ -134,10 +210,19 @@ const Contact = () => {
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
-                                        required
-                                        className="contact-form-input"
+                                        onBlur={() => handleBlur('email')}
+                                        className={`contact-form-input ${touched.email && fieldErrors.email ? 'input-error' : ''}`}
                                         placeholder="john@example.com"
+                                        disabled={isLoading}
+                                        aria-invalid={touched.email && fieldErrors.email ? 'true' : 'false'}
+                                        aria-describedby={fieldErrors.email ? 'email-error' : undefined}
                                     />
+                                    {touched.email && fieldErrors.email && (
+                                        <div id="email-error" className="field-error" role="alert">
+                                            <AlertCircle size={14} aria-hidden="true" />
+                                            {fieldErrors.email}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="contact-form-group">
@@ -148,10 +233,19 @@ const Contact = () => {
                                         name="subject"
                                         value={formData.subject}
                                         onChange={handleChange}
-                                        required
-                                        className="contact-form-input"
+                                        onBlur={() => handleBlur('subject')}
+                                        className={`contact-form-input ${touched.subject && fieldErrors.subject ? 'input-error' : ''}`}
                                         placeholder="How can we help?"
+                                        disabled={isLoading}
+                                        aria-invalid={touched.subject && fieldErrors.subject ? 'true' : 'false'}
+                                        aria-describedby={fieldErrors.subject ? 'subject-error' : undefined}
                                     />
+                                    {touched.subject && fieldErrors.subject && (
+                                        <div id="subject-error" className="field-error" role="alert">
+                                            <AlertCircle size={14} aria-hidden="true" />
+                                            {fieldErrors.subject}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="contact-form-group">
@@ -161,16 +255,34 @@ const Contact = () => {
                                         name="message"
                                         value={formData.message}
                                         onChange={handleChange}
-                                        required
+                                        onBlur={() => handleBlur('message')}
                                         rows="5"
-                                        className="contact-form-textarea"
+                                        className={`contact-form-textarea ${touched.message && fieldErrors.message ? 'input-error' : ''}`}
                                         placeholder="Tell us more about your inquiry..."
+                                        disabled={isLoading}
+                                        aria-invalid={touched.message && fieldErrors.message ? 'true' : 'false'}
+                                        aria-describedby={fieldErrors.message ? 'message-error' : undefined}
                                     />
+                                    {touched.message && fieldErrors.message && (
+                                        <div id="message-error" className="field-error" role="alert">
+                                            <AlertCircle size={14} aria-hidden="true" />
+                                            {fieldErrors.message}
+                                        </div>
+                                    )}
                                 </div>
 
-                                <button type="submit" className="contact-form-submit">
-                                    <Send size={20} />
-                                    Send Message
+                                <button type="submit" className="contact-form-submit" disabled={isLoading}>
+                                    {isLoading ? (
+                                        <>
+                                            <Loader2 size={20} className="animate-spin" aria-hidden="true" />
+                                            Sending...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Send size={20} aria-hidden="true" />
+                                            Send Message
+                                        </>
+                                    )}
                                 </button>
                             </form>
                         )}

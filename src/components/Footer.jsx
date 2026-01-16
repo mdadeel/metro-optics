@@ -110,14 +110,35 @@ const Footer = () => {
                     <div className="footer-social">
                         <h4 className="footer-social-title">Follow Us</h4>
                         <div className="footer-social-links">
-                            <a href="#" className="footer-social-link" aria-label="Facebook">
-                                <Facebook size={20} />
+                            <a
+                                href="https://facebook.com/metrooptics"
+                                className="footer-social-link"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="Visit our Facebook page"
+                            >
+                                <Facebook size={20} aria-hidden="true" />
+                                <span className="sr-only">Facebook</span>
                             </a>
-                            <a href="#" className="footer-social-link" aria-label="Instagram">
-                                <Instagram size={20} />
+                            <a
+                                href="https://instagram.com/metrooptics"
+                                className="footer-social-link"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="Visit our Instagram page"
+                            >
+                                <Instagram size={20} aria-hidden="true" />
+                                <span className="sr-only">Instagram</span>
                             </a>
-                            <a href="#" className="footer-social-link" aria-label="Twitter">
-                                <Twitter size={20} />
+                            <a
+                                href="https://twitter.com/metrooptics"
+                                className="footer-social-link"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="Visit our Twitter page"
+                            >
+                                <Twitter size={20} aria-hidden="true" />
+                                <span className="sr-only">Twitter</span>
                             </a>
                         </div>
                     </div>
