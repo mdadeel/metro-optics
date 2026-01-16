@@ -18,7 +18,7 @@
 .navbar-container {
     max-width: var(--container-max-width);
     margin: 0 auto;
-    padding: 1rem 2rem;
+    padding: 0.75rem 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -456,8 +456,8 @@
 }
 
 .navbar-modern.scrolled .navbar-container {
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
 /* ============================================

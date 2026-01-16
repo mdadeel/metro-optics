@@ -2,9 +2,10 @@ import { useProducts } from '../context/ProductContext';
 import ProductCard from './ProductCard';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
+import LoadingSpinner from './LoadingSpinner';
 
 const FeaturedProducts = ({ onQuickView }) => {
-    const { getBestsellers } = useProducts();
+    const { getBestsellers, loading } = useProducts();
     const bestsellers = getBestsellers(8);
 
     return (
@@ -24,11 +25,17 @@ const FeaturedProducts = ({ onQuickView }) => {
                 </div>
 
                 <div className="featured-products-grid">
-                    {bestsellers.map((product) => (
-                        <div key={product.id} className="featured-products-card-wrapper">
-                            <ProductCard product={product} onQuickView={onQuickView} />
+                    {loading ? (
+                        <div style={{ colSpan: 'full', display: 'flex', justifyContent: 'center', padding: '40px 0', width: '100%', gridColumn: '1 / -1' }}>
+                            <LoadingSpinner text="Loading bestsellers..." />
                         </div>
-                    ))}
+                    ) : (
+                        bestsellers.map((product) => (
+                            <div key={product.id} className="featured-products-card-wrapper">
+                                <ProductCard product={product} onQuickView={onQuickView} />
+                            </div>
+                        ))
+                    )}
                 </div>
             </div>
         </section>
