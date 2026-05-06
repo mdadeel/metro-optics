@@ -1,7 +1,7 @@
 /* ============================================
-   METRO MODERN PRODUCT CARD
-   Minimalist, Sharp, Always-visible CTA
-   ============================================ */
+    METRO MODERN PRODUCT CARD
+    Minimalist, Sharp, Always-visible CTA
+    ============================================ */
 
 .product-card {
     position: relative;
@@ -21,6 +21,61 @@
     border-color: var(--color-gray-200);
     box-shadow: var(--shadow-md);
     transform: translateY(-4px);
+}
+
+/* Image Loading States */
+.product-card-image.loading {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.product-card-image.loaded {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.image-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color-gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+}
+
+.image-placeholder .spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--color-gray-300);
+    border-top: 2px solid var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.image-error {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color-gray-100);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    color: var(--color-gray-500);
+    font-size: 12px;
+    gap: 8px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* Link area for image and info */
