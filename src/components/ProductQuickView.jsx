@@ -1,4 +1,4 @@
-import { X, ShoppingCart, Heart, Star } from 'lucide-react';
+import { X, ShoppingCart, Heart, Star } from '@phosphor-icons/react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Search, X, Loader2 } from 'lucide-react';
+import { MagnifyingGlass as Search, X, SpinnerGap as Loader2 } from "@phosphor-icons/react";
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../context/ProductContext';
 import './SearchBar.css';

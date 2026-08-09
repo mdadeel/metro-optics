@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { CaretLeft as ChevronLeft, CaretRight as ChevronRight } from "@phosphor-icons/react";
 import './Pagination.css';
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
