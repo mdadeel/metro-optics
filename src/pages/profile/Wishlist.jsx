@@ -1,6 +1,6 @@
 import { useWishlist } from '../../context/WishlistContext';
 import { useCart } from '../../context/CartContext';
-import { Heart, ShoppingCart, Trash2 } from 'lucide-react';
+import { Heart, ShoppingCart, Trash as Trash2 } from "@phosphor-icons/react";
 import './Wishlist.css'; // Import the new CSS file
 
 const Wishlist = () => {

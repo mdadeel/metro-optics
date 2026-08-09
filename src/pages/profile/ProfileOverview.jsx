@@ -1,7 +1,7 @@
 import { useAuth } from '../../context/AuthContext';
 import { useOrders } from '../../context/OrderContext';
 import { useWishlist } from '../../context/WishlistContext';
-import { Package, Heart, TrendingUp, MapPin, Edit2, ArrowRight, HelpCircle, Clock, CheckCircle } from 'lucide-react';
+import { Package, Heart, TrendUp as TrendingUp, MapPin, PencilSimple as Edit2, ArrowRight, Question as HelpCircle, Clock, CheckCircle } from "@phosphor-icons/react";
 import { Link } from 'react-router-dom';
 import './ProfilePages.css';
 

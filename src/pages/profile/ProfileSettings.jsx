@@ -4,7 +4,7 @@ import { updateProfile, updatePassword } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { toast } from 'sonner';
-import { User, Mail, Phone, Lock, Bell, Shield, Eye, EyeOff } from 'lucide-react';
+import { User, Envelope as Mail, Phone, Lock, Bell, Shield, Eye, EyeSlash as EyeOff } from "@phosphor-icons/react";
 import './ProfilePages.css';
 import './ProfileSettings.css';
 

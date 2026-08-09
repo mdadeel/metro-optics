@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useOrders } from '../../context/OrderContext';
 import { Link } from 'react-router-dom';
-import { Package, Search, Filter, Eye, Download, RotateCcw } from 'lucide-react';
+import { Package, MagnifyingGlass as Search, Funnel as Filter, Eye, Download, ArrowCounterClockwise as RotateCcw } from "@phosphor-icons/react";
 import './OrderHistory.css'; // Import the new CSS file
 
 const OrderHistory = () => {
@@ -64,7 +64,7 @@ const OrderHistory = () => {
                 </div>
             </div>
 
-            {/* Orders List */}
+            {/* Orders Menu */}
             {sortedOrders.length > 0 ? (
                 <div className="orders-list">
                     {sortedOrders.map((order) => (
