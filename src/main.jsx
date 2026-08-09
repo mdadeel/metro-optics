@@ -6,6 +6,7 @@ import App from './App.jsx'
 import './index.css'
 import './styles/accessibility.css'
 import './styles/tailwind.css'
+import { ThemeProvider } from './components/ThemeProvider'
 import { SiteSettingsProvider } from './context/SiteSettingsContext'
 import { ProductProvider } from './context/ProductContext'
 import { CartProvider } from './context/CartContext'
@@ -17,19 +18,21 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <HelmetProvider>
       <BrowserRouter>
-        <AuthProvider>
-          <SiteSettingsProvider>
-            <ProductProvider>
-              <CartProvider>
-                <WishlistProvider>
-                  <OrderProvider>
-                    <App />
-                  </OrderProvider>
-                </WishlistProvider>
-              </CartProvider>
-            </ProductProvider>
-          </SiteSettingsProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <SiteSettingsProvider>
+              <ProductProvider>
+                <CartProvider>
+                  <WishlistProvider>
+                    <OrderProvider>
+                      <App />
+                    </OrderProvider>
+                  </WishlistProvider>
+                </CartProvider>
+              </ProductProvider>
+            </SiteSettingsProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </BrowserRouter>
     </HelmetProvider>
   </React.StrictMode>,

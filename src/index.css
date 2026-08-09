@@ -13,15 +13,7 @@
 /* 4. Utility Classes */
 @import './styles/utilities.css';
 
-/* 4. Component Styles */
-@import './styles/components/button.css';
-@import './styles/components/navbar.css';
-@import './styles/components/product-card.css';
-@import './styles/components/hero-section.css';
-@import './styles/components/footer.css';
-@import './styles/components/featured-categories.css';
-@import './styles/components/featured-products.css';
-@import './styles/components/why-choose-us.css';
+/* 4. Component Styles — migrated to Tailwind utility classes in JSX */
 @import './styles/components/product-quick-view.css';
 @import './styles/components/cart-drawer.css';
 @import './components/StatCard.css';
@@ -38,7 +30,10 @@
 @import './styles/pages/order-tracking.css';
 @import './styles/pages/invoice.css';
 
-/* 6. Admin Styles */
+/* 6. Dark Mode Overrides */
+@import './styles/dark-mode.css';
+
+/* 7. Admin Styles */
 @import './styles/admin/wordpress.css';
 @import './styles/admin/dashboard.css';
 @import './styles/admin/layout.css';

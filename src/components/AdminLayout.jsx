@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import { Link, useLocation, Outlet } from 'react-router-dom';
-import {
-    LayoutDashboard, Package, ShoppingBag, CreditCard, FileText,
-    Users, Settings, BarChart3, Menu, X, Bell, ChevronDown, LogOut
-} from 'lucide-react';
+import { Layout as LayoutDashboard, Package, ShoppingBag, CreditCard, FileText, Users, GearSix as Settings, ChartBar as BarChart3, List as Menu, X, Bell, CaretDown as ChevronDown, SignOut as LogOut } from "@phosphor-icons/react";
 
-const AdminLayout = () => {
+const AdminLayoutDashboard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const location = useLocation();
@@ -100,4 +97,4 @@ const AdminLayout = () => {
     );
 };
 
-export default AdminLayout;
+export default AdminLayoutDashboard;

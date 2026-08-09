@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
-import { X, Minus, Plus, ShoppingBag, ArrowRight, Trash2 } from 'lucide-react';
+import { X, Minus, Plus, ShoppingBag, ArrowRight, Trash as Trash2 } from "@phosphor-icons/react";
 
 const CartDrawer = () => {
     const { cart, isCartOpen, closeCart, updateQuantity, removeFromCart, getCartTotal } = useCart();
