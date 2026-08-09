@@ -221,7 +221,7 @@ const PrescriptionForm = ({ onValidationChange, initialData = null }) => {
                 </div>
                 {user && (
                     <Button variant="outline" onClick={saveToProfile} disabled={loading}>
-                        {loading ? "Saving..." : "Save to Profile"}
+                        {loading ? "Saving..." : "FloppyDisk to Profile"}
                     </Button>
                 )}
             </div>

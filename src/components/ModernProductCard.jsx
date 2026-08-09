@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Heart, Eye, ShoppingCart } from 'lucide-react'
+import { Heart, Eye, ShoppingCart } from '@phosphor-icons/react'
 import { useCartStore } from '../../store/cartStore'
 import { useWishlistStore } from '../../store/wishlistStore'
 import { ModernButton, ModernBadge, LoadingSkeleton } from '../components/ui'

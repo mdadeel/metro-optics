@@ -126,7 +126,7 @@ export const ChartLoading = () => {
   )
 }
 
-// Search Loading Component
+// MagnifyingGlass Loading Component
 export const SearchLoading = () => {
   return (
     <div className="flex items-center gap-2 text-gray-500">
