@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Clock, Send, AlertCircle, Loader2 } from 'lucide-react';
+import { Envelope as Mail, Phone, MapPin, Clock, PaperPlaneTilt as Send, WarningCircle as AlertCircle, SpinnerGap as Loader2 } from "@phosphor-icons/react";
 import { useState } from 'react';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import SEO from '../components/SEO';

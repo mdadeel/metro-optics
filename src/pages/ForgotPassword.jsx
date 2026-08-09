@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, ArrowLeft, Loader2, CheckCircle } from 'lucide-react';
+import { Envelope as Mail, ArrowLeft, SpinnerGap as Loader2, CheckCircle } from "@phosphor-icons/react";
 import { useAuth } from '../context/AuthContext';
 import './AuthPages.css';
 

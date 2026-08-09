@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
 import { useProducts } from '../../context/ProductContext';
-import { Save, Plus, Trash2, Edit2, X, Image as ImageIcon, FileText, Layers, Upload } from 'lucide-react';
+import { FloppyDisk as Save, Plus, Trash as Trash2, PencilSimple as Edit2, X, Image as ImageIcon, FileText, Stack as Layers, Upload } from "@phosphor-icons/react";
 import { useToast } from '../../hooks/useToast';
 import './AdminCMSFunctional.css';
 
@@ -19,7 +19,7 @@ const AdminCMSFunctional = () => {
     const [pageForm, setPageForm] = useState({ title: '', content: '' });
 
     const initialProductState = {
-        name: '', price: '', category: 'Eyeglasses', image: '', stock: 10, brand: ''
+        name: '', price: '', category: 'Glasses', image: '', stock: 10, brand: ''
     };
     const [productForm, setProductForm] = useState(initialProductState);
 
@@ -323,7 +323,7 @@ const AdminCMSFunctional = () => {
                                     value={productForm.category}
                                     onChange={e => setProductForm({ ...productForm, category: e.target.value })}
                                 >
-                                    <option value="Eyeglasses">Eyeglasses</option>
+                                    <option value="Glasses">Glasses</option>
                                     <option value="Sunglasses">Sunglasses</option>
                                     <option value="Contact Lenses">Contact Lenses</option>
                                     <option value="Accessories">Accessories</option>

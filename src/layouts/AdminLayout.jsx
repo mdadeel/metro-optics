@@ -1,9 +1,9 @@
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, ShoppingBag, CreditCard, Settings, LogOut, Home } from 'lucide-react';
+import { Layout as LayoutDashboard, ShoppingBag, CreditCard, GearSix as Settings, SignOut as LogOut, House as Home } from "@phosphor-icons/react";
 import { useEffect } from 'react';
 
-const AdminLayout = () => {
+const AdminLayoutDashboard = () => {
     const { isAdmin, logout } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -66,4 +66,4 @@ const AdminLayout = () => {
     );
 };
 
-export default AdminLayout;
+export default AdminLayoutDashboard;

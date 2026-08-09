@@ -1,9 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useOrders } from '../../context/OrderContext';
-import {
-    Users, Search, Mail, Phone, ShoppingBag, DollarSign,
-    Calendar, TrendingUp, Eye, X
-} from 'lucide-react';
+import { Users, MagnifyingGlass as Search, Envelope as Mail, Phone, ShoppingBag, CurrencyDollar as DollarSign, Calendar, TrendUp as TrendingUp, Eye, X } from "@phosphor-icons/react";
 import usePagination from '../../hooks/usePagination';
 import Pagination from '../../components/Pagination';
 import { useToast } from '../../hooks/useToast';

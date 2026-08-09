@@ -16,7 +16,7 @@ export const useUIStore = create(
         openMobileMenu: () => set({ isMobileMenuOpen: true }),
         closeMobileMenu: () => set({ isMobileMenuOpen: false }),
         
-        // Search state
+        // MagnifyingGlass state
         searchQuery: '',
         setSearchQuery: (query) => set({ searchQuery: query }),
         

@@ -4,7 +4,7 @@ import { db } from '@/config/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Trash2, Eye, FileText } from 'lucide-react';
+import { Trash as Trash2, Eye, FileText } from "@phosphor-icons/react";
 import { toast } from 'sonner';
 import PrescriptionForm from '@/components/PrescriptionForm';
 
@@ -38,11 +38,11 @@ const Prescriptions = () => {
         if (!confirm("Are you sure you want to delete this prescription?")) return;
         
         try {
-            const updatedList = prescriptions.filter(p => p.id !== id);
+            const updatedMenu = prescriptions.filter(p => p.id !== id);
             await updateDoc(doc(db, 'users', user.uid), {
-                prescriptions: updatedList
+                prescriptions: updatedMenu
             });
-            setPrescriptions(updatedList);
+            setPrescriptions(updatedMenu);
             toast.success("Prescription deleted");
         } catch (deleteError) {
             console.error("Error deleting prescription:", deleteError);

@@ -1,9 +1,7 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
-import {
-    User, Package, MapPin, Heart, Settings, LogOut, Menu, X, FileText
-} from 'lucide-react';
+import { User, Package, MapPin, Heart, Gear, SignOut as LogOut, List as Menu, X, FileText } from "@phosphor-icons/react";
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useState } from 'react';
@@ -29,7 +27,7 @@ const ProfileLayout = () => {
         { icon: Heart, label: 'Wishlist', path: '/profile/wishlist' },
         { icon: MapPin, label: 'Address Book', path: '/profile/addresses' },
         { icon: FileText, label: 'Prescriptions', path: '/profile/prescriptions' },
-        { icon: Settings, label: 'Settings', path: '/profile/settings' },
+        { icon: Gear, label: 'Settings', path: '/profile/settings' },
     ];
 
     const getInitials = (name) => {

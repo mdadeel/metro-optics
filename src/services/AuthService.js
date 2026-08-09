@@ -1,4 +1,4 @@
-import { auth } from '../config/firebase'
+import { auth, hasFirebaseConfig } from '../config/firebase'
 import { 
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -17,10 +17,16 @@ export class AuthService {
   constructor() {
     this.auth = auth
     this.repository = userRepository
+    this.configured = hasFirebaseConfig
   }
   
-  // Initialize auth state listener
+  // Initialize auth state listener — gracefully handle missing Firebase
   initializeAuth() {
+    if (!this.configured || !this.auth) {
+      useAuthStore.getState().setLoading(false)
+      return () => {} // Return noop unsubscribe
+    }
+
     const unsubscribe = onAuthStateChanged(this.auth, async (user) => {
       useAuthStore.getState().setUser(user)
       

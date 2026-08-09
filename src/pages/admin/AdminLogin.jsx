@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Mail, Lock, Eye, EyeOff, Loader2, ShieldCheck, ArrowLeft } from 'lucide-react';
+import { Envelope as Mail, Lock, Eye, EyeSlash as EyeOff, SpinnerGap as Loader2, ShieldCheck, ArrowLeft } from "@phosphor-icons/react";
 import '../AuthPages.css';
 
 const AdminLogin = () => {

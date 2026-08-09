@@ -2,10 +2,7 @@ import { useMemo } from 'react';
 import { useOrders } from '../../context/OrderContext';
 import { useProducts } from '../../context/ProductContext';
 import { EnhancedLineChart, EnhancedBarChart } from '../../components/EnhancedCharts';
-import {
-    BarChart3, TrendingUp, DollarSign, ShoppingBag, Package,
-    Download, Calendar, Award
-} from 'lucide-react';
+import { ChartBar as BarChart3, TrendUp as TrendingUp, CurrencyDollar as DollarSign, ShoppingBag, Package, Download, Calendar, Medal as Award } from "@phosphor-icons/react";
 import './AdminReportsPage.css';
 
 const AdminReportsPage = () => {

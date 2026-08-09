@@ -2,7 +2,7 @@
 import { ProductRepository } from './ProductRepository'
 import { OrderRepository } from './OrderRepository'
 import { UserRepository } from './UserRepository'
-import { db } from '../config/firebase'
+import { db, hasFirebaseConfig } from '../config/firebase'
 import {
   collection,
   addDoc,
@@ -18,63 +18,82 @@ import {
   onSnapshot
 } from 'firebase/firestore'
 
-// Firestore service wrapper
+// Firestore service wrapper — handles unconfigured Firebase gracefully
 class FirestoreService {
   constructor(db) {
     this.db = db
+    this.configured = hasFirebaseConfig
   }
-  
+
   collection(db, collectionName) {
+    this._guard()
     return collection(db, collectionName)
   }
-  
-  doc(collection, docId) {
-    return doc(collection, docId)
+
+  _guard() {
+    if (!this.configured) {
+      throw new Error('Firebase not configured. Set VITE_FIREBASE_API_KEY and VITE_FIREBASE_PROJECT_ID in .env')
+    }
   }
-  
+
   async addDoc(collection, data) {
+    this._guard()
     return addDoc(collection, data)
   }
-  
-  async updateDoc(doc, data) {
-    return updateDoc(doc, data)
+
+  async updateDoc(docRef, data) {
+    this._guard()
+    return updateDoc(docRef, data)
   }
-  
-  async deleteDoc(doc) {
-    return deleteDoc(doc)
+
+  async deleteDoc(docRef) {
+    this._guard()
+    return deleteDoc(docRef)
   }
-  
-  async getDoc(doc) {
-    return getDoc(doc)
+
+  async getDoc(docRef) {
+    this._guard()
+    return getDoc(docRef)
   }
-  
-  async getDocs(query) {
-    return getDocs(query)
+
+  async getDocs(queryRef) {
+    this._guard()
+    return getDocs(queryRef)
   }
-  
-  query(collection, ...constraints) {
-    return query(collection, ...constraints)
-  }
-  
+
   orderBy(field, direction = 'asc') {
+    this._guard()
     return orderBy(field, direction)
   }
-  
-  where(field, operator, value) {
-    return where(field, operator, value)
+
+  where(field, op, value) {
+    this._guard()
+    return where(field, op, value)
   }
-  
+
+  doc(collectionRef, docId) {
+    this._guard()
+    return doc(collectionRef, docId)
+  }
+
+  query(queryRef, ...constraints) {
+    this._guard()
+    return query(queryRef, ...constraints)
+  }
+
   limit(count) {
+    this._guard()
     return limit(count)
   }
-  
-  onSnapshot(query, callback, errorCallback) {
-    return onSnapshot(query, callback, errorCallback)
+
+  onSnapshot(queryRef, callback, errorCallback) {
+    this._guard()
+    return onSnapshot(queryRef, callback, errorCallback)
   }
 }
 
 // Create firestore service instance
-const firestoreService = new FirestoreService(db)
+export const firestoreService = new FirestoreService(db)
 
 // Initialize repositories
 export const productRepository = new ProductRepository(firestoreService)

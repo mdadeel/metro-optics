@@ -4,7 +4,7 @@ import ProductCard from '../components/ProductCard';
 import ProductQuickView from '../components/ProductQuickView';
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
-import { Filter, X, Search, ChevronDown, Home, SlidersHorizontal } from 'lucide-react';
+import { Funnel as Filter, X, MagnifyingGlass as Search, CaretDown as ChevronDown, House as Home, SlidersHorizontal } from "@phosphor-icons/react";
 
 const Shop = () => {
     const { products } = useProducts();

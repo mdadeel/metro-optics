@@ -3,10 +3,7 @@ import { useOrders } from '../../context/OrderContext';
 import { useProducts } from '../../context/ProductContext';
 import StatCard from '../../components/StatCard';
 import { EnhancedLineChart, EnhancedBarChart } from '../../components/EnhancedCharts';
-import {
-    DollarSign, Package, ShoppingCart, TrendingUp,
-    Clock, AlertTriangle, Award, ArrowUpRight
-} from 'lucide-react';
+import { CurrencyDollar as DollarSign, Package, ShoppingCart, TrendUp as TrendingUp, Clock, WarningOctagon as AlertTriangle, Medal as Award, ArrowUpRight } from "@phosphor-icons/react";
 import './EnhancedDashboard.css';
 
 const EnhancedDashboard = () => {

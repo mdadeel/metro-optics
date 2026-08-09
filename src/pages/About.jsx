@@ -1,4 +1,4 @@
-import { Award, Truck, Shield, Users, Eye, Heart } from 'lucide-react';
+import { Medal as Award, Truck, Shield, Users, Eye, Heart } from "@phosphor-icons/react";
 import { useSiteSettings } from '../context/SiteSettingsContext';
 
 const About = () => {

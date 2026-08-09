@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ArrowLeft, Tag, TrendingUp } from 'lucide-react';
+import { Trash as Trash2, Plus, Minus, ShoppingBag, ArrowRight, ArrowLeft, Tag, TrendUp as TrendingUp } from "@phosphor-icons/react";
 import './CartPage.css';
 
 const Cart = () => {

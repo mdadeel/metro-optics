@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../config/firebase';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
-import { MapPin, Plus, Edit2, Trash2, Check, X } from 'lucide-react';
+import { MapPin, Plus, PencilSimple as Edit2, Trash as Trash2, Check, X } from "@phosphor-icons/react";
 import { toast } from 'sonner';
 import { sanitizeObject } from '../../lib/sanitize';
 import './AddressBook.css';
@@ -90,11 +90,11 @@ const AddressBook = () => {
     const handleDelete = async (id) => {
         if (!confirm("Delete this address?")) return;
         try {
-            const updatedList = addresses.filter(a => a.id !== id);
+            const updatedMenu = addresses.filter(a => a.id !== id);
             await updateDoc(doc(db, 'users', user.uid), {
-                addresses: updatedList
+                addresses: updatedMenu
             });
-            setAddresses(updatedList);
+            setAddresses(updatedMenu);
             toast.success("Address deleted");
         } catch (deleteError) {
             console.error("Error deleting address:", deleteError);

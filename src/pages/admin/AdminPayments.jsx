@@ -1,4 +1,4 @@
-import { CreditCard, DollarSign, TrendingUp } from 'lucide-react';
+import { CreditCard, CurrencyDollar as DollarSign, TrendUp as TrendingUp } from "@phosphor-icons/react";
 
 const AdminPayments = () => {
     return (

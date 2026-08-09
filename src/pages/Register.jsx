@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Mail, Lock, Eye, EyeOff, Loader2, User, Check, X, ArrowLeft, AlertCircle } from 'lucide-react';
+import { Envelope as Mail, Lock, Eye, EyeSlash as EyeOff, SpinnerGap as Loader2, User, Check, X, ArrowLeft, WarningCircle as AlertCircle } from "@phosphor-icons/react";
 import SEO from '../components/SEO';
 import './AuthPages.css';
 
@@ -126,7 +126,7 @@ const Register = () => {
         }
     };
 
-    const handleGoogleSignIn = async () => {
+    const handleGoogleLogIn = async () => {
         setError('');
         setIsGoogleLoading(true);
         try {
@@ -366,7 +366,7 @@ const Register = () => {
                             <button
                                 type="button"
                                 className="social-btn"
-                                onClick={handleGoogleSignIn}
+                                onClick={handleGoogleLogIn}
                                 disabled={isLoading || isGoogleLoading}
                             >
                                 {isGoogleLoading ? (

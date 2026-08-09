@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect, useCallback } from 'react';
 // Context files commonly export both hook and provider component
 // eslint-disable-next-line react-refresh/only-export-components
 import {
@@ -12,20 +12,27 @@ import {
     updateProfile
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../config/firebase';
+import { auth, db, hasFirebaseConfig } from '../config/firebase';
 import { toast } from 'sonner';
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
+const FIREBASE_NOT_CONFIGURED_MSG = 'Authentication is not available. Please configure Firebase.';
+
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isAdmin, setIsAdmin] = useState(false);
 
-    // Listen to auth state changes
+    // Listen to auth state changes — gracefully handle missing Firebase config
     useEffect(() => {
+        if (!hasFirebaseConfig || !auth) {
+            setLoading(false);
+            return;
+        }
+
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
 
@@ -50,7 +57,11 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     // Register new user
-    const register = async (email, password, displayName) => {
+    const register = useCallback(async (email, password, displayName) => {
+        if (!hasFirebaseConfig) {
+            toast.error(FIREBASE_NOT_CONFIGURED_MSG);
+            return;
+        }
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
@@ -80,10 +91,14 @@ export const AuthProvider = ({ children }) => {
             });
             throw error;
         }
-    };
+    }, []);
 
     // Login user
-    const login = async (email, password) => {
+    const login = useCallback(async (email, password) => {
+        if (!hasFirebaseConfig) {
+            toast.error(FIREBASE_NOT_CONFIGURED_MSG);
+            return;
+        }
         try {
             const result = await signInWithEmailAndPassword(auth, email, password);
             toast.success('Welcome back!', {
@@ -98,10 +113,13 @@ export const AuthProvider = ({ children }) => {
             });
             throw error;
         }
-    };
+    }, []);
 
     // Logout user
-    const logout = async () => {
+    const logout = useCallback(async () => {
+        if (!hasFirebaseConfig) {
+            return;
+        }
         try {
             await signOut(auth);
             toast.success('Logged out', {
@@ -115,10 +133,14 @@ export const AuthProvider = ({ children }) => {
             });
             throw error;
         }
-    };
+    }, []);
 
     // Google Sign In
-    const signInWithGoogle = async () => {
+    const signInWithGoogle = useCallback(async () => {
+        if (!hasFirebaseConfig) {
+            toast.error(FIREBASE_NOT_CONFIGURED_MSG);
+            return;
+        }
         try {
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(auth, provider);
@@ -151,10 +173,14 @@ export const AuthProvider = ({ children }) => {
             });
             throw error;
         }
-    };
+    }, []);
 
     // Password Reset
-    const resetPassword = async (email) => {
+    const resetPassword = useCallback(async (email) => {
+        if (!hasFirebaseConfig) {
+            toast.error(FIREBASE_NOT_CONFIGURED_MSG);
+            return;
+        }
         try {
             await sendPasswordResetEmail(auth, email);
             toast.success('Password reset email sent!', {
@@ -168,7 +194,7 @@ export const AuthProvider = ({ children }) => {
             });
             throw error;
         }
-    };
+    }, []);
 
     const value = {
         user,

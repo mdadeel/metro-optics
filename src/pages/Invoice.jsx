@@ -1,7 +1,7 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { useOrders } from '../context/OrderContext';
 import { useAuth } from '../context/AuthContext';
-import { Printer, CheckCircle, ArrowLeft, Glasses, ShieldAlert } from 'lucide-react';
+import { Printer, CheckCircle, ArrowLeft, Eyeglasses as Glasses, ShieldWarning as ShieldAlert } from "@phosphor-icons/react";
 import '../styles/pages/invoice.css';
 
 const Invoice = () => {

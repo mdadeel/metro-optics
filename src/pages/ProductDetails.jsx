@@ -4,11 +4,7 @@ import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useSiteSettings } from '../context/SiteSettingsContext';
-import {
-    ShoppingCart, Heart, Share2, ChevronLeft, ChevronRight,
-    Star, Check, Truck, Shield, Package, ChevronDown,
-    User, Calendar, ThumbsUp, Glasses, Sparkles, FileText
-} from 'lucide-react';
+import { ShoppingCart, Heart, Share as Share2, CaretLeft as ChevronLeft, CaretRight as ChevronRight, Star, Check, Truck, Shield, Package, CaretDown as ChevronDown, User, Calendar, ThumbsUp, Eyeglasses as Glasses, Sparkle as Sparkles, FileText } from "@phosphor-icons/react";
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -251,7 +247,7 @@ const ProductDetails = () => {
                     )}
 
                     {/* Lens Selection - Visual Grid */}
-                    {product.category === 'Eyeglasses' && (
+                    {product.category === 'Glasses' && (
                         <div className="lens-selection-section">
                             <label className="variant-label">Select Lens Type</label>
                             <div className="lens-selector-grid">

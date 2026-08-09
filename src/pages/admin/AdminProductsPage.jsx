@@ -1,9 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useProducts } from '../../context/ProductContext';
-import {
-    Package, Plus, Search, Edit2, Trash2, Eye, AlertCircle,
-    Filter, Download, Upload, X, ChevronDown
-} from 'lucide-react';
+import { Package, Plus, MagnifyingGlass as Search, PencilSimple as Edit2, Trash as Trash2, Eye, WarningCircle as AlertCircle, Funnel as Filter, Download, Upload, X, CaretDown as ChevronDown } from "@phosphor-icons/react";
 import usePagination from '../../hooks/usePagination';
 import Pagination from '../../components/Pagination';
 import { useToast } from '../../hooks/useToast';
@@ -380,7 +377,7 @@ const AdminProductsPage = () => {
                                         required
                                         value={formData.category}
                                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                        placeholder="e.g., Eyeglasses"
+                                        placeholder="e.g., Glasses"
                                         disabled={isLoading}
                                     />
                                 </div>

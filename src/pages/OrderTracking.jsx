@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useOrders } from '../context/OrderContext';
-import { Search, Package, Truck, CheckCircle, Clock } from 'lucide-react';
+import { MagnifyingGlass as Search, Package, Truck, CheckCircle, Clock } from "@phosphor-icons/react";
 
 const OrderTracking = () => {
     const [orderId, setOrderId] = useState('');

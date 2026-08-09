@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { useProductsStore, useUIStore } from '../../store'
 import { productService } from '../../services'
 import { ModernProductCard, ModernButton, ModernCard, ModernInput } from '../components/ui'
-import { Filter, Search, X, SlidersHorizontal, Grid3X3, List } from 'lucide-react'
+import { Funnel as Filter, MagnifyingGlass as Search, X, SlidersHorizontal, GridFour as Grid3X3, List as Menu } from "@phosphor-icons/react"
 import { cn } from '../../lib/utils'
 
 const Shop = () => {
@@ -152,7 +152,7 @@ const Shop = () => {
                       : 'text-gray-400 hover:text-gray-600'
                   )}
                 >
-                  <List size={16} />
+                  <Menu size={16} />
                 </button>
               </div>
 

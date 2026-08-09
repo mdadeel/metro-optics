@@ -1,9 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import {
-    Package, Users, BarChart3, Settings, Edit3, Image,
-    FileText, ShoppingBag, TrendingUp, DollarSign, Plus,
-    ArrowRight, Database, Layers
-} from 'lucide-react';
+import { Package, Users, ChartBar as BarChart3, GearSix as Settings, Edit3, Image, FileText, ShoppingBag, TrendUp as TrendingUp, CurrencyDollar as DollarSign, Plus, ArrowRight, Database, Stack as Layers } from "@phosphor-icons/react";
 import './AdminCMSRedesigned.css';
 
 const AdminCMSRedesigned = () => {

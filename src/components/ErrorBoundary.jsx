@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { Warning, ArrowsClockwise, House as Home } from "@phosphor-icons/react";
 import './ErrorBoundary.css';
 
 class ErrorBoundary extends Component {
@@ -28,7 +28,7 @@ class ErrorBoundary extends Component {
     logErrorToService = (error, errorInfo) => {
         // Example integration with error tracking
         try {
-            // Sentry.captureException(error, { contexts: { react: { componentStack: errorInfo.componentStack } } });
+            // Sentry.captureException(error, { contexts: { react: { componentLayers: errorInfo.componentLayers } } });
             // or
             // LogRocket.captureException(error, { extra: errorInfo });
             console.log('Error would be sent to tracking service:', error, errorInfo);
@@ -73,7 +73,7 @@ class ErrorBoundary extends Component {
             return (
                 <div className="error-boundary">
                     <div className="error-content">
-                        <AlertTriangle className="error-icon" size={64} />
+                        <Warning className="error-icon" size={64} />
                         <h1>Oops! Something went wrong</h1>
                         <p>
                             We're sorry for the inconvenience. The error has been logged and we'll fix it as soon as possible.
@@ -86,7 +86,7 @@ class ErrorBoundary extends Component {
                                 <summary>Error Details (Dev Only)</summary>
                                 <pre>
                                     {this.state.error.toString()}
-                                    {this.state.errorInfo?.componentStack}
+                                    {this.state.errorInfo?.componentLayers}
                                 </pre>
                             </details>
                         )}
@@ -96,7 +96,7 @@ class ErrorBoundary extends Component {
                                 className="error-button secondary"
                                 onClick={this.handleRetry}
                             >
-                                <RefreshCw size={16} />
+                                <ArrowsClockwise size={16} />
                                 Try Again
                             </button>
                             <button

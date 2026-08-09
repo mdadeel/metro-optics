@@ -3,7 +3,7 @@ import { useCart } from '../context/CartContext';
 import { useOrders } from '../context/OrderContext';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Check, Copy, Truck, CreditCard, ShoppingBag, ArrowLeft, ArrowRight, Phone, Mail, MapPin, User, Banknote, Smartphone, AlertCircle } from 'lucide-react';
+import { Check, Copy, Truck, CreditCard, ShoppingBag, ArrowLeft, ArrowRight, Phone, Envelope as Mail, MapPin, User, Money as Banknote, DeviceMobile as Smartphone, WarningCircle as AlertCircle } from "@phosphor-icons/react";
 import { sanitizeString, sanitizePhone, sanitizeEmail, sanitizeTransactionId } from '../lib/sanitize';
 import { toast } from 'sonner';
 import SEO from '../components/SEO';
@@ -53,7 +53,7 @@ const Checkout = () => {
         },
         address: (value) => {
             if (!value.trim()) return 'Delivery address is required';
-            if (value.trim().length < 10) return 'Please enter a complete address (House, Road, Area)';
+            if (value.trim().length < 10) return 'Please enter a complete address (Home, Road, Area)';
             return '';
         },
         bkashNumber: (value) => {
@@ -342,7 +342,7 @@ const Checkout = () => {
                                         onChange={e => handleChange('address', e.target.value)}
                                         onBlur={e => handleBlur('address', e.target.value)}
                                         className={`checkout-textarea ${touched.address && fieldErrors.address ? 'input-error' : ''}`}
-                                        placeholder="House/Flat, Road, Area, City"
+                                        placeholder="Home/Flat, Road, Area, City"
                                         aria-invalid={touched.address && fieldErrors.address ? 'true' : 'false'}
                                         aria-describedby={fieldErrors.address ? 'address-error' : undefined}
                                     />
@@ -401,7 +401,7 @@ const Checkout = () => {
                                         <div className="checkout-bkash-details">
                                             <div className="checkout-bkash-number">
                                                 <div>
-                                                    <span className="checkout-bkash-label">Send Money to:</span>
+                                                    <span className="checkout-bkash-label">Send Banknote to:</span>
                                                     <p className="checkout-bkash-value">{BKASH_NUMBER}</p>
                                                 </div>
                                                 <button

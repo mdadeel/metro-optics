@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useOrders } from '../../context/OrderContext';
-import { Search, Download, Eye, Check, X } from 'lucide-react';
+import { MagnifyingGlass as Search, Download, Eye, Check, X } from "@phosphor-icons/react";
 
 const AdminOrders = () => {
     const { orders, updateOrderStatus } = useOrders();

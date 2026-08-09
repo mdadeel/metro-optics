@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { CaretDown as ChevronDown } from "@phosphor-icons/react";
 
 const FAQ = () => {
     const [openIndex, setOpenIndex] = useState(null);
@@ -121,7 +121,7 @@ const FAQ = () => {
         }
     ];
 
-    const toggleQuestion = (categoryIndex, questionIndex) => {
+    const toggleHelpCircle = (categoryIndex, questionIndex) => {
         const key = `${categoryIndex}-${questionIndex}`;
         setOpenIndex(openIndex === key ? null : key);
     };
@@ -130,7 +130,7 @@ const FAQ = () => {
         <div className="faq-page">
             <div className="faq-container">
                 <div className="faq-header">
-                    <h1 className="faq-title">Frequently Asked Questions</h1>
+                    <h1 className="faq-title">Frequently Asked HelpCircles</h1>
                     <p className="faq-subtitle">
                         Find answers to common questions about ordering, prescriptions, shipping, and more
                     </p>
@@ -151,11 +151,11 @@ const FAQ = () => {
                                         <div key={questionIndex} className="faq-item">
                                             <button
                                                 id={buttonId}
-                                                onClick={() => toggleQuestion(categoryIndex, questionIndex)}
+                                                onClick={() => toggleHelpCircle(categoryIndex, questionIndex)}
                                                 onKeyDown={(e) => {
                                                     if (e.key === 'Enter' || e.key === ' ') {
                                                         e.preventDefault();
-                                                        toggleQuestion(categoryIndex, questionIndex);
+                                                        toggleHelpCircle(categoryIndex, questionIndex);
                                                     }
                                                 }}
                                                 className="faq-question"

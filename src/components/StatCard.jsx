@@ -1,4 +1,4 @@
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import { TrendUp as TrendingUp, TrendDown as TrendingDown } from "@phosphor-icons/react";
 import '../styles/components/StatCard.css'; // Ensure correct import path
 
 const StatCard = ({

@@ -1,7 +1,7 @@
 // Firebase Configuration for Metro Optics
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getAuth, connectAuthEmulator } from 'firebase/auth';
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 // Firebase project configuration - uses environment variables for security
@@ -15,12 +15,41 @@ const firebaseConfig = {
     measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Check if Firebase is configured with required env vars
+const hasFirebaseConfig = Boolean(firebaseConfig.apiKey) && Boolean(firebaseConfig.projectId);
 
-// Initialize services
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
+let app = null;
+let auth = null;
+let db = null;
+let storage = null;
 
+if (hasFirebaseConfig) {
+    try {
+        // Initialize Firebase
+        app = initializeApp(firebaseConfig);
+
+        // Initialize services
+        auth = getAuth(app);
+        db = getFirestore(app);
+        storage = getStorage(app);
+
+        console.log('Firebase initialized successfully with project:', firebaseConfig.projectId);
+    } catch (error) {
+        console.warn('Firebase initialization failed:', error.message);
+        // Reset to null on failure
+        app = null;
+        auth = null;
+        db = null;
+        storage = null;
+    }
+} else {
+    console.warn(
+        '%c Firebase not configured. ' +
+        'Set VITE_FIREBASE_API_KEY and VITE_FIREBASE_PROJECT_ID in your .env file. ' +
+        'See .env.example for all required variables.',
+        'background: #eab308; color: black; font-weight: bold; padding: 4px 8px; border-radius: 4px;'
+    );
+}
+
+export { auth, db, storage, hasFirebaseConfig };
 export default app;

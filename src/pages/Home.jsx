@@ -4,6 +4,7 @@ import FeaturedProducts from '../components/FeaturedProducts';
 import WhyChooseUs from '../components/WhyChooseUs';
 import ProductQuickView from '../components/ProductQuickView';
 import SEO from '../components/SEO';
+import { Reveal } from '../components/RevealAnimation';
 import { useState } from 'react';
 
 const Home = () => {
@@ -29,14 +30,17 @@ const Home = () => {
             {/* Hero Banner */}
             <HeroSection />
 
-            {/* Featured Categories */}
-            <FeaturedCategories />
+            <Reveal>
+                <FeaturedCategories />
+            </Reveal>
 
-            {/* Featured Products */}
-            <FeaturedProducts onQuickView={handleQuickView} />
+            <Reveal delay={0.1}>
+                <FeaturedProducts onQuickView={handleQuickView} />
+            </Reveal>
 
-            {/* Why Choose Us */}
-            <WhyChooseUs />
+            <Reveal delay={0.2}>
+                <WhyChooseUs />
+            </Reveal>
 
             {/* Quick View Modal */}
             <ProductQuickView

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
 import { useToast } from '../../hooks/useToast';
-import { Settings, Save, Globe, Mail, Phone, MapPin, Clock, DollarSign, Package, Database } from 'lucide-react';
+import { GearSix as Settings, FloppyDisk as Save, Globe, Envelope as Mail, Phone, MapPin, Clock, CurrencyDollar as DollarSign, Package, Database } from "@phosphor-icons/react";
 import { db } from '../../config/firebase';
 import { collection, getDocs, writeBatch, doc } from 'firebase/firestore';
 import initialProducts from '../../data/products';
