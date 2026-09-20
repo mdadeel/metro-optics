@@ -1,154 +1,131 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { Envelope as Mail, Lock, Eye, EyeSlash as EyeOff, SpinnerGap as Loader2, ShieldCheck, ArrowLeft } from "@phosphor-icons/react";
-import '../AuthPages.css';
+import { useAuthStore } from '../../stores/useAuthStore';
+import { Eye, EyeOff, Lock, Mail, ShieldCheck } from 'lucide-react';
+import { toast } from 'sonner';
 
-const AdminLogin = () => {
-    const navigate = useNavigate();
-    const { login } = useAuth();
+export default function AdminLogin() {
+  const { login, loading: authLoading } = useAuthStore();
+  const navigate = useNavigate();
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setIsLoading(true);
+    try {
+      // Await login which returns { user, role, isAdmin }
+      const result = await login(email, password);
 
-        try {
-            // Simulated delay for premium feel
-            await new Promise(resolve => setTimeout(resolve, 800));
-            await login(formData.email, formData.password);
-            // AuthContext will update isAdmin via useEffect/onAuthStateChanged
-            navigate('/admin');
-        } catch (err) {
-            setError(err.message || 'Authentication failed. Please check your admin credentials.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
+      // Check role from the return value directly
+      if (!result?.isAdmin && result?.role !== 'admin') {
+        toast.error('Access denied. This account does not have admin privileges.');
+        setSubmitting(false);
+        return;
+      }
 
+      toast.success('Welcome, Admin!');
+      navigate('/admin/dashboard', { replace: true });
+    } catch (err) {
+      console.error('Admin login failed:', err);
+      toast.error(err.message || 'Login failed. Check your credentials.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (authLoading) {
     return (
-        <div className="auth-page admin-auth-page">
-            <div className="auth-page-navbar">
-                <Link to="/" className="auth-navbar-home" style={{ color: 'white' }}>
-                    <ArrowLeft size={20} />
-                    <span>Return to Store</span>
-                </Link>
-            </div>
-
-            <div className="auth-container admin-container">
-                <div className="auth-card admin-card">
-                    <div className="auth-header">
-                        <div className="admin-status-badge">
-                            <ShieldCheck size={14} />
-                            <span>System Administrator</span>
-                        </div>
-                        <h1 className="auth-title">Admin Access</h1>
-                        <p className="auth-subtitle">Elevated permissions are required to manage Metro Optics</p>
-                    </div>
-
-                    <form onSubmit={handleSubmit} className="auth-form">
-                        {error && (
-                            <div className="auth-error">
-                                {error}
-                            </div>
-                        )}
-
-                        <div className="form-group">
-                            <label className="admin-label">Admin Email</label>
-                            <div className="input-wrapper">
-                                <Mail className="input-icon" size={18} style={{ color: '#94a3b8' }} />
-                                <input
-                                    type="email"
-                                    required
-                                    autoComplete="email"
-                                    value={formData.email}
-                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    className="input-with-icon admin-input"
-                                    placeholder="admin@metrooptics.com"
-                                    disabled={isLoading}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="form-group">
-                            <label className="admin-label">Security Password</label>
-                            <div className="input-wrapper">
-                                <Lock className="input-icon" size={18} style={{ color: '#94a3b8' }} />
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    required
-                                    autoComplete="current-password"
-                                    value={formData.password}
-                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                    className="input-with-icon admin-input"
-                                    placeholder="••••••••••••"
-                                    disabled={isLoading}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="password-toggle"
-                                    style={{ color: '#94a3b8' }}
-                                    disabled={isLoading}
-                                >
-                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                                </button>
-                            </div>
-                        </div>
-
-                        <button
-                            type="submit"
-                            className="auth-submit-btn premium-btn"
-                            disabled={isLoading}
-                        >
-                            {isLoading ? (
-                                <>
-                                    <Loader2 className="animate-spin" size={20} />
-                                    Authenticating...
-                                </>
-                            ) : (
-                                'Verify Identity'
-                            )}
-                        </button>
-                    </form>
-
-                    <div className="auth-footer" style={{ color: '#64748b', fontSize: '13px' }}>
-                        <p>Unauthorized access attempts are strictly monitored and logged via IP tracking.</p>
-                    </div>
-                </div>
-
-                <div
-                    className="auth-image admin-image"
-                    style={{ backgroundImage: 'url("/admin_security_dashboard_bg_1767673587034.png")' }}
-                >
-                    <div className="auth-image-overlay admin-image-overlay" />
-                    <div className="auth-image-content">
-                        <h2>Precision Control.</h2>
-                        <p>Access the core systems of Metro Optics. Manage inventory, process orders, and oversee customer relations with enterprise-grade stability.</p>
-                        <div className="admin-features-grid">
-                            <div className="admin-stat-item">
-                                <span className="stat-value">CMS</span>
-                                <span className="stat-label">Dynamic Content</span>
-                            </div>
-                            <div className="admin-stat-item">
-                                <span className="stat-value">ERP</span>
-                                <span className="stat-label">Inventory Sync</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+      </div>
     );
-};
+  }
 
-export default AdminLogin;
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 px-4">
+      <div className="w-full max-w-md">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-4">
+            <ShieldCheck className="w-8 h-8 text-primary" />
+          </div>
+          <h1 className="text-2xl font-bold text-white">Admin Portal</h1>
+          <p className="text-gray-400 mt-1">Metro Optics Management</p>
+        </div>
+
+        {/* Form */}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 space-y-6"
+        >
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Email Address
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
+                placeholder="admin@metrooptics.com"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Password
+            </label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full pl-10 pr-12 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
+                placeholder="••••••••"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="w-full py-3 px-4 bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {submitting ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                Verifying...
+              </span>
+            ) : (
+              'Sign In'
+            )}
+          </button>
+
+          <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+            <Link to="/" className="text-primary hover:underline">
+              ← Back to Store
+            </Link>
+          </p>
+        </form>
+      </div>
+    </div>
+  );
+}

@@ -1,13 +1,13 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 // Context files commonly export both hook and provider component
-// eslint-disable-next-line react-refresh/only-export-components
+ 
 import { toast } from 'sonner';
 
 const CartContext = createContext();
 
 export const useCart = () => useContext(CartContext);
 
-// eslint-disable-next-line react-refresh/only-export-components
+ 
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState(() => {
         try {
@@ -28,25 +28,33 @@ export const CartProvider = ({ children }) => {
     const closeCart = () => setIsCartOpen(false);
 
     const addToCart = (product) => {
+        const existing = cart.find(item => item.id === product.id && item.lensType === product.lensType);
+
+        // Update state first — side effects (toasts) stay OUTSIDE the updater so
+        // React StrictMode's double-invoked updaters can't fire them twice.
         setCart(prev => {
-            const existing = prev.find(item => item.id === product.id && item.lensType === product.lensType);
-            if (existing) {
-                toast.success(`Increased quantity of ${product.name}`, {
-                    description: `Now ${existing.quantity + 1} in cart`,
-                    duration: 2000,
-                });
+            const alreadyThere = prev.find(item => item.id === product.id && item.lensType === product.lensType);
+            if (alreadyThere) {
                 return prev.map(item =>
                     item.id === product.id && item.lensType === product.lensType
                         ? { ...item, quantity: item.quantity + 1 }
                         : item
                 );
             }
+            return [...prev, { ...product, quantity: 1 }];
+        });
+
+        if (existing) {
+            toast.success(`Increased quantity of ${product.name}`, {
+                description: `Now ${existing.quantity + 1} in cart`,
+                duration: 2000,
+            });
+        } else {
             toast.success('Added to cart!', {
                 description: product.name,
                 duration: 2000,
             });
-            return [...prev, { ...product, quantity: 1 }];
-        });
+        }
         openCart(); // Open drawer when adding item
     };
 

@@ -1,55 +1,42 @@
-import HeroSection from '../components/HeroSection';
-import FeaturedCategories from '../components/FeaturedCategories';
-import FeaturedProducts from '../components/FeaturedProducts';
-import WhyChooseUs from '../components/WhyChooseUs';
-import ProductQuickView from '../components/ProductQuickView';
-import SEO from '../components/SEO';
-import { Reveal } from '../components/RevealAnimation';
-import { useState } from 'react';
+import HeroBanner from '../components/home/HeroBanner';
+import FeaturedDeals from '../components/home/FeaturedDeals';
+import CategoryGrid from '../components/home/CategoryGrid';
+import NewArrivals from '../components/home/NewArrivals';
+import BrandShowcase from '../components/home/BrandShowcase';
+import WhyChooseUs from '../components/home/WhyChooseUs';
+import BlogPreview from '../components/home/BlogPreview';
+import NewsletterSection from '../components/home/NewsletterSection';
+import ProductQuickView from '../components/product/ProductQuickView';
 
-const Home = () => {
-    const [quickViewProduct, setQuickViewProduct] = useState(null);
-    const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+export default function Home() {
+  return (
+    <div className="max-w-[1320px] mx-auto px-4 py-6 space-y-12">
+      {/* 1. StarTech-style Hero Banner + Right Promos + Category Icon Row */}
+      <HeroBanner />
 
-    const handleQuickView = (product) => {
-        setQuickViewProduct(product);
-        setIsQuickViewOpen(true);
-    };
+      {/* 2. Featured Deals (5-Column StarTech Deals Grid) */}
+      <FeaturedDeals />
 
-    const closeQuickView = () => {
-        setIsQuickViewOpen(false);
-        setTimeout(() => setQuickViewProduct(null), 300);
-    };
+      {/* 3. Shop By Category (2-Row Visual Category Cards) */}
+      <CategoryGrid />
 
-    return (
-        <main role="main" id="main-content">
-            <SEO
-                title="Home"
-                description="Premium eyewear, sunglasses and contact lenses in Bangladesh. Shop the latest trends with free shipping and 7-day returns."
-            />
-            {/* Hero Banner */}
-            <HeroSection />
+      {/* 4. New Arrivals & Trending Eyewear (5-Column Grid) */}
+      <NewArrivals />
 
-            <Reveal>
-                <FeaturedCategories />
-            </Reveal>
+      {/* 5. Official Brand Partners Showcase */}
+      <BrandShowcase />
 
-            <Reveal delay={0.1}>
-                <FeaturedProducts onQuickView={handleQuickView} />
-            </Reveal>
+      {/* 6. Why Choose Metro Optics */}
+      <WhyChooseUs />
 
-            <Reveal delay={0.2}>
-                <WhyChooseUs />
-            </Reveal>
+      {/* 7. Optical Guides & Optometry Blog */}
+      <BlogPreview />
 
-            {/* Quick View Modal */}
-            <ProductQuickView
-                product={quickViewProduct}
-                isOpen={isQuickViewOpen}
-                onClose={closeQuickView}
-            />
-        </main>
-    );
-};
+      {/* 8. Newsletter Subscription Banner */}
+      <NewsletterSection />
 
-export default Home;
+      {/* Global Quick View Modal */}
+      <ProductQuickView />
+    </div>
+  );
+}

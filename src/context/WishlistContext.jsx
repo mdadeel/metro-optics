@@ -1,13 +1,13 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 // Context files commonly export both hook and provider component
-// eslint-disable-next-line react-refresh/only-export-components
+ 
 import { toast } from 'sonner';
 
 const WishlistContext = createContext();
 
 export const useWishlist = () => useContext(WishlistContext);
 
-// eslint-disable-next-line react-refresh/only-export-components
+ 
 export const WishlistProvider = ({ children }) => {
     const [wishlist, setWishlist] = useState(() => {
         try {

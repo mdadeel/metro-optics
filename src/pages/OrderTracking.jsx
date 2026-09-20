@@ -1,34 +1,56 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useOrders } from '../context/OrderContext';
-import { MagnifyingGlass as Search, Package, Truck, CheckCircle, Clock } from "@phosphor-icons/react";
+import { useAuth } from '../context/AuthContext';
+import { MagnifyingGlass as Search, Package, Truck, CheckCircle, Clock, SignIn } from "@phosphor-icons/react";
 
 const OrderTracking = () => {
     const [orderId, setOrderId] = useState('');
     const [order, setOrder] = useState(null);
+    const [searched, setSearched] = useState(false);
     const [error, setError] = useState('');
-    const { getOrder } = useOrders();
+    const { getOrderById, fetchOrderById, loading } = useOrders();
+    const { user } = useAuth();
 
-    const handleTrack = (e) => {
+    const handleTrack = async (e) => {
         e.preventDefault();
-        const foundOrder = getOrder(Number(orderId));
-        if (foundOrder) {
-            setOrder(foundOrder);
+        const id = orderId.trim();
+        if (!id) return;
+
+        // Firestore document IDs are strings — never coerce with Number()
+        const localOrder = getOrderById(id);
+        if (localOrder) {
+            setOrder(localOrder);
+            setSearched(true);
+            setError('');
+            return;
+        }
+
+        // Fall back to a direct Firestore read (rules allow users to read
+        // only their own orders, so this is IDOR-safe)
+        const fetched = await fetchOrderById(id);
+        if (fetched) {
+            setOrder(fetched);
             setError('');
         } else {
             setOrder(null);
             setError('Order not found. Please check the ID and try again.');
         }
+        setSearched(true);
     };
 
     const steps = [
-        { status: 'Pending', label: 'Order Placed', icon: Clock, description: 'We have received your order.' },
-        { status: 'Processing', label: 'Processing', icon: Package, description: 'We are preparing your items.' },
-        { status: 'Shipped', label: 'Shipped', icon: Truck, description: 'Your order is on the way.' },
-        { status: 'Delivered', label: 'Delivered', icon: CheckCircle, description: 'Package delivered successfully.' },
+        { status: 'pending', label: 'Order Placed', icon: Clock, description: 'We have received your order.' },
+        { status: 'processing', label: 'Processing', icon: Package, description: 'We are preparing your items.' },
+        { status: 'shipped', label: 'Shipped', icon: Truck, description: 'Your order is on the way.' },
+        { status: 'delivered', label: 'Delivered', icon: CheckCircle, description: 'Package delivered successfully.' },
     ];
 
+    // Match statuses case-insensitively so both 'pending' and 'Pending' work
     const getCurrentStepIndex = (status) => {
-        return steps.findIndex(s => s.status === status);
+        if (!status) return -1;
+        const normalized = String(status).toLowerCase();
+        return steps.findIndex(s => s.status === normalized);
     };
 
     const currentStepIndex = order ? getCurrentStepIndex(order.status) : -1;
@@ -37,28 +59,41 @@ const OrderTracking = () => {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div className="text-center mb-12">
                 <h1 className="text-3xl font-bold text-gray-900 mb-4">Track Your Order</h1>
-                <p className="text-gray-500">Enter your Order ID to see the current status.</p>
+                <p className="text-gray-500">Sign in with the account used at checkout, then enter your Order ID to see the current status.</p>
             </div>
 
             {/* Search Box */}
             <div className="max-w-md mx-auto mb-12">
                 <form onSubmit={handleTrack} className="relative">
                     <input
-                        type="number"
+                        type="text"
                         value={orderId}
                         onChange={(e) => setOrderId(e.target.value)}
-                        placeholder="Enter Order ID (e.g., 12345)"
+                        placeholder="Enter Order ID (e.g., 4K9fTq2ZxR...)"
                         className="w-full px-6 py-4 pr-12 rounded-full border-2 border-gray-200 focus:border-primary focus:ring-primary outline-none text-lg shadow-sm transition-all"
                     />
                     <button
                         type="submit"
                         className="absolute right-2 top-2 p-2 bg-primary text-white rounded-full hover:bg-primary/90 transition-colors"
+                        aria-label="Track order"
                     >
                         <Search className="w-6 h-6" />
                     </button>
                 </form>
-                {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+                {!user && !error && !order && (
+                    <p className="text-gray-500 text-center mt-4 flex items-center justify-center gap-1.5">
+                        <SignIn size={16} aria-hidden="true" />
+                        <Link to="/login" className="text-primary font-medium hover:underline">Sign in</Link>
+                        &nbsp;to track your orders
+                    </p>
+                )}
+                {error && <p className="text-red-500 text-center mt-4" role="alert">{error}</p>}
             </div>
+
+            {/* Loading state from orders subscription */}
+            {user && loading && !searched && (
+                <p className="text-center text-gray-500">Loading your orders…</p>
+            )}
 
             {/* Timeline Result */}
             {order && (

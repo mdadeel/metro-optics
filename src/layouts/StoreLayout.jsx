@@ -1,19 +1,32 @@
 import { Outlet } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import CartDrawer from '../components/CartDrawer';
+import TopBar from '../components/layout/TopBar';
+import Header from '../components/layout/Header';
+import MegaMenu from '../components/layout/MegaMenu';
+import MobileNav from '../components/layout/MobileNav';
+import Footer from '../components/layout/Footer';
 
-const StoreLayout = () => {
-    return (
-        <div className="min-h-screen flex flex-col">
-            <Navbar />
-            <CartDrawer />
-            <main className="flex-grow">
-                <Outlet />
-            </main>
-            <Footer />
-        </div>
-    );
-};
+export default function StoreLayout() {
+  return (
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
+      {/* Row 1: Slim utility top bar */}
+      <TopBar />
 
-export default StoreLayout;
+      {/* Row 2 & 3: Sticky Header & MegaMenu */}
+      <div className="sticky top-0 z-40 shadow-sm">
+        <Header />
+        <MegaMenu />
+      </div>
+
+      {/* Mobile Drawer */}
+      <MobileNav />
+
+      {/* Main Page Content Target */}
+      <main id="main-content" className="flex-1">
+        <Outlet />
+      </main>
+
+      {/* StarTech 5-Column Mega Footer */}
+      <Footer />
+    </div>
+  );
+}

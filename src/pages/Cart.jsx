@@ -1,187 +1,209 @@
 import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
-import { Trash as Trash2, Plus, Minus, ShoppingBag, ArrowRight, ArrowLeft, Tag, TrendUp as TrendingUp } from "@phosphor-icons/react";
-import './CartPage.css';
+import { Trash2, Minus, Plus, ArrowRight, ShoppingBag, ShieldCheck } from 'lucide-react';
+import Breadcrumb from '../components/layout/Breadcrumb';
+import ProductCard from '../components/product/ProductCard';
+import { useCartStore } from '../stores/useCartStore';
+import { useProductStore } from '../stores/useProductStore';
+import { formatPrice } from '../lib/utils';
 
-const Cart = () => {
-    const { cart, updateQuantity, removeFromCart, getCartTotal } = useCart();
+export default function Cart() {
+  const { items, updateQuantity, removeFromCart, getSubtotal, getShipping, getTax, getTotal } =
+    useCartStore();
+  const products = useProductStore((state) => state.products);
 
-    const shipping = cart.length > 0 ? 100 : 0;
-    const subtotal = getCartTotal();
-    const tax = Math.round(subtotal * 0.05); // 5% tax
-    const total = subtotal + shipping + tax;
+  const subtotal = getSubtotal();
+  const shipping = getShipping();
+  const tax = getTax();
+  const total = getTotal();
 
-    // Calculate savings goal
-    const savingsGoal = 10000;
-    const amountToSave = Math.max(savingsGoal - subtotal, 0);
+  const recommendations = products.slice(0, 4);
 
-    if (cart.length === 0) {
-        return (
-            <div className="cart-page">
-                <div className="cart-container">
-                    <div className="empty-cart">
-                        <div className="empty-cart-icon">
-                            <ShoppingBag size={64} />
-                        </div>
-                        <h2>Your Shopping Cart is Empty</h2>
-                        <p>Discover our bestselling eyewear collection</p>
-                        <Link to="/shop" className="button">
-                            <ArrowLeft size={18} />
-                            Browse Products
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
+  if (items.length === 0) {
     return (
-        <div className="cart-page">
-            <div className="cart-container">
-                {/* Header */}
-                <div className="cart-header">
-                    <h1>Shopping Cart</h1>
-                    <p>{cart.length} {cart.length === 1 ? 'item' : 'items'}</p>
-                </div>
-
-                <div className="cart-layout">
-                    {/* Cart Items */}
-                    <div className="cart-items-section">
-                        <div className="cart-items-card">
-                            {cart.map((item) => (
-                                <div key={`${item.id}-${item.lensType || 'default'}`} className="cart-item">
-                                    <div className="cart-item-image">
-                                        <img src={item.image} alt={item.name} loading="lazy" />
-                                    </div>
-
-                                    <div className="cart-item-details">
-                                        <div className="cart-item-info">
-                                            <h3>{item.name}</h3>
-                                            <p className="cart-item-type">{item.lensType || item.category}</p>
-                                            {item.prescriptionDetails && (
-                                                <p className="cart-item-prescription">
-                                                    With prescription
-                                                </p>
-                                            )}
-                                        </div>
-
-                                        <div className="cart-item-price">
-                                            <span className="price">৳{item.price.toLocaleString()}</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="cart-item-actions">
-                                        <div className="quantity-control">
-                                            <button
-                                                onClick={() => updateQuantity(item.id, item.quantity - 1, item.lensType)}
-                                                disabled={item.quantity <= 1}
-                                                className="quantity-btn"
-                                                aria-label="Decrease quantity"
-                                            >
-                                                <Minus size={16} />
-                                            </button>
-                                            <span className="quantity-value">{item.quantity}</span>
-                                            <button
-                                                onClick={() => updateQuantity(item.id, item.quantity + 1, item.lensType)}
-                                                className="quantity-btn"
-                                                aria-label="Increase quantity"
-                                            >
-                                                <Plus size={16} />
-                                            </button>
-                                        </div>
-
-                                        <button
-                                            onClick={() => removeFromCart(item.id, item.lensType)}
-                                            className="remove-btn"
-                                            title="Remove item"
-                                            aria-label={`Remove ${item.name}`}
-                                        >
-                                            <Trash2 size={18} />
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Promo Code Section */}
-                        <div className="promo-code-section">
-                            <div className="promo-code-input-group">
-                                <input
-                                    type="text"
-                                    placeholder="Enter promo code"
-                                    className="promo-code-input"
-                                />
-                                <button className="apply-promo-btn">
-                                    <Tag size={16} />
-                                    Apply
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Order Summary */}
-                    <div className="cart-summary-section">
-                        <div className="cart-summary">
-                            <h3 className="summary-title">Order Summary</h3>
-
-                            <div className="summary-row subtotal">
-                                <span>Subtotal</span>
-                                <span>৳{subtotal.toLocaleString()}</span>
-                            </div>
-
-                            <div className="summary-row shipping">
-                                <span>Shipping</span>
-                                <span>৳{shipping}</span>
-                            </div>
-
-                            <div className="summary-row tax">
-                                <span>Tax (5%)</span>
-                                <span>৳{tax}</span>
-                            </div>
-
-                            <div className="summary-row total">
-                                <span>Total</span>
-                                <span className="amount">৳{total.toLocaleString()}</span>
-                            </div>
-
-                            {/* Savings Alert */}
-                            {subtotal < savingsGoal && (
-                                <div className="savings-alert">
-                                    <p>
-                                        <TrendingUp size={18} />
-                                        Add ৳{amountToSave.toLocaleString()} more to save ৳500!
-                                    </p>
-                                </div>
-                            )}
-
-                            {subtotal >= savingsGoal && (
-                                <div className="savings-alert">
-                                    <p>
-                                        <TrendingUp size={18} />
-                                        🎉 You're saving ৳500 on this order!
-                                    </p>
-                                </div>
-                            )}
-
-                            <Link to="/checkout">
-                                <button className="checkout-btn">
-                                    Proceed to Checkout
-                                    <ArrowRight size={20} />
-                                </button>
-                            </Link>
-
-                            <Link to="/shop">
-                                <button className="continue-shopping">
-                                    <ArrowLeft size={18} />
-                                    Continue Shopping
-                                </button>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div className="max-w-[1320px] mx-auto px-4 py-16 text-center space-y-4">
+        <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-gray-800 text-gray-400 flex items-center justify-center mx-auto">
+          <ShoppingBag className="w-8 h-8" />
         </div>
+        <h2 className="text-2xl font-black text-gray-900 dark:text-white">Your Shopping Cart is Empty</h2>
+        <p className="text-xs text-gray-500 max-w-sm mx-auto">
+          Explore our designer frames and sunglasses with certified prescription lens options.
+        </p>
+        <div className="pt-2">
+          <Link
+            to="/shop"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl shadow-sm transition-all"
+          >
+            <span>Start Shopping</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </div>
     );
-};
+  }
 
-export default Cart;
+  return (
+    <div className="max-w-[1320px] mx-auto px-4 py-6 space-y-8">
+      <Breadcrumb items={[{ label: 'Shopping Cart' }]} />
+
+      <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white">
+        Shopping Cart ({items.length} {items.length === 1 ? 'item' : 'items'})
+      </h1>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Table Column (8 Cols) */}
+        <div className="lg:col-span-8 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-gray-50 dark:bg-gray-800 text-gray-500 font-bold uppercase tracking-wider border-b border-gray-200 dark:border-gray-800">
+                <tr>
+                  <th className="p-4">Product Details</th>
+                  <th className="p-4">Unit Price</th>
+                  <th className="p-4">Quantity</th>
+                  <th className="p-4">Subtotal</th>
+                  <th className="p-4 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                {items.map((item) => (
+                  <tr key={item.cartItemId} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/40 transition-colors">
+                    <td className="p-4">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={item.image || item.images?.[0]}
+                          alt={item.name}
+                          className="w-16 h-16 object-cover rounded-lg border border-gray-200 dark:border-gray-800 shrink-0"
+                        />
+                        <div>
+                          <Link
+                            to={`/product/${item.id}`}
+                            className="font-bold text-gray-900 dark:text-white hover:text-primary transition-colors line-clamp-1"
+                          >
+                            {item.name}
+                          </Link>
+                          <div className="text-[11px] text-gray-400 mt-0.5 space-x-2">
+                            <span>Color: {item.selectedColor}</span>
+                            <span>•</span>
+                            <span>Size: {item.selectedSize}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td className="p-4 font-bold text-gray-900 dark:text-white whitespace-nowrap">
+                      {formatPrice(item.price)}
+                    </td>
+
+                    <td className="p-4 whitespace-nowrap">
+                      <div className="flex items-center border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden w-fit">
+                        <button
+                          onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
+                          className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
+                        >
+                          <Minus className="w-3.5 h-3.5" />
+                        </button>
+                        <span className="px-3 text-xs font-bold">{item.quantity}</span>
+                        <button
+                          onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
+                          className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </td>
+
+                    <td className="p-4 font-black text-primary whitespace-nowrap">
+                      {formatPrice(item.price * item.quantity)}
+                    </td>
+
+                    <td className="p-4 text-right whitespace-nowrap">
+                      <button
+                        onClick={() => removeFromCart(item.cartItemId)}
+                        className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                        aria-label="Remove item"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="p-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            <Link
+              to="/shop"
+              className="text-xs font-bold text-primary hover:underline"
+            >
+              ← Continue Shopping
+            </Link>
+          </div>
+        </div>
+
+        {/* Order Summary Sidebar (4 Cols) */}
+        <div className="lg:col-span-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm space-y-4">
+          <h3 className="text-base font-black text-gray-900 dark:text-white uppercase tracking-wider pb-2 border-b border-gray-100 dark:border-gray-800">
+            Order Summary
+          </h3>
+
+          <div className="space-y-2 text-xs">
+            <div className="flex justify-between text-gray-600 dark:text-gray-400">
+              <span>Items Subtotal</span>
+              <span className="font-semibold text-gray-900 dark:text-white">{formatPrice(subtotal)}</span>
+            </div>
+
+            <div className="flex justify-between text-gray-600 dark:text-gray-400">
+              <span>Estimated Shipping</span>
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {shipping === 0 ? <span className="text-emerald-500 font-bold">FREE</span> : formatPrice(shipping)}
+              </span>
+            </div>
+
+            <div className="flex justify-between text-gray-600 dark:text-gray-400">
+              <span>Estimated State Tax (8.25%)</span>
+              <span className="font-semibold text-gray-900 dark:text-white">{formatPrice(tax)}</span>
+            </div>
+
+            <hr className="my-2 border-gray-100 dark:border-gray-800" />
+
+            <div className="flex justify-between text-base font-black text-gray-900 dark:text-white pt-1">
+              <span>Total Amount</span>
+              <span className="text-primary text-xl font-black">{formatPrice(total)}</span>
+            </div>
+          </div>
+
+          {shipping > 0 && (
+            <div className="p-3 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800 text-[11px] text-amber-800 dark:text-amber-300">
+              Add <strong>{formatPrice(99 - subtotal)}</strong> more to unlock Free Nationwide Shipping!
+            </div>
+          )}
+
+          <Link
+            to="/checkout"
+            className="w-full py-3.5 px-4 bg-primary hover:bg-primary-hover text-white text-xs font-black rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+          >
+            <span>Proceed to Checkout</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+
+          <div className="pt-2 flex items-center justify-center gap-2 text-[11px] text-gray-400">
+            <ShieldCheck className="w-4 h-4 text-emerald-500" />
+            <span>256-Bit Bank Grade SSL Checkout</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Recommended Products */}
+      <div className="space-y-4 pt-6">
+        <h3 className="text-lg font-black text-gray-900 dark:text-white">
+          Frequently Added Together
+        </h3>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {recommendations.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

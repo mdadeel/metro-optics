@@ -1,8 +1,23 @@
-/* Tailwind CSS for shadcn UI components only */
-/* Import auth pages that use Tailwind */
+/* Tailwind CSS entry (Tailwind v4)
+ *
+ * IMPORTANT: The deps were upgraded to Tailwind v4, which no longer
+ * understands `@tailwind base/components/utilities`. Those directives
+ * silently produced no utilities, breaking all component styling
+ * (navbar, buttons, responsive + dark: variants, animations...).
+ *
+ * v4 equivalent setup:
+ *   1. `@import "tailwindcss"` brings in preflight + theme + utilities.
+ *   2. `@config` loads the legacy tailwind.config.js (theme colors mapped
+ *      to CSS variables, shadows, radii, animations, tailwindcss-animate
+ *      plugin, content globs) so existing utility classes keep working.
+ */
 @import '../pages/AuthPages.css';
 @import '../pages/CartPage.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@config "../../tailwind.config.js";
+
+/* Class-based dark mode (was darkMode: ["class"] in the v3 config).
+ * <html class="dark"> is toggled by ThemeProvider (next-themes). */
+@custom-variant dark (&:where(.dark, .dark *));

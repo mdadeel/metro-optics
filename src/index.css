@@ -1,17 +1,7 @@
 /* Metro Optics - Main Stylesheet */
-/* Clinical Minimalism Design System */
-
-/* 1. CSS Variables (Design Tokens) */
-@import './styles/variables.css';
-
-/* 2. Base Styles (Reset & Global Elements) */
-@import './styles/base.css';
-
-/* 3. Accessibility Styles */
-@import './styles/accessibility.css';
-
-/* 4. Utility Classes */
-@import './styles/utilities.css';
+@import '@fontsource/geist-sans';
+@import '@fontsource/geist-mono';
+@import './styles/globals.css';
 
 /* 4. Component Styles — migrated to Tailwind utility classes in JSX */
 @import './styles/components/product-quick-view.css';

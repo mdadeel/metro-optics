@@ -1,4 +1,5 @@
-import { useParams, Link, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { useOrders } from '../context/OrderContext';
 import { useAuth } from '../context/AuthContext';
 import { Printer, CheckCircle, ArrowLeft, Eyeglasses as Glasses, ShieldWarning as ShieldAlert } from "@phosphor-icons/react";
@@ -6,9 +7,26 @@ import '../styles/pages/invoice.css';
 
 const Invoice = () => {
     const { id } = useParams();
-    const { getOrderById } = useOrders();
+    const { getOrderById, fetchOrderById } = useOrders();
     const { user, isAdmin } = useAuth();
-    const order = getOrderById(id);
+    const [fetchedOrder, setFetchedOrder] = useState(null);
+
+    const contextOrder = getOrderById(id);
+    const order = contextOrder || fetchedOrder;
+
+    // Fallback: right after checkout the new order may not have arrived in the
+    // Firestore snapshot yet — fetch it directly so the invoice never shows
+    // "Order not found" as a false negative.
+    useEffect(() => {
+        if (contextOrder || !id) return;
+        let cancelled = false;
+        fetchOrderById(id).then((result) => {
+            if (!cancelled) setFetchedOrder(result);
+        });
+        return () => {
+            cancelled = true;
+        };
+    }, [contextOrder, id, fetchOrderById]);
 
     // Security: Verify order ownership (IDOR protection)
     if (!order) {
@@ -36,6 +54,17 @@ const Invoice = () => {
             </div>
         );
     }
+
+    // Price breakdown. New orders store subtotal/shipping/tax explicitly;
+    // legacy orders only stored `total`, so reconstruct from the line items.
+    const itemsSubtotal = (order.items || []).reduce(
+        (sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 0),
+        0
+    );
+    const shipping = Number(order.shipping ?? 100);
+    const subtotal = Number(order.subtotal ?? itemsSubtotal);
+    const tax = Number(order.tax ?? Math.max(0, Number(order.total) - subtotal - shipping));
+    const invoiceTotals = { subtotal, shipping, tax };
 
     const handlePrint = () => {
         window.print();
@@ -129,15 +158,21 @@ const Invoice = () => {
                     <div className="invoice-totals">
                         <div className="invoice-total-row">
                             <span>Subtotal</span>
-                            <span>৳{order.total - 100}</span>
+                            <span>৳{invoiceTotals.subtotal.toLocaleString()}</span>
                         </div>
                         <div className="invoice-total-row">
                             <span>Shipping</span>
-                            <span>৳100</span>
+                            <span>৳{invoiceTotals.shipping.toLocaleString()}</span>
                         </div>
+                        {invoiceTotals.tax > 0 && (
+                            <div className="invoice-total-row">
+                                <span>Tax (5%)</span>
+                                <span>৳{invoiceTotals.tax.toLocaleString()}</span>
+                            </div>
+                        )}
                         <div className="invoice-total-row final">
                             <span>Total</span>
-                            <span>৳{order.total}</span>
+                            <span>৳{Number(order.total).toLocaleString()}</span>
                         </div>
                     </div>
                 </div>

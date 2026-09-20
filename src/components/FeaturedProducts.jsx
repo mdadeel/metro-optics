@@ -6,7 +6,7 @@ import LoadingSpinner from './LoadingSpinner';
 import { motion } from 'motion/react';
 
 const FeaturedProducts = ({ onQuickView }) => {
-    const { getBestsellers, loading, products } = useProducts();
+    const { getBestsellers, loading } = useProducts();
     const bestsellers = getBestsellers(8);
 
     return (
