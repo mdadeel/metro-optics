@@ -1,0 +1,17 @@
+# Search engines and AI crawlers are allowed to crawl public content.
+# Private-route rules are crawl guidance, not access control.
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /seed-data
+Disallow: /profile
+Disallow: /cart
+Disallow: /checkout
+Disallow: /invoice/
+Disallow: /order-confirmation
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /track-order
+
+Sitemap: https://metro-optics.vercel.app/sitemap.xml

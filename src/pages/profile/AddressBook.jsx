@@ -107,8 +107,9 @@ const AddressBook = () => {
     return (
         <div className="address-book-page">
             <div className="address-book-header">
-                <h1>Address Book</h1>
-                <p>Manage your delivery addresses</p>
+                <p className="mo-eyebrow">DELIVERY DETAILS</p>
+                <h1>Address book</h1>
+                <p>Manage the addresses saved to your account.</p>
             </div>
 
             {/* Addresses Grid */}
@@ -125,9 +126,11 @@ const AddressBook = () => {
                         <div className="address-header">
                             <span className="address-type">{address.type}</span>
                             <button
+                                type="button"
                                 className="delete-btn-icon"
                                 onClick={() => handleDelete(address.id)}
-                                title="Delete Address"
+                                title="Delete address"
+                                aria-label={`Delete ${address.type || 'saved'} address`}
                             >
                                 <Trash2 size={16} />
                             </button>
@@ -145,24 +148,27 @@ const AddressBook = () => {
                 ))}
 
                 {/* Add New Address Card */}
-                <div
+                <button
+                    type="button"
                     className="address-card add-new"
                     onClick={() => setShowForm(true)}
+                    aria-haspopup="dialog"
+                    aria-expanded={showForm}
                 >
-                    <div className="add-icon-wrapper">
+                    <div className="add-icon-wrapper" aria-hidden="true">
                         <Plus size={24} />
                     </div>
-                    <h3>Add New Address</h3>
-                </div>
+                    <span>Add new address</span>
+                </button>
             </div>
 
             {/* Address Form Modal */}
             {showForm && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
+                    <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl" role="dialog" aria-modal="true" aria-labelledby="address-dialog-title">
                         <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-bold">Add New Address</h2>
-                            <button onClick={() => setShowForm(false)} className="text-gray-500 hover:text-black">
+                            <h2 id="address-dialog-title" className="text-xl font-bold">Add new address</h2>
+                            <button type="button" onClick={() => setShowForm(false)} className="text-gray-500 hover:text-black" aria-label="Close address form">
                                 <X size={24} />
                             </button>
                         </div>

@@ -6,7 +6,7 @@
 export const SITE_CONFIG = {
   name: 'Metro Optics',
   tagline: 'Precision Vision & Designer Frames',
-  phone: '+1 (800) 555-METRO',
+  phone: '+1 (212) 555-0199',
   email: 'support@metrooptics.com',
   address: '145 Optical Plaza, Suite 400, New York, NY 10001',
   workingHours: 'Mon - Sat: 9:00 AM - 8:00 PM EST',

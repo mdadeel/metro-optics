@@ -4,10 +4,11 @@ import SEO from '../components/SEO';
 
 export default function NotFound() {
   return (
-    <div className="min-h-[70vh] flex items-center justify-center px-4 py-20">
+    <div className="mo-not-found-page min-h-[70vh] flex items-center justify-center px-4 py-20">
       <SEO
         title="404 - Page Not Found"
         description="The page you are looking for does not exist or has been moved."
+        noIndex
       />
       <div className="text-center max-w-lg">
         {/* 404 Number */}

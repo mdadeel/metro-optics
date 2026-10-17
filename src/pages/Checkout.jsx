@@ -17,6 +17,7 @@ import { useOrderStore } from '../stores/useOrderStore';
 import { checkoutSchema } from '../lib/validators';
 import { formatPrice } from '../lib/utils';
 import { toast } from 'sonner';
+import SEO from '../components/SEO';
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -36,11 +37,11 @@ export default function Checkout() {
       firstName: user?.displayName?.split(' ')[0] || '',
       lastName: user?.displayName?.split(' ')[1] || '',
       email: user?.email || '',
-      phone: '(555) 234-5678',
-      address: '742 Evergreen Terrace',
-      city: 'New York',
-      state: 'NY',
-      zipCode: '10001',
+      phone: user?.phoneNumber || '',
+      address: '',
+      city: '',
+      state: '',
+      zipCode: '',
       paymentMethod: 'credit-card',
     },
   });
@@ -49,10 +50,12 @@ export default function Checkout() {
   const shipping = getShipping();
   const tax = getTax();
   const total = getTotal();
+  const pageSEO = <SEO title="Secure Checkout" description="Enter delivery and payment details to place your Metro Optics order." url="/checkout" noIndex />;
 
   if (items.length === 0) {
     return (
-      <div className="max-w-[1320px] mx-auto px-4 py-20 text-center space-y-4">
+      <div className="mo-checkout-page mo-checkout-page--empty max-w-[1320px] mx-auto px-4 py-20 text-center space-y-4">
+        {pageSEO}
         <h2 className="text-2xl font-black">Your Cart is Empty</h2>
         <p className="text-xs text-gray-500">Please add items to your cart before proceeding to checkout.</p>
         <Link to="/shop" className="px-6 py-3 bg-primary text-white font-bold rounded-xl text-xs inline-block">
@@ -98,7 +101,8 @@ export default function Checkout() {
   };
 
   return (
-    <div className="max-w-[1320px] mx-auto px-4 py-6 space-y-8">
+    <div className="mo-checkout-page max-w-[1320px] mx-auto px-4 py-6 space-y-8">
+      {pageSEO}
       <Breadcrumb items={[{ label: 'Cart', to: '/cart' }, { label: 'Checkout' }]} />
 
       <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white">
@@ -122,10 +126,12 @@ export default function Checkout() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
-                    First Name
+                  <label htmlFor="checkout-first-name" className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
+                    First name
                   </label>
                   <input
+                    id="checkout-first-name"
+                    autoComplete="given-name"
                     {...register('firstName')}
                     className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent outline-none focus:border-primary"
                   />
@@ -135,10 +141,12 @@ export default function Checkout() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
-                    Last Name
+                  <label htmlFor="checkout-last-name" className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
+                    Last name
                   </label>
                   <input
+                    id="checkout-last-name"
+                    autoComplete="family-name"
                     {...register('lastName')}
                     className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent outline-none focus:border-primary"
                   />
@@ -148,11 +156,13 @@ export default function Checkout() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
-                    Email Address
+                  <label htmlFor="checkout-email" className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
+                    Email address
                   </label>
                   <input
+                    id="checkout-email"
                     type="email"
+                    autoComplete="email"
                     {...register('email')}
                     className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent outline-none focus:border-primary"
                   />
@@ -162,10 +172,13 @@ export default function Checkout() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
-                    Phone Number
+                  <label htmlFor="checkout-phone" className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
+                    Phone number
                   </label>
                   <input
+                    id="checkout-phone"
+                    type="tel"
+                    autoComplete="tel"
                     {...register('phone')}
                     className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent outline-none focus:border-primary"
                   />
@@ -175,10 +188,12 @@ export default function Checkout() {
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
-                    Street Address
+                  <label htmlFor="checkout-address" className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
+                    Street address
                   </label>
                   <input
+                    id="checkout-address"
+                    autoComplete="street-address"
                     {...register('address')}
                     className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent outline-none focus:border-primary"
                   />
@@ -188,10 +203,12 @@ export default function Checkout() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
+                  <label htmlFor="checkout-city" className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
                     City
                   </label>
                   <input
+                    id="checkout-city"
+                    autoComplete="address-level2"
                     {...register('city')}
                     className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent outline-none focus:border-primary"
                   />
@@ -202,19 +219,23 @@ export default function Checkout() {
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
-                      State
+                    <label htmlFor="checkout-state" className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
+                      State / region
                     </label>
                     <input
+                      id="checkout-state"
+                      autoComplete="address-level1"
                       {...register('state')}
                       className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent outline-none focus:border-primary"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
-                      ZIP Code
+                    <label htmlFor="checkout-postal-code" className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
+                      ZIP / postal code
                     </label>
                     <input
+                      id="checkout-postal-code"
+                      autoComplete="postal-code"
                       {...register('zipCode')}
                       className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent outline-none focus:border-primary"
                     />
@@ -245,10 +266,10 @@ export default function Checkout() {
                   <CreditCard className="w-5 h-5 text-primary" />
                   <div className="flex-1">
                     <span className="text-xs font-bold text-gray-900 dark:text-white block">
-                      Credit / Debit Card (Stripe / 3D Secure)
+                      Credit / debit card
                     </span>
                     <span className="text-[11px] text-gray-400">
-                      Visa, Mastercard, American Express, Discover
+Choose a card payment method
                     </span>
                   </div>
                 </label>

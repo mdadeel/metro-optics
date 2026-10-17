@@ -5,7 +5,7 @@ import { DEMO_PRODUCTS } from '../lib/constants';
 
 export const useProductStore = create((set, get) => ({
   products: DEMO_PRODUCTS,
-  loading: false,
+  loading: hasFirebaseConfig,
   error: null,
   activeCategory: 'all',
   searchQuery: '',

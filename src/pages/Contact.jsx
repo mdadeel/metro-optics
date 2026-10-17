@@ -1,11 +1,39 @@
-import { Envelope as Mail, Phone, MapPin, Clock, PaperPlaneTilt as Send, WarningCircle as AlertCircle, SpinnerGap as Loader2 } from "@phosphor-icons/react";
+import { Envelope as Mail, Phone, MapPin, Clock, PaperPlaneTilt as Send, WarningCircle as AlertCircle } from "@phosphor-icons/react";
 import { useState } from 'react';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import SEO from '../components/SEO';
+import Breadcrumb from '../components/layout/Breadcrumb';
+import { SITE_CONFIG } from '../lib/constants';
+import { buildBreadcrumbSchema, buildWebPageSchema, SITE_ORIGIN } from '../lib/seo';
 
 const Contact = () => {
     const { settings, getPage } = useSiteSettings();
     const pageContent = getPage('contact');
+    const contactPhone = settings.sitePhone || SITE_CONFIG.phone;
+    const supportEmail = settings.siteEmail || SITE_CONFIG.email;
+    const contactAddress = settings.siteAddress || SITE_CONFIG.address;
+    const businessHours = settings.businessHours || SITE_CONFIG.workingHours;
+    const contactPageTitle = pageContent?.title || 'Contact Metro Optics';
+    const contactDescription = 'Contact Metro Optics for help with eyewear, product questions or an order. Find current phone, email, business hours and support options.';
+    const contactPageSchema = {
+        ...buildWebPageSchema({
+            name: contactPageTitle,
+            description: contactDescription,
+            path: '/contact',
+            type: 'ContactPage',
+        }),
+        mainEntity: {
+            '@type': 'Organization',
+            '@id': `${SITE_ORIGIN}/#organization`,
+            name: 'Metro Optics',
+            contactPoint: {
+                '@type': 'ContactPoint',
+                contactType: 'customer support',
+                telephone: contactPhone,
+                email: supportEmail,
+            },
+        },
+    };
 
     const [formData, setFormData] = useState({
         name: '',
@@ -14,7 +42,6 @@ const Contact = () => {
         message: ''
     });
     const [submitted, setSubmitted] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const [fieldErrors, setFieldErrors] = useState({});
     const [touched, setTouched] = useState({});
 
@@ -71,47 +98,41 @@ const Contact = () => {
         }
     };
 
-    const handleSubmit = async (e) => {
+    const mailtoHref = `mailto:${supportEmail}?subject=${encodeURIComponent(`Metro Optics: ${formData.subject.trim()}`)}&body=${encodeURIComponent(`From: ${formData.name.trim()}\nReply to: ${formData.email.trim()}\n\n${formData.message.trim()}`)}`;
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-
-        // Mark all fields as touched
         setTouched({ name: true, email: true, subject: true, message: true });
+        if (!validateForm()) return;
 
-        // Validate form
-        if (!validateForm()) {
-            return;
-        }
-
-        setIsLoading(true);
-
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        // TODO: Integrate with backend/email service
-        console.log('Contact form submitted:', formData);
-        setIsLoading(false);
+        // The storefront has no message API configured yet. Open a prefilled
+        // email instead of showing a false "sent" confirmation.
         setSubmitted(true);
-
-        setTimeout(() => {
-            setSubmitted(false);
-            setFormData({ name: '', email: '', subject: '', message: '' });
-            setTouched({});
-            setFieldErrors({});
-        }, 3000);
+        window.location.href = mailtoHref;
     };
 
     return (
         <div className="contact-page">
             <SEO
-                title="Contact Us"
-                description="Get in touch with Metro Optics directly. Our support team is ready to answer your questions and assist with your eyewear needs."
+                title="Contact & Customer Support"
+                description={contactDescription}
+                url="/contact"
+                structuredData={[
+                    contactPageSchema,
+                    buildBreadcrumbSchema([
+                        { name: 'Home', path: '/' },
+                        { name: 'Contact', path: '/contact' },
+                    ]),
+                ]}
             />
             <div className="contact-container">
+                <Breadcrumb items={[{ label: 'Contact' }]} />
                 {/* Header */}
                 <div className="contact-header">
-                    <h1 className="contact-title">{pageContent.title}</h1>
+                    <p className="mo-eyebrow">WE’RE HERE TO HELP</p>
+                    <h1 className="contact-title">{contactPageTitle}</h1>
                     <p className="contact-subtitle">
-                        Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+                        Need help choosing frames or checking an order? Use the details here or prepare an email below. Your email app will open so you can review and send your message.
                     </p>
                 </div>
 
@@ -130,7 +151,7 @@ const Contact = () => {
                                 </div>
                                 <div className="contact-method-content">
                                     <h3 className="contact-method-title">Phone</h3>
-                                    <p className="contact-method-text">{settings.sitePhone || '+880 1234-567890'}</p>
+                                    <a className="contact-method-text" href={`tel:${contactPhone.replace(/[^+\d]/g, '')}`}>{contactPhone}</a>
                                 </div>
                             </div>
 
@@ -140,7 +161,7 @@ const Contact = () => {
                                 </div>
                                 <div className="contact-method-content">
                                     <h3 className="contact-method-title">Email</h3>
-                                    <p className="contact-method-text">{settings.siteEmail || 'support@metrooptics.com'}</p>
+                                    <a className="contact-method-text" href={`mailto:${supportEmail}`}>{supportEmail}</a>
                                 </div>
                             </div>
 
@@ -151,7 +172,7 @@ const Contact = () => {
                                 <div className="contact-method-content">
                                     <h3 className="contact-method-title">Address</h3>
                                     <p className="contact-method-text">
-                                        {settings.siteAddress || '123 Main Street, Dhaka'}
+                                        {contactAddress}
                                     </p>
                                 </div>
                             </div>
@@ -162,7 +183,7 @@ const Contact = () => {
                                 </div>
                                 <div className="contact-method-content">
                                     <h3 className="contact-method-title">Business Hours</h3>
-                                    <p className="contact-method-text">{settings.businessHours || '9:00 AM - 8:00 PM'}</p>
+                                    <p className="contact-method-text">{businessHours}</p>
                                 </div>
                             </div>
                         </div>
@@ -173,14 +194,19 @@ const Contact = () => {
                         <h2 className="contact-form-title">Send us a Message</h2>
 
                         {submitted ? (
-                            <div className="contact-success">
+                            <div className="contact-success" role="status" aria-live="polite">
                                 <div className="contact-success-icon">
-                                    <Send size={48} />
+                                    <Send size={24} aria-hidden="true" />
                                 </div>
-                                <h3 className="contact-success-title">Message Sent!</h3>
+                                <h3 className="contact-success-title">Your email draft is ready</h3>
                                 <p className="contact-success-text">
-                                    Thank you for contacting us. We'll get back to you within 24 hours.
+                                    Your email app should open with your message. Review it and press Send; if it doesn’t open, use the email link below.
                                 </p>
+                                <div className="contact-success-actions">
+                                    <a className="contact-form-submit" href={mailtoHref}>Open email app</a>
+                                    <a className="contact-success-email" href={`mailto:${supportEmail}`}>{supportEmail}</a>
+                                    <button type="button" className="contact-success-reset" onClick={() => setSubmitted(false)}>Edit message</button>
+                                </div>
                             </div>
                         ) : (
                             <form onSubmit={handleSubmit} className="contact-form" noValidate>
@@ -188,6 +214,7 @@ const Contact = () => {
                                     <label htmlFor="name" className="contact-form-label">Your Name</label>
                                     <input
                                         type="text"
+                                        autoComplete="name"
                                         id="name"
                                         name="name"
                                         value={formData.name}
@@ -195,7 +222,6 @@ const Contact = () => {
                                         onBlur={() => handleBlur('name')}
                                         className={`contact-form-input ${touched.name && fieldErrors.name ? 'input-error' : ''}`}
                                         placeholder="John Doe"
-                                        disabled={isLoading}
                                         aria-invalid={touched.name && fieldErrors.name ? 'true' : 'false'}
                                         aria-describedby={fieldErrors.name ? 'name-error' : undefined}
                                     />
@@ -211,6 +237,7 @@ const Contact = () => {
                                     <label htmlFor="email" className="contact-form-label">Email Address</label>
                                     <input
                                         type="email"
+                                        autoComplete="email"
                                         id="email"
                                         name="email"
                                         value={formData.email}
@@ -218,7 +245,6 @@ const Contact = () => {
                                         onBlur={() => handleBlur('email')}
                                         className={`contact-form-input ${touched.email && fieldErrors.email ? 'input-error' : ''}`}
                                         placeholder="john@example.com"
-                                        disabled={isLoading}
                                         aria-invalid={touched.email && fieldErrors.email ? 'true' : 'false'}
                                         aria-describedby={fieldErrors.email ? 'email-error' : undefined}
                                     />
@@ -241,7 +267,7 @@ const Contact = () => {
                                         onBlur={() => handleBlur('subject')}
                                         className={`contact-form-input ${touched.subject && fieldErrors.subject ? 'input-error' : ''}`}
                                         placeholder="How can we help?"
-                                        disabled={isLoading}
+                                        maxLength={120}
                                         aria-invalid={touched.subject && fieldErrors.subject ? 'true' : 'false'}
                                         aria-describedby={fieldErrors.subject ? 'subject-error' : undefined}
                                     />
@@ -264,10 +290,11 @@ const Contact = () => {
                                         rows="5"
                                         className={`contact-form-textarea ${touched.message && fieldErrors.message ? 'input-error' : ''}`}
                                         placeholder="Tell us more about your inquiry..."
-                                        disabled={isLoading}
+                                        maxLength={1600}
                                         aria-invalid={touched.message && fieldErrors.message ? 'true' : 'false'}
                                         aria-describedby={fieldErrors.message ? 'message-error' : undefined}
                                     />
+                                    <p className="contact-character-count">{formData.message.length} / 1,600 characters</p>
                                     {touched.message && fieldErrors.message && (
                                         <div id="message-error" className="field-error" role="alert">
                                             <AlertCircle size={14} aria-hidden="true" />
@@ -276,18 +303,9 @@ const Contact = () => {
                                     )}
                                 </div>
 
-                                <button type="submit" className="contact-form-submit" disabled={isLoading}>
-                                    {isLoading ? (
-                                        <>
-                                            <Loader2 size={20} className="animate-spin" aria-hidden="true" />
-                                            Sending...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Send size={20} aria-hidden="true" />
-                                            Send Message
-                                        </>
-                                    )}
+                                <button type="submit" className="contact-form-submit">
+                                    <Send size={16} aria-hidden="true" />
+                                    Prepare email
                                 </button>
                             </form>
                         )}

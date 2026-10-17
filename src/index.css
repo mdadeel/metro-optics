@@ -1,6 +1,4 @@
 /* Metro Optics - Main Stylesheet */
-@import '@fontsource/geist-sans';
-@import '@fontsource/geist-mono';
 @import './styles/globals.css';
 
 /* 4. Component Styles — migrated to Tailwind utility classes in JSX */
@@ -29,3 +27,26 @@
 @import './styles/admin/layout.css';
 @import './styles/admin/orders.css';
 @import './styles/admin/cms.css';
+
+/* Premium Metro Optics storefront refresh */
+@import './styles/storefront-premium.css';
+@import './styles/pages/home-premium.css';
+@import './styles/pages/product-details-premium.css';
+@import './styles/pages/shop-premium.css';
+@import './styles/storefront-interior.css';
+
+@font-face {
+  font-family: 'Geist Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/geist-sans-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/geist-mono-latin-400-normal.woff2') format('woff2');
+}

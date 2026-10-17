@@ -1,45 +1,75 @@
 import { Helmet } from 'react-helmet-async';
+import {
+  absoluteSiteUrl,
+  canonicalSiteUrl,
+  DEFAULT_SOCIAL_IMAGE,
+  SITE_NAME,
+} from '../lib/seo';
 
-const SEO = ({
-    title,
-    description,
-    keywords,
-    image,
-    url,
-    type = 'website'
-}) => {
-    const siteTitle = 'Metro Optics - Premium Eyewear';
-    const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
-    const siteUrl = import.meta.env.VITE_APP_URL || 'https://metrooptics.com';
-    const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
-    const defaultImage = `${siteUrl}/og-image.jpg`;
-    const defaultDescription = 'Shop premium eyeglasses, sunglasses, and contact lenses at Metro Optics. Free shipping, 7-day returns, and expert eye care.';
+const DEFAULT_DESCRIPTION =
+  'Explore eyeglasses, sunglasses and everyday frames from Metro Optics. Review available styles, product details and current prices before choosing your next pair.';
+const DEFAULT_ROBOTS = 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
 
-    return (
-        <Helmet>
-            {/* Basic Meta Tags */}
-            <title>{fullTitle}</title>
-            <meta name="description" content={description || defaultDescription} />
-            {keywords && <meta name="keywords" content={keywords} />}
+function formatMetaDescription(value) {
+  const cleaned = String(value || DEFAULT_DESCRIPTION).replace(/\s+/g, ' ').trim();
+  if (cleaned.length <= 160) return cleaned;
+  const shortened = cleaned.slice(0, 157);
+  const lastSpace = shortened.lastIndexOf(' ');
+  return `${shortened.slice(0, lastSpace > 120 ? lastSpace : 157).trim()}…`;
+}
 
-            {/* Open Graph / Facebook */}
-            <meta property="og:type" content={type} />
-            <meta property="og:url" content={fullUrl} />
-            <meta property="og:title" content={fullTitle} />
-            <meta property="og:description" content={description || defaultDescription} />
-            <meta property="og:image" content={image || defaultImage} />
+function safeJsonLd(value) {
+  return JSON.stringify(value).replace(/</g, '\\u003c');
+}
 
-            {/* Twitter */}
-            <meta property="twitter:card" content="summary_large_image" />
-            <meta property="twitter:url" content={fullUrl} />
-            <meta property="twitter:title" content={fullTitle} />
-            <meta property="twitter:description" content={description || defaultDescription} />
-            <meta property="twitter:image" content={image || defaultImage} />
+export default function SEO({
+  title,
+  description,
+  image = DEFAULT_SOCIAL_IMAGE,
+  imageAlt = 'Metro Optics eyewear',
+  url,
+  type = 'website',
+  noIndex = false,
+  robots,
+  structuredData,
+}) {
+  const pageTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} | Eyeglasses & Sunglasses`;
+  const metaDescription = formatMetaDescription(description);
+  const canonicalUrl = canonicalSiteUrl(url);
+  const imageUrl = absoluteSiteUrl(image);
+  const robotsContent = robots || (noIndex ? 'noindex,follow' : DEFAULT_ROBOTS);
+  const schemas = (Array.isArray(structuredData) ? structuredData : [structuredData]).filter(Boolean);
 
-            {/* Canonical URL */}
-            <link rel="canonical" href={fullUrl} />
-        </Helmet>
-    );
-};
+  return (
+    <Helmet>
+      <title>{pageTitle}</title>
+      <meta name="description" content={metaDescription} />
+      <meta name="author" content={SITE_NAME} />
+      <meta name="robots" content={robotsContent} />
+      <meta name="googlebot" content={robotsContent} />
+      <link rel="canonical" href={canonicalUrl} />
 
-export default SEO;
+      <meta property="og:type" content={type} />
+      <meta property="og:site_name" content={SITE_NAME} />
+      <meta property="og:url" content={canonicalUrl} />
+      <meta property="og:title" content={pageTitle} />
+      <meta property="og:description" content={metaDescription} />
+      <meta property="og:image" content={imageUrl} />
+      <meta property="og:image:alt" content={imageAlt} />
+
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={pageTitle} />
+      <meta name="twitter:description" content={metaDescription} />
+      <meta name="twitter:image" content={imageUrl} />
+      <meta name="twitter:image:alt" content={imageAlt} />
+
+      {schemas.map((schema, index) => (
+        <script
+          key={`${schema['@type'] || 'schema'}-${index}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(schema) }}
+        />
+      ))}
+    </Helmet>
+  );
+}

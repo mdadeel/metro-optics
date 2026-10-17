@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Envelope as Mail, ArrowLeft, SpinnerGap as Loader2, CheckCircle } from "@phosphor-icons/react";
 import { useAuth } from '../context/AuthContext';
 import './AuthPages.css';
+import SEO from '../components/SEO';
 
 const ForgotPassword = () => {
     const { resetPassword } = useAuth();
@@ -27,7 +28,8 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="auth-page">
+        <div className="auth-page mo-auth-page">
+            <SEO title="Reset Your Password" description="Reset your Metro Optics account password using a secure email link." url="/forgot-password" noIndex />
             <div className="auth-page-navbar">
                 <Link to="/login" className="auth-navbar-home">
                     <ArrowLeft size={20} />
@@ -128,7 +130,9 @@ const ForgotPassword = () => {
 
                 <div
                     className="auth-image"
-                    style={{ backgroundImage: 'url("/luxury_eyewear_login_bg_1767673565881.png")' }}
+                    role="img"
+                    aria-label="A Metro Optics customer wearing optical frames"
+                    style={{ backgroundImage: 'url("/metro-hero.webp")' }}
                 >
                     <div className="auth-image-overlay" />
                     <div className="auth-image-content">
