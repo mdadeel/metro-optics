@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useAuthStore } from '../stores/useAuthStore';
 import { toast } from 'sonner';
+import LogoMark from '../components/layout/LogoMark';
+import SEO from '../components/SEO';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -29,11 +31,17 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-[75vh] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-8 shadow-xl space-y-6">
+    <div className="mo-auth-page">
+      <SEO title="Create an Account" description="Create a Metro Optics account to keep your orders, saved frames and account details together." url="/register" noIndex />
+      <div className="mo-auth-layout">
+        <aside className="mo-auth-story">
+          <img src="/metro-hero.webp" alt="A Metro Optics customer wearing considered everyday frames" width="1264" height="848" decoding="async" />
+          <div className="mo-auth-story__copy"><p className="mo-eyebrow">A CLEARER VIEW, EVERY DAY</p><h2>Find your own point of view.</h2><p>Create an account to keep your orders, saved frames, and vision details in one place.</p></div>
+        </aside>
+        <section className="mo-auth-card">
         <div className="text-center space-y-2">
-          <div className="w-10 h-10 rounded-xl bg-primary text-white font-black flex items-center justify-center mx-auto text-lg shadow">
-            M
+          <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center mx-auto shadow" aria-hidden="true">
+            <LogoMark size={21} />
           </div>
           <h1 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">
             Create an Account
@@ -45,13 +53,15 @@ export default function Register() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-700 dark:text-gray-300">
-              Full Name
+            <label htmlFor="register-name" className="text-xs font-bold text-gray-700 dark:text-gray-300">
+              Full name
             </label>
             <div className="relative">
               <User className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
+                id="register-name"
                 type="text"
+                autoComplete="name"
                 required
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
@@ -62,13 +72,15 @@ export default function Register() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-700 dark:text-gray-300">
-              Email Address
+            <label htmlFor="register-email" className="text-xs font-bold text-gray-700 dark:text-gray-300">
+              Email address
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
+                id="register-email"
                 type="email"
+                autoComplete="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -79,13 +91,15 @@ export default function Register() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-700 dark:text-gray-300">
+            <label htmlFor="register-password" className="text-xs font-bold text-gray-700 dark:text-gray-300">
               Password
             </label>
             <div className="relative">
               <Lock className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
+                id="register-password"
                 type={showPassword ? 'text' : 'password'}
+                autoComplete="new-password"
                 required
                 minLength={6}
                 value={password}
@@ -97,6 +111,8 @@ export default function Register() {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showPassword}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -128,6 +144,7 @@ export default function Register() {
             <span>Return to Store</span>
           </Link>
         </div>
+        </section>
       </div>
     </div>
   );

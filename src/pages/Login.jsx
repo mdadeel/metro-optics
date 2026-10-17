@@ -3,6 +3,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useAuthStore } from '../stores/useAuthStore';
 import { toast } from 'sonner';
+import LogoMark from '../components/layout/LogoMark';
+import SEO from '../components/SEO';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -35,12 +37,18 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-[75vh] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-8 shadow-xl space-y-6">
+    <div className="mo-auth-page">
+      <SEO title="Sign In" description="Sign in to your Metro Optics account to access order history, saved frames and account settings." url="/login" noIndex />
+      <div className="mo-auth-layout">
+        <aside className="mo-auth-story">
+          <img src="/metro-hero.webp" alt="A Metro Optics customer wearing considered everyday frames" width="1264" height="848" decoding="async" />
+          <div className="mo-auth-story__copy"><p className="mo-eyebrow">A CLEARER VIEW, EVERY DAY</p><h2>Good to see you again.</h2><p>Pick up where you left off. Your orders, saved frames, and vision details are right here.</p></div>
+        </aside>
+        <section className="mo-auth-card">
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <div className="w-10 h-10 rounded-xl bg-primary text-white font-black flex items-center justify-center mx-auto text-lg shadow">
-            M
+          <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center mx-auto shadow" aria-hidden="true">
+            <LogoMark size={21} />
           </div>
           <h1 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">
             Sign In to Metro Optics
@@ -50,27 +58,20 @@ export default function Login() {
           </p>
         </div>
 
-        {/* Demo credentials hint */}
-        <div className="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl text-xs text-blue-800 dark:text-blue-300 space-y-1">
-          <p className="font-bold">Demo Mode Credentials:</p>
-          <p>
-            Customer: <code className="font-mono font-bold">user@metrooptics.com</code> / <code className="font-mono font-bold">user123</code>
-          </p>
-          <p>
-            Admin: <code className="font-mono font-bold">admin@metrooptics.com</code> / <code className="font-mono font-bold">admin123</code>
-          </p>
-        </div>
+        <p className="mo-auth-note">Your account keeps orders, saved frames, and prescription records together.</p>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-700 dark:text-gray-300">
-              Email Address
+            <label htmlFor="login-email" className="text-xs font-bold text-gray-700 dark:text-gray-300">
+              Email address
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
+                id="login-email"
                 type="email"
+                autoComplete="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -82,7 +83,7 @@ export default function Login() {
 
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-gray-700 dark:text-gray-300">
+              <label htmlFor="login-password" className="text-xs font-bold text-gray-700 dark:text-gray-300">
                 Password
               </label>
               <Link
@@ -95,7 +96,9 @@ export default function Login() {
             <div className="relative">
               <Lock className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
+                id="login-password"
                 type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -106,6 +109,8 @@ export default function Login() {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showPassword}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -137,6 +142,7 @@ export default function Login() {
             <span>Return to Store</span>
           </Link>
         </div>
+        </section>
       </div>
     </div>
   );

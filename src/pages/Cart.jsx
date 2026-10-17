@@ -5,6 +5,7 @@ import ProductCard from '../components/product/ProductCard';
 import { useCartStore } from '../stores/useCartStore';
 import { useProductStore } from '../stores/useProductStore';
 import { formatPrice } from '../lib/utils';
+import SEO from '../components/SEO';
 
 export default function Cart() {
   const { items, updateQuantity, removeFromCart, getSubtotal, getShipping, getTax, getTotal } =
@@ -17,10 +18,12 @@ export default function Cart() {
   const total = getTotal();
 
   const recommendations = products.slice(0, 4);
+  const pageSEO = <SEO title="Your Shopping Bag" description="Review items in your Metro Optics shopping bag before checkout." url="/cart" noIndex />;
 
   if (items.length === 0) {
     return (
-      <div className="max-w-[1320px] mx-auto px-4 py-16 text-center space-y-4">
+      <div className="mo-cart-page mo-cart-page--empty max-w-[1320px] mx-auto px-4 py-16 text-center space-y-4">
+        {pageSEO}
         <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-gray-800 text-gray-400 flex items-center justify-center mx-auto">
           <ShoppingBag className="w-8 h-8" />
         </div>
@@ -42,7 +45,8 @@ export default function Cart() {
   }
 
   return (
-    <div className="max-w-[1320px] mx-auto px-4 py-6 space-y-8">
+    <div className="mo-cart-page max-w-[1320px] mx-auto px-4 py-6 space-y-8">
+      {pageSEO}
       <Breadcrumb items={[{ label: 'Shopping Cart' }]} />
 
       <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white">
@@ -56,17 +60,17 @@ export default function Cart() {
             <table className="w-full text-left text-xs">
               <thead className="bg-gray-50 dark:bg-gray-800 text-gray-500 font-bold uppercase tracking-wider border-b border-gray-200 dark:border-gray-800">
                 <tr>
-                  <th className="p-4">Product Details</th>
-                  <th className="p-4">Unit Price</th>
-                  <th className="p-4">Quantity</th>
-                  <th className="p-4">Subtotal</th>
-                  <th className="p-4 text-right">Action</th>
+                  <th scope="col" className="p-4">Product</th>
+                  <th scope="col" className="p-4">Unit price</th>
+                  <th scope="col" className="p-4">Quantity</th>
+                  <th scope="col" className="p-4">Subtotal</th>
+                  <th scope="col" className="p-4 text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                 {items.map((item) => (
                   <tr key={item.cartItemId} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/40 transition-colors">
-                    <td className="p-4">
+                    <td className="p-4" data-label="Product">
                       <div className="flex items-center gap-3">
                         <img
                           src={item.image || item.images?.[0]}
@@ -89,34 +93,39 @@ export default function Cart() {
                       </div>
                     </td>
 
-                    <td className="p-4 font-bold text-gray-900 dark:text-white whitespace-nowrap">
+                    <td className="p-4 font-bold text-gray-900 dark:text-white whitespace-nowrap" data-label="Unit price">
                       {formatPrice(item.price)}
                     </td>
 
-                    <td className="p-4 whitespace-nowrap">
+                    <td className="p-4 whitespace-nowrap" data-label="Quantity">
                       <div className="flex items-center border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden w-fit">
                         <button
+                          type="button"
                           onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
                           className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
+                          aria-label={`Decrease quantity of ${item.name}`}
                         >
-                          <Minus className="w-3.5 h-3.5" />
+                          <Minus className="w-3.5 h-3.5" aria-hidden="true" />
                         </button>
-                        <span className="px-3 text-xs font-bold">{item.quantity}</span>
+                        <span className="px-3 text-xs font-bold" aria-live="polite">{item.quantity}</span>
                         <button
+                          type="button"
                           onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
                           className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
+                          aria-label={`Increase quantity of ${item.name}`}
                         >
-                          <Plus className="w-3.5 h-3.5" />
+                          <Plus className="w-3.5 h-3.5" aria-hidden="true" />
                         </button>
                       </div>
                     </td>
 
-                    <td className="p-4 font-black text-primary whitespace-nowrap">
+                    <td className="p-4 font-black text-primary whitespace-nowrap" data-label="Subtotal">
                       {formatPrice(item.price * item.quantity)}
                     </td>
 
-                    <td className="p-4 text-right whitespace-nowrap">
+                    <td className="p-4 text-right whitespace-nowrap" data-label="Remove">
                       <button
+                        type="button"
                         onClick={() => removeFromCart(item.cartItemId)}
                         className="p-2 text-gray-400 hover:text-red-600 transition-colors"
                         aria-label="Remove item"

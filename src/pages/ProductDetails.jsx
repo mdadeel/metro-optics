@@ -1,489 +1,277 @@
-import { useState, useMemo } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
-  Star,
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  ChevronRight,
   Heart,
-  ShoppingBag,
   Minus,
   Plus,
-  Zap,
-  GitCompare,
-  Truck,
   RotateCcw,
+  Ruler,
   ShieldCheck,
-  Check,
+  ShoppingBag,
+  Truck,
+  Zap,
 } from 'lucide-react';
-import Breadcrumb from '../components/layout/Breadcrumb';
-import ProductCard from '../components/product/ProductCard';
-import ProductQuickView from '../components/product/ProductQuickView';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '../components/ui/tabs';
 import { useProductStore } from '../stores/useProductStore';
 import { useCartStore } from '../stores/useCartStore';
-import { useWishlistStore } from '../../src/stores/useWishlistStore';
-import { useCompareStore } from '../../src/stores/useCompareStore';
+import { useWishlistStore } from '../stores/useWishlistStore';
 import { formatPrice, calculateDiscount } from '../lib/utils';
 import { LENS_TYPES } from '../lib/constants';
+import SEO from '../components/SEO';
+import {
+  buildBreadcrumbSchema,
+  buildProductSchema,
+  getProductAvailability,
+  isDemoCatalog,
+} from '../lib/seo';
+
+const detailPanels = [
+  { id: 'details', label: 'Details' },
+  { id: 'specs', label: 'Specifications' },
+];
+
+function RelatedFrameCard({ product }) {
+  return (
+    <Link to={`/product/${product.id}`} className="mo-related-card">
+      <span className="mo-related-card__image"><img src={product.image || product.images?.[0]} alt={product.name} loading="lazy" /></span>
+      <span className="mo-related-card__brand">{product.brand || 'Metro Optics'}</span>
+      <strong>{product.name}</strong>
+      <span className="mo-related-card__price">{formatPrice(product.price)} <ArrowUpRight size={13} aria-hidden="true" /></span>
+    </Link>
+  );
+}
 
 export default function ProductDetails() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const { getProductById, products } = useProductStore();
-  const addToCart = useCartStore((state) => state.addToCart);
-  const { toggleWishlist, isInWishlist } = useWishlistStore();
-  const { addToCompare, isInCompare } = useCompareStore();
+  const products = useProductStore((state) => state.products);
+  const loading = useProductStore((state) => state.loading);
+  const getProductById = useProductStore((state) => state.getProductById);
+  const product = getProductById(id);
 
-  const product = getProductById(id) || products[0];
-
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [selectedColor, setSelectedColor] = useState(
-    () => product?.colors?.[0] || 'Standard'
-  );
-  const [selectedSize, setSelectedSize] = useState(
-    () => product?.sizes?.[0] || 'Standard'
-  );
-  const [selectedLens, setSelectedLens] = useState('Standard Clear');
-  const [quantity, setQuantity] = useState(1);
-
-  const images = useMemo(() => {
-    if (product?.images && product.images.length > 0) return product.images;
-    if (product?.image) return [product.image];
-    return ['https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&auto=format&fit=crop&q=80'];
-  }, [product]);
-
-  if (!product) {
+  if (!product && loading) {
     return (
-      <div className="max-w-[1320px] mx-auto px-4 py-20 text-center">
-        <h2 className="text-2xl font-black mb-2">Eyewear Model Not Found</h2>
-        <p className="text-xs text-gray-500 mb-6">The requested product could not be located.</p>
-        <Link to="/shop" className="px-6 py-3 bg-primary text-white font-bold rounded-xl text-xs">
-          Return to Shop
-        </Link>
+      <div className="mo-detail-page mo-detail-not-found">
+        <SEO title="Loading product" description="Loading product details from the Metro Optics collection." url={`/product/${encodeURIComponent(id)}`} noIndex />
+        <p className="mo-eyebrow">LOADING</p>
+        <h1 className="mo-display">Finding this frame.</h1>
+        <p>Product details are loading. Please wait a moment.</p>
       </div>
     );
   }
 
+  if (!product) {
+    return (
+      <div className="mo-detail-page mo-detail-not-found">
+        <SEO title="Frame not found" description="This product could not be found in the Metro Optics collection. Browse the current collection to see available frames." url={`/product/${encodeURIComponent(id)}`} noIndex />
+        <p className="mo-eyebrow">NOT FOUND</p>
+        <h1 className="mo-display">This frame has moved on.</h1>
+        <p>We couldn’t find that style. Take a look at the rest of the collection.</p>
+        <Link to="/shop" className="mo-button mo-button--dark">Back to the collection <ArrowRight size={16} /></Link>
+      </div>
+    );
+  }
+
+  return <ProductDetailsContent key={String(product.id)} product={product} products={products} />;
+}
+
+function ProductDetailsContent({ product, products }) {
+  const navigate = useNavigate();
+  const addToCart = useCartStore((state) => state.addToCart);
+  const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
+  const isInWishlist = useWishlistStore((state) => state.isInWishlist);
+
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || 'Standard');
+  const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || 'Standard');
+  const [selectedLens, setSelectedLens] = useState(product.lensType || LENS_TYPES[0]);
+  const [quantity, setQuantity] = useState(1);
+  const [activePanel, setActivePanel] = useState('details');
+
+  const images = useMemo(() => {
+    if (product.images?.length) return product.images;
+    if (product.image) return [product.image];
+    return [];
+  }, [product]);
   const discount = calculateDiscount(product.originalPrice, product.price);
   const inWishlist = isInWishlist(product.id);
-  const inCompare = isInCompare(product.id);
+  const relatedProducts = products
+    .filter((item) => item.id !== product.id && item.category === product.category)
+    .slice(0, 4);
+  const categoryLabel = product.category?.replaceAll('-', ' ') || 'eyewear';
+  const productPath = `/product/${encodeURIComponent(product.id)}`;
+  const productIsDemo = String(product.id).startsWith('demo-') || isDemoCatalog(products);
+  const productDescription = product.description || `Explore ${product.name} in the Metro Optics collection. View the current price and product options before ordering.`;
+  const productSchema = productIsDemo ? null : buildProductSchema(product, productPath);
+  const productBreadcrumbSchema = productIsDemo
+    ? null
+    : buildBreadcrumbSchema([
+        { name: 'Home', path: '/' },
+        { name: 'Shop', path: '/shop' },
+        { name: product.name, path: productPath },
+      ]);
+  const productAvailability = getProductAvailability(product);
+  const isOutOfStock = productAvailability === 'https://schema.org/OutOfStock';
+  const sku = product.sku || product.inventory?.sku;
 
-  const handleAddToCart = () => {
-    addToCart(product, quantity, { selectedColor, selectedSize });
-  };
-
+  const handleAddToCart = () => addToCart(product, quantity, { selectedColor, selectedSize, selectedLens });
   const handleBuyNow = () => {
-    addToCart(product, quantity, { selectedColor, selectedSize });
+    handleAddToCart();
     navigate('/checkout');
   };
 
-  // Related products from same category
-  const relatedProducts = products
-    .filter((p) => p.id !== product.id && p.category === product.category)
-    .slice(0, 5);
-
   return (
-    <div className="max-w-[1320px] mx-auto px-4 py-6 space-y-10">
-      {/* Breadcrumb Trail */}
-      <Breadcrumb
-        items={[
-          { label: 'Shop', to: '/shop' },
-          { label: product.category, to: `/shop?category=${product.category}` },
-          { label: product.name },
-        ]}
+    <div className="mo-detail-page">
+      <SEO
+        title={product.name}
+        description={productDescription}
+        url={productPath}
+        image={images[0] || undefined}
+        imageAlt={`${product.name} eyewear`}
+        type="product"
+        noIndex={productIsDemo}
+        structuredData={[productSchema, productBreadcrumbSchema]}
       />
+      <nav className="mo-detail-crumbs" aria-label="Breadcrumb">
+        <Link to="/">Home</Link><ChevronRight size={13} aria-hidden="true" />
+        <Link to="/shop">Shop</Link><ChevronRight size={13} aria-hidden="true" />
+        <Link to={`/shop?category=${product.category}`} className="mo-detail-crumbs__category">{categoryLabel}</Link>
+        <ChevronRight size={13} aria-hidden="true" /><span>{product.name}</span>
+      </nav>
 
-      {/* Main Product Layout (Gallery + Buying Box) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left: Gallery (5 Cols) */}
-        <div className="lg:col-span-6 space-y-4">
-          <div className="relative aspect-square rounded-2xl overflow-hidden bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-md">
-            {discount > 0 && (
-              <span className="absolute top-4 left-4 z-10 bg-accent text-white text-xs font-black px-2.5 py-1 rounded shadow">
-                Save {discount}%
-              </span>
-            )}
-            <img
-              src={images[activeImageIndex] || images[0]}
-              alt={product.name}
-              className="w-full h-full object-cover object-center"
-            />
+      <div className="mo-detail-layout">
+        <section className="mo-detail-gallery" aria-label="Product images">
+          <div className="mo-detail-main-image">
+            {discount > 0 && <span className="mo-detail-sale">SAVE {discount}%</span>}
+            <img src={images[activeImageIndex] || images[0]} alt={product.name} />
+            <span className="mo-detail-image-index">{String(activeImageIndex + 1).padStart(2, '0')} <i /> {String(images.length || 1).padStart(2, '0')}</span>
           </div>
-
-          {/* Thumbnail List */}
           {images.length > 1 && (
-            <div className="flex items-center gap-3">
-              {images.map((img, idx) => (
+            <div className="mo-detail-thumbnails" aria-label="Choose product image">
+              {images.map((image, index) => (
                 <button
-                  key={idx}
-                  onClick={() => setActiveImageIndex(idx)}
-                  className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
-                    activeImageIndex === idx
-                      ? 'border-primary shadow-sm scale-105'
-                      : 'border-gray-200 dark:border-gray-800 opacity-70 hover:opacity-100'
-                  }`}
+                  key={`${image}-${index}`}
+                  type="button"
+                  className={activeImageIndex === index ? 'is-active' : ''}
+                  onClick={() => setActiveImageIndex(index)}
+                  aria-label={`Show image ${index + 1}`}
+                  aria-pressed={activeImageIndex === index}
                 >
-                  <img src={img} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" />
+                  <img src={image} alt="" />
                 </button>
               ))}
             </div>
           )}
-        </div>
+        </section>
 
-        {/* Right: Product Purchasing Panel (7 Cols) */}
-        <div className="lg:col-span-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
-          {/* Header info */}
-          <div>
-            <div className="flex items-center justify-between gap-2 mb-2">
-              <span className="text-xs font-black uppercase tracking-wider text-primary">
-                {product.brand} Official
-              </span>
-              <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-full">
-                <Check className="w-3 h-3" />
-                <span>In Stock & Ready</span>
-              </span>
-            </div>
-
-            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white leading-tight">
-              {product.name}
-            </h1>
-
-            <div className="flex items-center gap-4 mt-2 text-xs text-gray-400">
-              <div className="flex items-center text-amber-400">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-4 h-4 ${
-                      i < Math.floor(product.rating || 5) ? 'fill-current' : 'text-gray-300'
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="font-semibold text-gray-600 dark:text-gray-300">
-                {product.rating} ({product.reviews || 48} verified reviews)
-              </span>
-              <span>•</span>
-              <span>SKU: {product.sku || 'MO-RB-3025'}</span>
-            </div>
-          </div>
-
-          {/* Pricing Row */}
-          <div className="p-4 bg-gray-50 dark:bg-gray-800/60 rounded-xl flex items-baseline gap-3">
-            <span className="text-3xl font-black text-primary">
-              {formatPrice(product.price)}
-            </span>
-            {product.originalPrice > product.price && (
-              <span className="text-base text-gray-400 line-through">
-                {formatPrice(product.originalPrice)}
-              </span>
-            )}
-            {discount > 0 && (
-              <span className="text-xs font-bold text-accent bg-accent/10 px-2 py-0.5 rounded">
-                Save ${Math.round(product.originalPrice - product.price)}
+        <section className="mo-detail-info" aria-labelledby="mo-product-title">
+          <div className="mo-detail-overline">
+            <span>{product.brand || 'Metro Optics'}</span>
+            {productAvailability && (
+              <span className={`mo-detail-stock${isOutOfStock ? ' is-unavailable' : ''}`}>
+                {!isOutOfStock && <Check size={12} aria-hidden="true" />}
+                {isOutOfStock ? 'Currently unavailable' : 'Available now'}
               </span>
             )}
           </div>
+          <h1 id="mo-product-title" className="mo-display">{product.name}</h1>
+          {sku && <p className="mo-detail-sku">SKU {sku}</p>}
 
-          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-            {product.description}
-          </p>
+          <div className="mo-detail-price-row">
+            <strong>{formatPrice(product.price)}</strong>
+            {product.originalPrice > product.price && <del>{formatPrice(product.originalPrice)}</del>}
+            {discount > 0 && <span>You save {formatPrice(product.originalPrice - product.price)}</span>}
+          </div>
+          <p className="mo-detail-description">{product.description}</p>
 
-          {/* Color Selection */}
           {product.colors?.length > 0 && (
-            <div>
-              <label className="text-xs font-bold text-gray-800 dark:text-gray-200 block mb-2">
-                Frame Color: <span className="text-primary font-semibold">{selectedColor}</span>
-              </label>
-              <div className="flex flex-wrap gap-2">
+            <fieldset className="mo-detail-option">
+              <legend>Frame colour <span>{selectedColor}</span></legend>
+              <div className="mo-detail-choice-list">
                 {product.colors.map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => setSelectedColor(color)}
-                    className={`px-3 py-1.5 rounded-lg border text-xs font-bold transition-all ${
-                      selectedColor === color
-                        ? 'border-primary bg-primary/10 text-primary shadow-sm'
-                        : 'border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-primary/50'
-                    }`}
-                  >
-                    {color}
-                  </button>
+                  <button key={color} type="button" className={selectedColor === color ? 'is-selected' : ''} onClick={() => setSelectedColor(color)} aria-pressed={selectedColor === color}>{color}</button>
                 ))}
               </div>
-            </div>
+            </fieldset>
           )}
 
-          {/* Lens Type Selection */}
-          <div>
-            <label className="text-xs font-bold text-gray-800 dark:text-gray-200 block mb-2">
-              Lens Configuration:
-            </label>
-            <div className="grid grid-cols-2 gap-2">
+          <fieldset className="mo-detail-option mo-detail-lens-option">
+            <legend>Choose your lens <span>{selectedLens}</span></legend>
+            <div className="mo-detail-lens-grid">
               {LENS_TYPES.slice(0, 4).map((lens) => (
-                <button
-                  key={lens}
-                  onClick={() => setSelectedLens(lens)}
-                  className={`px-3 py-2 rounded-lg border text-xs font-medium text-left transition-all ${
-                    selectedLens === lens
-                      ? 'border-primary bg-primary/10 text-primary font-bold'
-                      : 'border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300'
-                  }`}
-                >
-                  {lens}
+                <button key={lens} type="button" className={selectedLens === lens ? 'is-selected' : ''} onClick={() => setSelectedLens(lens)} aria-pressed={selectedLens === lens}>
+                  <span className="mo-detail-radio"><i /></span><span>{lens}</span>
                 </button>
               ))}
             </div>
-          </div>
+          </fieldset>
 
-          {/* Size Selection */}
           {product.sizes?.length > 0 && (
-            <div>
-              <label className="text-xs font-bold text-gray-800 dark:text-gray-200 block mb-2">
-                Bridge & Lens Sizing:
-              </label>
-              <div className="flex gap-2">
-                {product.sizes.map((sz) => (
-                  <button
-                    key={sz}
-                    onClick={() => setSelectedSize(sz)}
-                    className={`px-3 py-1.5 rounded-lg border text-xs font-bold transition-all ${
-                      selectedSize === sz
-                        ? 'border-primary bg-primary text-white'
-                        : 'border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300'
-                    }`}
-                  >
-                    {sz}
-                  </button>
+            <fieldset className="mo-detail-option">
+              <legend>Frame size <span>{selectedSize}</span></legend>
+              <div className="mo-detail-choice-list">
+                {product.sizes.map((size) => (
+                  <button key={size} type="button" className={selectedSize === size ? 'is-selected' : ''} onClick={() => setSelectedSize(size)} aria-pressed={selectedSize === size}>{size}</button>
                 ))}
+                <Link to="/faq" className="mo-detail-size-help"><Ruler size={13} /> Fit guide</Link>
               </div>
-            </div>
+            </fieldset>
           )}
 
-          {/* Quantity & Actions */}
-          <div className="pt-2 flex flex-col sm:flex-row gap-3">
-            {/* Quantity Stepper */}
-            <div className="flex items-center border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden self-start">
-              <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
-              >
-                <Minus className="w-4 h-4" />
-              </button>
-              <span className="px-4 text-sm font-black min-w-[3rem] text-center">
-                {quantity}
-              </span>
-              <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
-              >
-                <Plus className="w-4 h-4" />
-              </button>
+          <div className="mo-detail-purchase">
+            <div className="mo-detail-quantity" aria-label="Quantity">
+              <button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))} aria-label="Decrease quantity"><Minus size={14} /></button>
+              <span>{quantity}</span>
+              <button type="button" onClick={() => setQuantity((value) => value + 1)} aria-label="Increase quantity"><Plus size={14} /></button>
             </div>
-
-            {/* Add to Cart */}
-            <button
-              onClick={handleAddToCart}
-              className="flex-1 py-3.5 px-6 bg-primary hover:bg-primary-hover text-white text-xs font-black rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
-            >
-              <ShoppingBag className="w-4 h-4" />
-              <span>Add to Cart</span>
-            </button>
-
-            {/* Buy Now Fast Checkout */}
-            <button
-              onClick={handleBuyNow}
-              className="py-3.5 px-6 bg-accent hover:bg-accent-hover text-white text-xs font-black rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
-            >
-              <Zap className="w-4 h-4 fill-current" />
-              <span>Buy Now</span>
-            </button>
-
-            {/* Wishlist Icon */}
-            <button
-              onClick={() => toggleWishlist(product)}
-              className={`p-3.5 border rounded-xl transition-all ${
-                inWishlist
-                  ? 'border-accent text-accent bg-accent/10'
-                  : 'border-gray-200 dark:border-gray-700 text-gray-500 hover:text-accent'
-              }`}
-              aria-label="Wishlist"
-            >
-              <Heart className={`w-5 h-5 ${inWishlist ? 'fill-current' : ''}`} />
-            </button>
-
-            {/* Compare Icon */}
-            <button
-              onClick={() => addToCompare(product)}
-              className={`p-3.5 border rounded-xl transition-all ${
-                inCompare
-                  ? 'border-primary text-primary bg-primary/10'
-                  : 'border-gray-200 dark:border-gray-700 text-gray-500 hover:text-primary'
-              }`}
-              aria-label="Compare"
-            >
-              <GitCompare className="w-5 h-5" />
-            </button>
+            <button type="button" className="mo-detail-add" onClick={handleAddToCart} disabled={isOutOfStock}><ShoppingBag size={16} /> Add to bag</button>
+            <button type="button" className="mo-detail-buy" onClick={handleBuyNow} disabled={isOutOfStock}><Zap size={15} /> Buy now</button>
+          </div>
+          <div className="mo-detail-utility">
+            <button type="button" onClick={() => toggleWishlist(product)} aria-pressed={inWishlist} className={inWishlist ? 'is-active' : ''}><Heart size={16} fill={inWishlist ? 'currentColor' : 'none'} /> {inWishlist ? 'Saved to wishlist' : 'Save to wishlist'}</button>
           </div>
 
-          {/* Guarantee Highlights */}
-          <div className="pt-4 border-t border-gray-100 dark:border-gray-800 grid grid-cols-3 gap-2 text-[11px] text-gray-500 text-center">
-            <div className="flex flex-col items-center gap-1">
-              <Truck className="w-4 h-4 text-primary" />
-              <span>Free Shipping</span>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <RotateCcw className="w-4 h-4 text-amber-500" />
-              <span>30-Day Returns</span>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span>Rx Verified</span>
-            </div>
+          <div className="mo-detail-promises">
+            <div><Truck size={17} /><span><strong>Complimentary delivery</strong><small>On orders over $99</small></span></div>
+            <div><RotateCcw size={17} /><span><strong>30-day returns</strong><small>Easy, no-stress exchanges</small></span></div>
+            <div><ShieldCheck size={17} /><span><strong>Authenticity assured</strong><small>Original frames, always</small></span></div>
           </div>
+        </section>
+      </div>
+
+      <section className="mo-detail-information" aria-label="Product information">
+        <div className="mo-detail-tabs" role="group" aria-label="Product information sections">
+          {detailPanels.map((panel) => (
+            <button key={panel.id} type="button" className={activePanel === panel.id ? 'is-active' : ''} onClick={() => setActivePanel(panel.id)} aria-pressed={activePanel === panel.id}>
+              {panel.label}
+            </button>
+          ))}
         </div>
-      </div>
-
-      {/* Product Details Tabs (Description, Specifications, Reviews) */}
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm">
-        <Tabs defaultValue="specs">
-          <TabsList className="mb-6">
-            <TabsTrigger value="specs">Specifications & Dimensions</TabsTrigger>
-            <TabsTrigger value="desc">Full Description</TabsTrigger>
-            <TabsTrigger value="reviews">Customer Reviews ({product.reviews || 48})</TabsTrigger>
-          </TabsList>
-
-          {/* Specifications Table */}
-          <TabsContent value="specs">
-            <div className="space-y-4">
-              <h3 className="text-base font-black text-gray-900 dark:text-white">
-                Technical Specifications & Fit Details
-              </h3>
-              <div className="border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden divide-y divide-gray-100 dark:divide-gray-800 text-xs">
-                {product.specs ? (
-                  Object.entries(product.specs).map(([key, val]) => (
-                    <div key={key} className="grid grid-cols-3 p-3">
-                      <span className="font-bold text-gray-500 uppercase">{key}</span>
-                      <span className="col-span-2 font-semibold text-gray-900 dark:text-white">
-                        {val}
-                      </span>
-                    </div>
-                  ))
-                ) : (
-                  <>
-                    <div className="grid grid-cols-3 p-3">
-                      <span className="font-bold text-gray-500 uppercase">Frame Material</span>
-                      <span className="col-span-2 font-semibold text-gray-900 dark:text-white">
-                        Italian Hypoallergenic Cellulose Acetate
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-3 p-3">
-                      <span className="font-bold text-gray-500 uppercase">Lens Material</span>
-                      <span className="col-span-2 font-semibold text-gray-900 dark:text-white">
-                        Impact-Resistant Polycarbonate UV400
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-3 p-3">
-                      <span className="font-bold text-gray-500 uppercase">Hinge Construction</span>
-                      <span className="col-span-2 font-semibold text-gray-900 dark:text-white">
-                        5-Barrel Stainless Steel Hinge
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-3 p-3">
-                      <span className="font-bold text-gray-500 uppercase">Warranty</span>
-                      <span className="col-span-2 font-semibold text-gray-900 dark:text-white">
-                        2-Year Comprehensive Manufacturer Protection
-                      </span>
-                    </div>
-                  </>
-                )}
-              </div>
+        {activePanel === 'details' && (
+          <div className="mo-detail-panel">
+            <div><p className="mo-eyebrow">DESIGNED WITH INTENTION</p><h2 className="mo-display">A good frame changes everything.</h2></div>
+            <div><p>{product.description}</p><p>Made to feel just right from the first wear, with a carefully considered silhouette and everyday comfort at its core. Pair it with your prescription or wear it as is.</p></div>
+          </div>
+        )}
+        {activePanel === 'specs' && (
+          product.specs && Object.keys(product.specs).length > 0 ? (
+            <div className="mo-detail-specs">
+              {Object.entries(product.specs).map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}
             </div>
-          </TabsContent>
+          ) : (
+            <p className="mo-detail-empty-specs">Detailed specifications are not available for this frame yet. Contact our team if you need a specific measurement or material detail.</p>
+          )
+        )}
+      </section>
 
-          {/* Description */}
-          <TabsContent value="desc">
-            <div className="prose dark:prose-invert max-w-none text-xs sm:text-sm text-gray-600 dark:text-gray-300 space-y-4">
-              <p>{product.description}</p>
-              <p>
-                Engineered with optical ergonomics in mind, this silhouette provides balanced temple weight distribution to eliminate discomfort during prolonged wear. Lenses are treated with oleophobic and hydrophobic coatings to resist fingerprint smudges, rain droplets, and static dust accumulation.
-              </p>
-            </div>
-          </TabsContent>
-
-          {/* Reviews */}
-          <TabsContent value="reviews">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-800">
-                <div>
-                  <h4 className="text-base font-black text-gray-900 dark:text-white">
-                    Verified Customer Feedback
-                  </h4>
-                  <p className="text-xs text-gray-500">Based on {product.reviews || 48} verified eyewear purchases</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-black text-primary">{product.rating}</span>
-                  <div className="flex text-amber-400">
-                    <Star className="w-4 h-4 fill-current" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="p-4 bg-gray-50 dark:bg-gray-800/60 rounded-xl space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-gray-900 dark:text-white">
-                      Marcus V. — Verified Buyer
-                    </span>
-                    <span className="text-[11px] text-gray-400">2 days ago</span>
-                  </div>
-                  <div className="flex text-amber-400">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className="w-3 h-3 fill-current" />
-                    ))}
-                  </div>
-                  <p className="text-xs text-gray-600 dark:text-gray-300">
-                    "The frame quality blew me away. Super lightweight yet robust, and my custom prescription lenses are crystal clear with zero distortion!"
-                  </p>
-                </div>
-
-                <div className="p-4 bg-gray-50 dark:bg-gray-800/60 rounded-xl space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-gray-900 dark:text-white">
-                      Elena R. — Verified Buyer
-                    </span>
-                    <span className="text-[11px] text-gray-400">1 week ago</span>
-                  </div>
-                  <div className="flex text-amber-400">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className="w-3 h-3 fill-current" />
-                    ))}
-                  </div>
-                  <p className="text-xs text-gray-600 dark:text-gray-300">
-                    "Fast delivery to New York in 2 days. The case and microfiber cloth included are very premium. Will definitely order again!"
-                  </p>
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-
-      {/* You May Also Like (5-Column Grid) */}
       {relatedProducts.length > 0 && (
-        <div className="space-y-4">
-          <div className="pb-2 border-b border-gray-200 dark:border-gray-800">
-            <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">
-              You May Also Like
-            </h3>
-            <p className="text-xs text-gray-500">Similar models in {product.category}</p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {relatedProducts.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        </div>
+        <section className="mo-related" aria-labelledby="mo-related-title">
+          <div className="mo-related__heading"><div><p className="mo-eyebrow">MORE TO LOVE</p><h2 id="mo-related-title" className="mo-display">Similar frames, same feeling.</h2></div><Link to={`/shop?category=${product.category}`}>Explore collection <ArrowRight size={15} /></Link></div>
+          <div className="mo-related__grid">{relatedProducts.map((item) => <RelatedFrameCard key={item.id} product={item} />)}</div>
+        </section>
       )}
-
-      <ProductQuickView />
     </div>
   );
 }

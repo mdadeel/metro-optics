@@ -4,49 +4,47 @@
    ============================================ */
 
 .dark {
-  --color-bg: #0A0A0A;
-  --color-surface: #111111;
-  --color-border: #2A2A2A;
-  --color-border-light: #222222;
-  --color-text-primary: #E5E5E5;
-  --color-text-secondary: #9A9A9A;
-  --color-text-tertiary: #5A5A5A;
-  --color-accent-soft: #1A1A2E;
-  --color-secondary: #0A0A0A;
-  --color-secondary-light: #1A1A1A;
+  --color-bg: #111713;
+  --color-surface: #19211c;
+  --color-border: #303a33;
+  --color-border-light: #252e28;
+  --color-text-primary: #f0f1e8;
+  --color-text-secondary: #a9b0a9;
+  --color-text-tertiary: #737a74;
+  --color-accent-soft: #232c25;
+  --color-secondary: #151c17;
+  --color-secondary-light: #232c25;
 
-  /* Gray Scale - Inverted for dark backgrounds */
-  --color-white: #0a0a0a;
-  --color-gray-50: #111111;
-  --color-gray-100: #1a1a1a;
-  --color-gray-200: #2a2a2a;
-  --color-gray-300: #3a3a3a;
-  --color-gray-400: #5a5a5a;
-  --color-gray-500: #7a7a7a;
-  --color-gray-600: #9a9a9a;
-  --color-gray-700: #b0b0b0;
-  --color-gray-800: #cccccc;
-  --color-gray-900: #e5e5e5;
+  /* Warm neutral scale for dark surfaces */
+  --color-white: #111713;
+  --color-gray-50: #151c17;
+  --color-gray-100: #19211c;
+  --color-gray-200: #303a33;
+  --color-gray-300: #3b473f;
+  --color-gray-400: #737a74;
+  --color-gray-500: #929a92;
+  --color-gray-600: #a9b0a9;
+  --color-gray-700: #c3c9c0;
+  --color-gray-800: #d8ddd4;
+  --color-gray-900: #f0f1e8;
 
-  /* Primary - Inverted */
-  --color-primary: #e5e5e5;
-  --color-primary-light: #ffffff;
-  --color-primary-dark: #cccccc;
+  /* Accessible evergreen accent in dark mode */
+  --color-primary: #d9e99a;
+  --color-primary-light: #e4efb3;
+  --color-primary-dark: #c0d27d;
+  --color-primary-hover: #c0d27d;
 
-  /* Secondary */
-  --color-secondary: #0a0a0a;
-  --color-secondary-light: #1a1a1a;
+  --color-accent: #c4a66b;
+  --color-accent-light: #d7bd8b;
+  --color-accent-dark: #a98b53;
+  --color-accent-soft: #25271f;
 
-  /* Accent */
-  --color-accent: #3a3a3a;
+  --gradient-primary: linear-gradient(135deg, #344c3b 0%, #24352a 100%);
+  --gradient-primary-hover: linear-gradient(135deg, #415d48 0%, #2d4033 100%);
 
-  /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-  --gradient-primary-hover: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
-
-  /* Focus ring - brighter in dark mode */
-  --color-focus-ring: #60a5fa;
-  --color-focus-ring-offset: #0a0a0a;
+  /* Focus ring with strong contrast in dark mode */
+  --color-focus-ring: #d9e99a;
+  --color-focus-ring-offset: #111713;
 
   /* Shadows - Subtler in dark mode */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);

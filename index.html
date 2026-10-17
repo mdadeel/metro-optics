@@ -1,18 +1,65 @@
 <!doctype html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="/logo.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Metro Optics - Premium Eyewear & Contact Lenses in Bangladesh</title>
-  <meta name="description"
-    content="Shop premium eyeglasses, sunglasses, and contact lenses at Metro Optics. Experience superior vision with our curated collection and expert eye care services." />
-</head>
-
-<body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
-</body>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#243b32" />
+    <meta name="robots" content="__METRO_OPTICS_ROBOTS__" />
+    <meta name="googlebot" content="__METRO_OPTICS_ROBOTS__" />
+    <meta name="description" content="Shop eyeglasses, sunglasses, blue-light and reading frames from Metro Optics. Explore available styles, product details and support for finding a fit." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Metro Optics" />
+    <meta property="og:url" content="__METRO_OPTICS_SITE_URL__/" />
+    <meta property="og:title" content="Eyeglasses &amp; Sunglasses | Metro Optics" />
+    <meta property="og:description" content="Shop eyeglasses, sunglasses, blue-light and reading frames from Metro Optics. Explore available styles and product details." />
+    <meta property="og:image" content="__METRO_OPTICS_SITE_URL__/metro-optics-og.jpg" />
+    <meta property="og:image:alt" content="Metro Optics eyewear editorial campaign" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Eyeglasses &amp; Sunglasses | Metro Optics" />
+    <meta name="twitter:description" content="Explore eyeglasses, sunglasses and everyday frames from Metro Optics." />
+    <meta name="twitter:image" content="__METRO_OPTICS_SITE_URL__/metro-optics-og.jpg" />
+    <link rel="canonical" href="__METRO_OPTICS_SITE_URL__/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preload" as="image" href="/metro-hero.webp" fetchpriority="high" />
+    <link rel="preload" as="font" href="/fonts/geist-sans-latin-400-normal.woff2" type="font/woff2" crossorigin />
+    <title>Eyeglasses &amp; Sunglasses | Metro Optics</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "__METRO_OPTICS_SITE_URL__/#organization",
+            "name": "Metro Optics",
+            "url": "__METRO_OPTICS_SITE_URL__/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "__METRO_OPTICS_SITE_URL__/logo.png"
+            },
+            "description": "Eyewear storefront for eyeglasses, sunglasses and related frames."
+          },
+          {
+            "@type": "WebSite",
+            "@id": "__METRO_OPTICS_SITE_URL__/#website",
+            "url": "__METRO_OPTICS_SITE_URL__/",
+            "name": "Metro Optics",
+            "publisher": { "@id": "__METRO_OPTICS_SITE_URL__/#organization" },
+            "inLanguage": "en",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "__METRO_OPTICS_SITE_URL__/shop?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

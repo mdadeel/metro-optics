@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { CaretDown as ChevronDown } from "@phosphor-icons/react";
+import { Link } from 'react-router-dom';
+import Breadcrumb from '../components/layout/Breadcrumb';
+import SEO from '../components/SEO';
+import { buildBreadcrumbSchema, buildWebPageSchema } from '../lib/seo';
 
 const FAQ = () => {
     const [openIndex, setOpenIndex] = useState(null);
@@ -10,11 +14,11 @@ const FAQ = () => {
             questions: [
                 {
                     q: "How do I place an order?",
-                    a: "Browse our collection, select your favorite frames, choose your lens options, and proceed to checkout. You'll need to upload your prescription or enter it manually during the checkout process."
+                    a: "Browse the collection, choose any frame and lens options shown on the product page, then add them to your bag. At checkout, enter your delivery details, choose an available payment method, and review the full order summary before placing your order."
                 },
                 {
                     q: "What payment methods do you accept?",
-                    a: "We accept all major credit/debit cards, mobile banking (bKash, Nagad, Rocket), and cash on delivery for orders within Dhaka."
+                    a: "Payment choices appear during checkout and may depend on your delivery address. Current options include credit or debit card, PayPal, and cash on delivery where available."
                 },
                 {
                     q: "Can I cancel or modify my order?",
@@ -27,19 +31,19 @@ const FAQ = () => {
             questions: [
                 {
                     q: "Do I need a prescription to order glasses?",
-                    a: "Yes, for prescription eyeglasses you'll need a valid prescription from an eye doctor. For non-prescription sunglasses or blue light glasses, no prescription is required."
+                    a: "Only prescription lenses require a valid prescription from an eye-care professional. The product page shows the lens choices currently available for each frame; contact us before ordering if you need prescription lenses."
                 },
                 {
                     q: "How do I submit my prescription?",
-                    a: "You can upload a photo of your prescription during checkout, manually enter the details, or email it to us at prescriptions@metrooptics.com."
+                    a: "You can save prescription details under Prescriptions in your account. The checkout form does not currently collect a prescription upload or prescription values, so contact support before placing an order that needs prescription lenses."
                 },
                 {
                     q: "What is PD (Pupillary Distance) and how do I measure it?",
-                    a: "PD is the distance between your pupils in millimeters. It's crucial for proper lens alignment. You can find it on your prescription, ask your eye doctor, or use our online PD calculator tool."
+                    a: "PD is the distance between your pupils, measured in millimeters. It may be printed on your prescription; otherwise, ask your eye-care professional to measure it. We do not currently offer an online PD calculator."
                 },
                 {
                     q: "What lens options do you offer?",
-                    a: "We offer single vision, bifocal, and progressive lenses. Additional options include anti-glare coating, blue light filtering, photochromic (transitions), and various tint options."
+                    a: "Available selections vary by frame. Product pages currently show options such as clear, polarized anti-glare, blue-light blocking, and photochromic lenses. Contact us if you need a specific lens type that is not listed."
                 }
             ]
         },
@@ -48,19 +52,23 @@ const FAQ = () => {
             questions: [
                 {
                     q: "How long does shipping take?",
-                    a: "Standard shipping takes 3-5 business days nationwide. Express shipping (1-2 days) is available for Dhaka and major cities at an additional cost."
+                    a: "Delivery timing depends on the destination and order. After placing an order, enter its number on the Track an Order page to see the latest status, or contact support if you need an update."
+                },
+                {
+                    q: "How much is shipping?",
+                    a: "Shipping is complimentary when your cart subtotal is $99 or more. For smaller orders, standard shipping is $9.99. Your current shipping charge appears in the cart and checkout summary."
                 },
                 {
                     q: "Do you ship internationally?",
-                    a: "Currently, we only ship within Bangladesh. International shipping will be available soon."
+                    a: "Delivery availability depends on the destination supported by checkout. If your address is not accepted or you are ordering from outside the listed delivery areas, contact us before placing an order."
                 },
                 {
                     q: "How can I track my order?",
-                    a: "Once your order ships, you'll receive a tracking number via email and SMS. You can also track your order on our Track Order page using your order ID."
+                    a: "Open Track an Order and enter the order number from your confirmation. The page shows the latest status recorded for that order; contact support if the number is not found or the status needs clarification."
                 },
                 {
                     q: "What if my glasses are damaged during shipping?",
-                    a: "All orders are insured. If your glasses arrive damaged, contact us within 48 hours with photos and we'll send a replacement at no cost."
+                    a: "Keep the packaging, take clear photos of the damage, and contact support as soon as possible. Our team will review the order and explain the available next steps."
                 }
             ]
         },
@@ -69,15 +77,15 @@ const FAQ = () => {
             questions: [
                 {
                     q: "What is your return policy?",
-                    a: "We offer a 7-day return policy from the date of delivery. Glasses must be in original condition with all packaging. Prescription glasses are eligible for return if there's a manufacturing defect."
+                    a: "Metro Optics advertises 30-day returns on the storefront. Eligibility can depend on the item and its condition, so contact support for return instructions before sending anything back."
                 },
                 {
                     q: "How do I return or exchange my glasses?",
-                    a: "Contact our support team to initiate a return. We'll provide you with a return shipping label. Once we receive and inspect the glasses, we'll process your refund or exchange."
+                    a: "Contact us with your order number and the reason for the return. We will confirm whether the item is eligible and share the correct return or exchange instructions."
                 },
                 {
                     q: "Are there any restocking fees?",
-                    a: "No, we don't charge restocking fees. However, original shipping costs are non-refundable unless the return is due to our error."
+                    a: "Any applicable fees or shipping adjustments will be confirmed with your return instructions. Please contact support before returning your order."
                 }
             ]
         },
@@ -86,19 +94,19 @@ const FAQ = () => {
             questions: [
                 {
                     q: "How do I choose the right frame size?",
-                    a: "Each product page includes detailed measurements (lens width, bridge width, temple length). We also provide a size guide to help you find the perfect fit based on your face shape."
+                    a: "Choose from the frame sizes listed on each product page. If measurements are not available or you are unsure which fit to choose, contact our team before ordering."
                 },
                 {
                     q: "What materials are your frames made of?",
-                    a: "We offer frames in various materials including acetate, metal (stainless steel, titanium), TR-90 plastic, and combination materials. Each product description specifies the frame material."
+                    a: "Frame materials and product specifications are listed on the product page when available. If a detail you need is missing, contact support and include the frame name."
                 },
                 {
                     q: "Do all frames come with a warranty?",
-                    a: "Yes, all frames come with a 1-year warranty against manufacturing defects. Lenses are covered for 6 months against scratches (with proper care)."
+                    a: "Warranty coverage depends on the frame and its terms. Check the product or order information, or contact support with the frame name or order number to confirm what applies."
                 },
                 {
                     q: "Can I get prescription lenses in sunglasses?",
-                    a: "Absolutely! All our sunglasses can be fitted with prescription lenses. Simply upload your prescription during checkout and select your preferred lens options."
+                    a: "Prescription availability can vary by frame, and prescription details are not collected during checkout at this time. Contact us before ordering so we can confirm whether your chosen frame can be made with your prescription."
                 }
             ]
         },
@@ -107,30 +115,62 @@ const FAQ = () => {
             questions: [
                 {
                     q: "Do I need to create an account to order?",
-                    a: "No, you can checkout as a guest. However, creating an account allows you to save prescriptions, track orders easily, and access exclusive member benefits."
+                    a: "You can check out as a guest. An account lets you view your order history, save addresses and prescriptions, and keep your wishlist in one place."
                 },
                 {
                     q: "How can I contact customer support?",
-                    a: "You can reach us via email at support@metrooptics.com, call +880 1234-567890, or use the contact form on our website. We respond within 24 hours."
+                    a: "Visit the Contact page for the current phone number, email address, business hours, and contact form. The form prepares an email in your email app, where you can review and send it."
                 },
                 {
                     q: "Do you have physical stores?",
-                    a: "Currently, we operate primarily online. However, you can visit our showroom in Dhaka by appointment for in-person consultations and frame trials."
+                    a: "Please use the Contact page to confirm whether in-person consultations or frame trials are currently available in your area."
                 }
             ]
         }
     ];
 
-    const toggleHelpCircle = (categoryIndex, questionIndex) => {
+    const faqDescription = 'Find clear answers to common questions about ordering eyewear, prescriptions, lens options, delivery, returns and customer support at Metro Optics.';
+    const faqSchema = {
+        ...buildWebPageSchema({
+            name: 'Eyewear & Order FAQs | Metro Optics',
+            description: faqDescription,
+            path: '/faq',
+            type: 'FAQPage',
+        }),
+        mainEntity: faqs.flatMap((category) => category.questions.map((item) => ({
+            '@type': 'Question',
+            name: item.q,
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: item.a,
+            },
+        }))),
+    };
+
+    const toggleQuestion = (categoryIndex, questionIndex) => {
         const key = `${categoryIndex}-${questionIndex}`;
         setOpenIndex(openIndex === key ? null : key);
     };
 
     return (
         <div className="faq-page">
+            <SEO
+                title="Eyewear & Order FAQs"
+                description={faqDescription}
+                url="/faq"
+                structuredData={[
+                    faqSchema,
+                    buildBreadcrumbSchema([
+                        { name: 'Home', path: '/' },
+                        { name: 'FAQs', path: '/faq' },
+                    ]),
+                ]}
+            />
             <div className="faq-container">
+                <Breadcrumb items={[{ label: 'Help & FAQs' }]} />
                 <div className="faq-header">
-                    <h1 className="faq-title">Frequently Asked HelpCircles</h1>
+                    <p className="mo-eyebrow">GOOD TO KNOW</p>
+                    <h1 className="faq-title">Frequently asked questions</h1>
                     <p className="faq-subtitle">
                         Find answers to common questions about ordering, prescriptions, shipping, and more
                     </p>
@@ -151,13 +191,8 @@ const FAQ = () => {
                                         <div key={questionIndex} className="faq-item">
                                             <button
                                                 id={buttonId}
-                                                onClick={() => toggleHelpCircle(categoryIndex, questionIndex)}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'Enter' || e.key === ' ') {
-                                                        e.preventDefault();
-                                                        toggleHelpCircle(categoryIndex, questionIndex);
-                                                    }
-                                                }}
+                                                type="button"
+                                                onClick={() => toggleQuestion(categoryIndex, questionIndex)}
                                                 className="faq-question"
                                                 aria-expanded={isOpen}
                                                 aria-controls={panelId}
@@ -191,9 +226,9 @@ const FAQ = () => {
                     <p className="faq-footer-text">
                         Our support team is here to help. Contact us anytime!
                     </p>
-                    <a href="/contact" className="faq-contact-btn">
-                        Contact Support
-                    </a>
+                    <Link to="/contact" className="faq-contact-btn">
+                        Contact support
+                    </Link>
                 </div>
             </div>
         </div>

@@ -2,40 +2,38 @@
 @import "tailwindcss";
 
 @theme {
-  /* Primary: Deep Blue (trust, eyewear precision, StarTech accent) */
-  --color-primary: #1a56db;
-  --color-primary-hover: #1648b8;
-  --color-primary-light: #e8f0fe;
+  /* Metro Optics editorial palette: forest green, warm paper, soft sage */
+  --color-primary: #294233;
+  --color-primary-hover: #1f3428;
+  --color-primary-light: #e8eee7;
   --color-primary-foreground: #ffffff;
 
-  /* Secondary: Warm Gold (luxury, bespoke acetate) */
-  --color-secondary: #d4a853;
-  --color-secondary-hover: #c4963f;
-  --color-secondary-foreground: #ffffff;
+  --color-secondary: #f0f1e9;
+  --color-secondary-hover: #e3e6da;
+  --color-secondary-foreground: #1d2924;
 
-  /* Accent: Coral / High-Visibility Red (sale tags, discounts) */
-  --color-accent: #ef4444;
-  --color-accent-hover: #dc2626;
+  --color-accent: #b38b4e;
+  --color-accent-hover: #96723f;
   --color-accent-foreground: #ffffff;
 
-  /* Neutrals */
-  --color-background: #ffffff;
-  --color-foreground: #1a1a2e;
-  --color-muted: #f4f6f8;
-  --color-muted-foreground: #6b7280;
-  --color-border: #e5e7eb;
+  /* Warm storefront neutrals */
+  --color-background: #fbfaf7;
+  --color-foreground: #1d2924;
+  --color-muted: #f0f1e9;
+  --color-muted-foreground: #737a74;
+  --color-border: #e6e5dd;
 
-  /* Semantic Feedback */
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-info: #3b82f6;
+  /* Semantic feedback */
+  --color-success: #4d7654;
+  --color-warning: #b38b4e;
+  --color-error: #a64b42;
+  --color-info: #607a70;
 
-  /* StarTech Layout Tokens */
-  --color-topbar-bg: #2d2d44;
-  --color-header-bg: #1a1a2e;
-  --color-header-text: #ffffff;
-  --color-megamenu-bg: #f8f9fa;
+  /* Shared storefront surfaces */
+  --color-topbar-bg: #1b2c24;
+  --color-header-bg: #ffffff;
+  --color-header-text: #1d2924;
+  --color-megamenu-bg: #fbfaf7;
 
   /* Typography */
   --font-sans: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;

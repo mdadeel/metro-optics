@@ -1,0 +1,14 @@
+# Metro Optics
+
+> Eyewear storefront for eyeglasses, sunglasses and everyday frames.
+
+Use the linked pages as the source of truth. Product prices, colors, sizes and availability can change; rely on the current product page rather than copied summaries.
+For prescription or clinical vision questions, consult a qualified eye-care professional.
+
+## Public pages
+- [Frequently asked questions](https://metro-optics.vercel.app/faq): Answers about ordering, lens options, delivery, returns and support.
+- [Contact Metro Optics](https://metro-optics.vercel.app/contact): Current contact details and support options.
+- [About Metro Optics](https://metro-optics.vercel.app/about): The store's approach to eyewear and customer guidance.
+
+## Site map
+- [XML sitemap](https://metro-optics.vercel.app/sitemap.xml)

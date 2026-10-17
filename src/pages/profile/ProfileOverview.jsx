@@ -1,24 +1,35 @@
 import { useAuth } from '../../context/AuthContext';
+import { formatPrice } from '../../lib/utils';
 import { useOrders } from '../../context/OrderContext';
-import { useWishlist } from '../../context/WishlistContext';
-import { Package, Heart, TrendUp as TrendingUp, MapPin, PencilSimple as Edit2, ArrowRight, Question as HelpCircle, Clock, CheckCircle } from "@phosphor-icons/react";
+import { useWishlistStore } from '../../stores/useWishlistStore';
+import { Package, Heart, TrendUp as TrendingUp, PencilSimple as Edit2, ArrowRight, Question as HelpCircle, Clock, CheckCircle } from "@phosphor-icons/react";
 import { Link } from 'react-router-dom';
 import './ProfilePages.css';
+
+function getDateValue(value) {
+    if (typeof value?.toDate === 'function') return value.toDate();
+    const date = value instanceof Date ? value : new Date(value || 0);
+    return Number.isNaN(date.getTime()) ? null : date;
+}
 
 const ProfileOverview = () => {
     const { user } = useAuth();
     const { orders } = useOrders();
-    const { wishlistCount } = useWishlist();
+    const wishlistCount = useWishlistStore((state) => state.items.length);
+    const userEmail = String(user?.email || '').toLowerCase();
 
-    // Get user's orders
-    const userOrders = orders.filter(order =>
-        order.email === user?.email || order.userId === user?.uid
-    );
+    const userOrders = orders.filter((order) => (
+        order.userId === user?.uid
+        || String(order.userEmail || '').toLowerCase() === userEmail
+        || String(order.email || '').toLowerCase() === userEmail
+        || String(order.customer?.email || '').toLowerCase() === userEmail
+    ));
 
-    // Stats
-    const totalSpent = userOrders.reduce((sum, order) => sum + order.total, 0);
-    const activeOrdersCount = userOrders.filter(o => ['pending', 'processing', 'shipped'].includes(o.status)).length;
-    const completedOrdersCount = userOrders.filter(o => o.status === 'delivered').length;
+    const totalSpent = userOrders.reduce((sum, order) => sum + (Number(order.total) || 0), 0);
+    const activeOrdersCount = userOrders.filter((order) => (
+        ['pending', 'confirmed', 'processing', 'shipped'].includes(String(order.status || '').toLowerCase())
+    )).length;
+    const completedOrdersCount = userOrders.filter((order) => String(order.status || '').toLowerCase() === 'delivered').length;
 
     // Recent orders (max 5)
     const recentOrders = userOrders.slice(0, 5);
@@ -92,14 +103,14 @@ const ProfileOverview = () => {
                                     <tbody>
                                         {recentOrders.map(order => (
                                             <tr key={order.id}>
-                                                <td className="font-mono">#{order.id.slice(0, 8).toUpperCase()}</td>
-                                                <td>{new Date(order.createdAt).toLocaleDateString()}</td>
+                                                <td className="font-mono">#{String(order.id).slice(0, 8).toUpperCase()}</td>
+                                                <td>{getDateValue(order.createdAt)?.toLocaleDateString() || '—'}</td>
                                                 <td>
-                                                    <span className={`status-badge-sm ${order.status}`}>
-                                                        {order.status}
+                                                    <span className={`status-badge-sm ${String(order.status || 'unknown').toLowerCase()}`}>
+                                                        {String(order.status || 'Status unavailable')}
                                                     </span>
                                                 </td>
-                                                <td className="font-bold">৳{order.total.toLocaleString()}</td>
+                                                <td className="font-bold">{formatPrice(order.total)}</td>
                                                 <td>
                                                     <Link to={`/invoice/${order.id}`} className="table-action-link">
                                                         View
@@ -161,7 +172,7 @@ const ProfileOverview = () => {
                             <TrendingUp size={16} />
                         </div>
                         <div className="spending-amount">
-                            ৳{totalSpent.toLocaleString()}
+                            {formatPrice(totalSpent)}
                         </div>
                         <p className="spending-note">Lifetime value</p>
                     </div>

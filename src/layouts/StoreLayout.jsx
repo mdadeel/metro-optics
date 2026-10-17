@@ -7,12 +7,12 @@ import Footer from '../components/layout/Footer';
 
 export default function StoreLayout() {
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      {/* Row 1: Slim utility top bar */}
+    <div className="mo-storefront-shell">
+      {/* Slim service and delivery announcement */}
       <TopBar />
 
-      {/* Row 2 & 3: Sticky Header & MegaMenu */}
-      <div className="sticky top-0 z-40 shadow-sm">
+      {/* Sticky storefront header and category navigation */}
+      <div className="mo-storefront-sticky">
         <Header />
         <MegaMenu />
       </div>
@@ -20,12 +20,12 @@ export default function StoreLayout() {
       {/* Mobile Drawer */}
       <MobileNav />
 
-      {/* Main Page Content Target */}
+      {/* Main storefront page content */}
       <main id="main-content" className="flex-1">
         <Outlet />
       </main>
 
-      {/* StarTech 5-Column Mega Footer */}
+      {/* Store footer */}
       <Footer />
     </div>
   );

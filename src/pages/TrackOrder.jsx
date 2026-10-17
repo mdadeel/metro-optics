@@ -1,153 +1,175 @@
-import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Search, Package, CheckCircle2, Clock, Truck, ShieldCheck } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Search, Package, CheckCircle2, Clock, Truck, CircleHelp } from 'lucide-react';
 import Breadcrumb from '../components/layout/Breadcrumb';
-import { useOrderStore } from '../stores/useOrderStore';
+import { useOrders } from '../context/OrderContext';
 import { formatPrice } from '../lib/utils';
+import SEO from '../components/SEO';
 
 const trackingSteps = [
-  { id: 'confirmed', title: 'Order Confirmed', desc: 'Prescription & payment validated' },
-  { id: 'lab', title: 'Optical Lab Fitting', desc: 'Digital CNC lens cutting & bevelling' },
-  { id: 'qc', title: 'Laser QC Verification', desc: 'Diopter & pupillary distance checked' },
-  { id: 'courier', title: 'Out for Delivery', desc: 'Insured express courier in transit' },
-  { id: 'delivered', title: 'Delivered', desc: 'Safely arrived at destination' },
+  { id: 'pending', title: 'Order received', description: 'We have received your order.' },
+  { id: 'confirmed', title: 'Order confirmed', description: 'Your order is confirmed and being prepared.' },
+  { id: 'processing', title: 'Preparing your order', description: 'Our team is preparing your frames.' },
+  { id: 'shipped', title: 'On its way', description: 'Your order has been handed to the carrier.' },
+  { id: 'delivered', title: 'Delivered', description: 'Your order has arrived.' },
 ];
+
+const statusIndex = {
+  pending: 0,
+  confirmed: 1,
+  processing: 2,
+  shipped: 3,
+  delivered: 4,
+};
+
+function getOrderDate(value) {
+  if (!value) return null;
+  const date = typeof value?.toDate === 'function' ? value.toDate() : new Date(value);
+  return Number.isNaN(date.getTime())
+    ? null
+    : date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+}
 
 export default function TrackOrder() {
   const [searchParams] = useSearchParams();
   const initialId = searchParams.get('id') || '';
-  const getOrderById = useOrderStore((state) => state.getOrderById);
-
+  const { orders, getOrderById, fetchOrderById } = useOrders();
   const [inputOrderId, setInputOrderId] = useState(initialId);
-  const [activeOrder, setActiveOrder] = useState(() => {
-    return initialId ? getOrderById(initialId.trim()) : null;
-  });
-  const [searched, setSearched] = useState(() => Boolean(initialId));
+  const [searchedOrderId, setSearchedOrderId] = useState(initialId);
+  const [searchResult, setSearchResult] = useState(() => ({ id: initialId, order: null, loading: Boolean(initialId) }));
 
-  const handleSearch = (idToSearch) => {
-    const id = (idToSearch || inputOrderId).trim();
+  const findInCurrentOrders = useCallback((id) => orders.find(
+    (order) => String(order.id).toLowerCase() === id.trim().toLowerCase()
+  ) || getOrderById(id), [orders, getOrderById]);
+
+  useEffect(() => {
+    if (!initialId) return undefined;
+    let cancelled = false;
+    const localOrder = findInCurrentOrders(initialId);
+    Promise.resolve(localOrder || fetchOrderById(initialId))
+      .then((result) => {
+        if (!cancelled) setSearchResult({ id: initialId, order: result || null, loading: false });
+      })
+      .catch(() => {
+        if (!cancelled) setSearchResult({ id: initialId, order: null, loading: false });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [initialId, findInCurrentOrders, fetchOrderById]);
+
+  const activeOrder = useMemo(() => {
+    if (!searchedOrderId) return null;
+    return findInCurrentOrders(searchedOrderId)
+      || (searchResult.id.toLowerCase() === searchedOrderId.trim().toLowerCase() ? searchResult.order : null);
+  }, [findInCurrentOrders, searchedOrderId, searchResult]);
+
+  const normalizedStatus = String(activeOrder?.status || '').trim().toLowerCase();
+  const currentStepIndex = statusIndex[normalizedStatus] ?? -1;
+  const isCancelled = normalizedStatus === 'cancelled' || normalizedStatus === 'canceled';
+  const isSearching = searchResult.loading && searchResult.id.toLowerCase() === searchedOrderId.trim().toLowerCase();
+
+  const handleSearch = async (event) => {
+    event.preventDefault();
+    const id = inputOrderId.trim();
     if (!id) return;
-    const found = getOrderById(id);
-    setActiveOrder(found);
-    setSearched(true);
+    setSearchedOrderId(id);
+
+    const localOrder = findInCurrentOrders(id);
+    if (localOrder) {
+      setSearchResult({ id, order: localOrder, loading: false });
+      return;
+    }
+
+    setSearchResult({ id, order: null, loading: true });
+    try {
+      const result = await fetchOrderById(id);
+      setSearchResult({ id, order: result || null, loading: false });
+    } catch {
+      setSearchResult({ id, order: null, loading: false });
+    }
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 space-y-8">
-      <Breadcrumb items={[{ label: 'Track Order' }]} />
+    <div className="mo-track-page">
+      <SEO title="Track an Order" description="Check the latest status of a Metro Optics order using the order number from your confirmation." url="/track-order" noIndex />
+      <div className="mo-interior-shell">
+        <Breadcrumb items={[{ label: 'Track an order' }]} />
+        <header className="mo-page-heading mo-track-heading">
+          <p className="mo-eyebrow">HERE FOR THE JOURNEY</p>
+          <h1 className="mo-display">Track your order.</h1>
+          <p>Enter the order number from your confirmation to check its latest status.</p>
+        </header>
 
-      <div className="text-center space-y-2">
-        <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white">
-          Track Your Eyewear Order
-        </h1>
-        <p className="text-xs text-gray-500 max-w-md mx-auto">
-          Enter your Order ID (found on your email receipt or order confirmation) to monitor laboratory crafting and transit progress.
-        </p>
+        <form className="mo-track-search" onSubmit={handleSearch} role="search">
+          <label className="sr-only" htmlFor="track-order-id">Order number</label>
+          <Search size={18} aria-hidden="true" />
+          <input
+            id="track-order-id"
+            type="search"
+            value={inputOrderId}
+            onChange={(event) => setInputOrderId(event.target.value)}
+            placeholder="Enter your order number"
+            autoComplete="off"
+            required
+          />
+          <button type="submit" aria-label="Find order"><span>Find order</span><Search size={15} aria-hidden="true" /></button>
+        </form>
+
+        {isSearching && <p className="mo-track-loading" role="status">Looking up order…</p>}
+
+        {searchedOrderId && activeOrder && (
+          <section className="mo-track-result" aria-labelledby="mo-track-result-title" aria-live="polite">
+            <div className="mo-track-result__top">
+              <div>
+                <p className="mo-eyebrow">ORDER STATUS</p>
+                <h2 id="mo-track-result-title">Order <span>#{activeOrder.id}</span></h2>
+                {getOrderDate(activeOrder.createdAt) && <p>Placed {getOrderDate(activeOrder.createdAt)}</p>}
+              </div>
+              <span className={`mo-track-status mo-track-status--${normalizedStatus || 'unknown'}`}>{normalizedStatus || 'Status unavailable'}</span>
+            </div>
+
+            {isCancelled ? (
+              <div className="mo-track-cancelled" role="status">
+                <CircleHelp size={20} aria-hidden="true" />
+                <p>This order was cancelled. If you need help, <Link to="/contact">contact our team</Link>.</p>
+              </div>
+            ) : currentStepIndex >= 0 ? (
+              <ol className="mo-track-steps" aria-label="Order progress">
+                {trackingSteps.map((step, index) => {
+                  const completed = index < currentStepIndex;
+                  const current = index === currentStepIndex;
+                  return (
+                    <li key={step.id} className={`${completed ? 'is-complete' : ''}${current ? ' is-current' : ''}`} aria-current={current ? 'step' : undefined}>
+                      <span className="mo-track-step__icon">
+                        {completed ? <CheckCircle2 size={17} aria-hidden="true" /> : index === 3 ? <Truck size={17} aria-hidden="true" /> : index === 0 ? <Package size={17} aria-hidden="true" /> : <Clock size={16} aria-hidden="true" />}
+                      </span>
+                      <span className="mo-track-step__copy"><strong>{step.title}</strong><small>{step.description}</small></span>
+                    </li>
+                  );
+                })}
+              </ol>
+            ) : (
+              <div className="mo-track-cancelled" role="status">
+                <CircleHelp size={20} aria-hidden="true" />
+                <p>We found the order, but its current status is not available yet. <Link to="/contact">Contact us</Link> if you need help.</p>
+              </div>
+            )}
+
+            <div className="mo-track-result__summary">
+              <span>{activeOrder.customer?.name || activeOrder.customerName || 'Customer'}</span>
+              <strong>Total {formatPrice(activeOrder.total)}</strong>
+            </div>
+          </section>
+        )}
+
+        {searchedOrderId && !isSearching && !activeOrder && (
+          <div className="mo-track-not-found" role="status">
+            <Package size={25} aria-hidden="true" />
+            <div><h2>We couldn't find that order.</h2><p>Check the order number and try again. You can also <Link to="/contact">contact our team</Link> for help.</p></div>
+          </div>
+        )}
       </div>
-
-      {/* Search Bar */}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSearch();
-        }}
-        className="flex gap-2 max-w-md mx-auto"
-      >
-        <input
-          type="text"
-          value={inputOrderId}
-          onChange={(e) => setInputOrderId(e.target.value)}
-          placeholder="e.g. ORD-123456 or demo ID..."
-          className="flex-1 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-xs outline-none focus:border-primary shadow-sm"
-        />
-        <button
-          type="submit"
-          className="px-6 py-3 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl shadow-sm transition-colors flex items-center gap-1.5"
-        >
-          <Search className="w-4 h-4" />
-          <span>Track</span>
-        </button>
-      </form>
-
-      {/* Tracking Result */}
-      {searched && (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-gray-100 dark:border-gray-800 text-xs">
-            <div>
-              <span className="text-gray-400 block">Status for Order</span>
-              <strong className="text-base font-black text-gray-900 dark:text-white font-mono">
-                {activeOrder ? activeOrder.id : inputOrderId}
-              </strong>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="px-3 py-1 bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold rounded-full text-xs flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5" />
-                <span>Processing in Optical Lab</span>
-              </span>
-            </div>
-          </div>
-
-          {/* Stepper Timeline */}
-          <div className="space-y-6 py-4">
-            {trackingSteps.map((step, idx) => {
-              const isCompleted = idx <= 1; // First 2 steps simulated complete
-              const isCurrent = idx === 1;
-              return (
-                <div key={step.id} className="flex gap-4 relative">
-                  {/* Vertical Line */}
-                  {idx < trackingSteps.length - 1 && (
-                    <div
-                      className={`absolute left-4 top-8 -bottom-4 w-0.5 ${
-                        isCompleted ? 'bg-primary' : 'bg-gray-200 dark:bg-gray-800'
-                      }`}
-                    />
-                  )}
-
-                  {/* Step Circle */}
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 z-10 ${
-                      isCompleted
-                        ? 'bg-primary text-white shadow-md'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-400 border border-gray-200 dark:border-gray-700'
-                    }`}
-                  >
-                    {isCompleted ? (
-                      <CheckCircle2 className="w-4 h-4" />
-                    ) : (
-                      <span className="text-xs font-bold">{idx + 1}</span>
-                    )}
-                  </div>
-
-                  {/* Details */}
-                  <div className="space-y-0.5">
-                    <h4
-                      className={`text-sm font-bold ${
-                        isCurrent
-                          ? 'text-primary'
-                          : isCompleted
-                          ? 'text-gray-900 dark:text-white'
-                          : 'text-gray-400'
-                      }`}
-                    >
-                      {step.title}
-                    </h4>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{step.desc}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {activeOrder && (
-            <div className="pt-4 border-t border-gray-100 dark:border-gray-800 text-xs text-gray-500 flex justify-between">
-              <span>Customer: {activeOrder.customer?.name}</span>
-              <span className="font-bold text-gray-900 dark:text-white">
-                Total: {formatPrice(activeOrder.total)}
-              </span>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }

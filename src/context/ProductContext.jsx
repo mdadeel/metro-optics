@@ -19,6 +19,7 @@ import {
 } from 'firebase/firestore';
 import { db, hasFirebaseConfig } from '../config/firebase';
 import { products as localProducts } from '../data/products';
+import { useProductStore } from '../stores/useProductStore';
 import { toast } from 'sonner';
 
 const ProductContext = createContext(null);
@@ -41,12 +42,14 @@ export function ProductProvider({ children }) {
         if (!cancelled) {
           setProducts(localProducts);
           setLoading(false);
+          useProductStore.setState({ loading: false });
         }
         return;
       }
 
       try {
         setLoading(true);
+        useProductStore.setState({ loading: true, error: null });
         const q = query(collection(db, 'products'), orderBy('name'));
         const snapshot = await getDocs(q);
         if (!cancelled) {
@@ -55,6 +58,7 @@ export function ProductProvider({ children }) {
             ...docSnap.data(),
           }));
           setProducts(fetched.length > 0 ? fetched : localProducts);
+          useProductStore.setState({ products: fetched, loading: false, error: null });
           setLoading(false);
         }
       } catch (err) {
@@ -62,6 +66,7 @@ export function ProductProvider({ children }) {
         if (!cancelled) {
           setError(err.message);
           setProducts(localProducts);
+          useProductStore.setState({ products: [], loading: false, error: err.message });
           setLoading(false);
         }
       }

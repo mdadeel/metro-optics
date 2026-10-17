@@ -1,81 +1,94 @@
+import { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { CheckCircle, Package, ArrowRight, Home, Truck } from 'lucide-react';
-import { useOrderStore } from '../stores/useOrderStore';
+import { CheckCircle, Package, Home, Truck } from 'lucide-react';
+import { useOrders } from '../context/OrderContext';
 import { formatPrice } from '../lib/utils';
+import SEO from '../components/SEO';
 
 export default function OrderConfirmation() {
   const [searchParams] = useSearchParams();
   const orderId = searchParams.get('orderId');
-  const getOrderById = useOrderStore((state) => state.getOrderById);
+  const { getOrderById, fetchOrderById } = useOrders();
+  const [fetchedResult, setFetchedResult] = useState({ id: null, order: null });
 
-  const order = getOrderById(orderId);
+  const contextOrder = getOrderById(orderId);
+  const hasFetchedCurrentId = fetchedResult.id === orderId;
+  const order = contextOrder || (hasFetchedCurrentId ? fetchedResult.order : null);
+  const isLoading = Boolean(orderId) && !contextOrder && !hasFetchedCurrentId;
+
+  useEffect(() => {
+    if (!orderId || contextOrder) return undefined;
+    let cancelled = false;
+    fetchOrderById(orderId)
+      .then((result) => {
+        if (!cancelled) setFetchedResult({ id: orderId, order: result || null });
+      })
+      .catch(() => {
+        if (!cancelled) setFetchedResult({ id: orderId, order: null });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [contextOrder, fetchOrderById, orderId]);
+
+  const customer = order?.customer || {};
+  const customerName = customer.name || order?.customerName || 'Customer';
+  const customerAddress = customer.address || order?.address || '';
+  const customerPhone = customer.phone || order?.phone || '';
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-16 text-center space-y-6">
-      <div className="w-20 h-20 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-500 flex items-center justify-center mx-auto shadow-sm animate-in zoom-in-95">
-        <CheckCircle className="w-10 h-10" />
+    <div className="mo-confirmation-page">
+      <SEO title="Order Confirmation" description="View the confirmation and status details for your Metro Optics order." url="/order-confirmation" noIndex />
+      <div className="mo-confirmation-icon" aria-hidden="true"><CheckCircle /></div>
+
+      <div className="mo-confirmation-heading">
+        <p className="mo-eyebrow">ORDER RECEIVED</p>
+        <h1>Thank you for your order.</h1>
+        <p>We’ve received your eyewear order and will keep you updated as it moves through fulfilment.</p>
       </div>
 
-      <div>
-        <span className="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
-          Order Confirmed & Payment Received
-        </span>
-        <h1 className="text-3xl font-black text-gray-900 dark:text-white mt-1">
-          Thank You For Your Order!
-        </h1>
-        <p className="text-xs text-gray-500 mt-2">
-          Your eyewear order is now being processed by our laboratory opticians.
-        </p>
-      </div>
+      {isLoading && <p className="mo-confirmation-loading" role="status">Loading your order details…</p>}
 
       {order && (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm text-left space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-800 text-xs">
+        <section className="mo-confirmation-card" aria-label="Order details">
+          <div className="mo-confirmation-card__top">
             <div>
-              <span className="text-gray-400 block">Order Number</span>
-              <strong className="text-gray-900 dark:text-white font-mono text-sm">{order.id}</strong>
+              <span>Order number</span>
+              <strong>{order.id}</strong>
             </div>
-            <div className="text-right">
-              <span className="text-gray-400 block">Total Paid</span>
-              <strong className="text-primary font-black text-sm">{formatPrice(order.total)}</strong>
+            <div className="mo-confirmation-card__total">
+              <span>Order total</span>
+              <strong>{formatPrice(order.total)}</strong>
             </div>
           </div>
-
-          <div className="space-y-2 text-xs">
-            <h4 className="font-bold text-gray-800 dark:text-gray-200 uppercase text-[11px]">
-              Delivery Destination:
-            </h4>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              {order.customer?.name} <br />
-              {order.customer?.address} <br />
-              Phone: {order.customer?.phone}
-            </p>
+          {(customerAddress || customerPhone) && (
+            <div className="mo-confirmation-destination">
+              <h2>Delivery destination</h2>
+              <p>{customerName}{customerAddress ? ` · ${customerAddress}` : ''}{customerPhone ? ` · ${customerPhone}` : ''}</p>
+            </div>
+          )}
+          <div className="mo-confirmation-delivery">
+            <Truck aria-hidden="true" />
+            <span>You can check the latest order status at any time using your order number.</span>
           </div>
+        </section>
+      )}
 
-          <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-xl border border-blue-100 dark:border-blue-900 flex items-center gap-3 text-xs text-blue-800 dark:text-blue-300">
-            <Truck className="w-5 h-5 shrink-0" />
-            <span>
-              Estimated delivery in <strong>2 - 4 business days</strong> with insured tracking.
-            </span>
-          </div>
+      {!isLoading && !order && (
+        <div className="mo-confirmation-missing" role="status">
+          <p>{orderId ? 'Your order was submitted, but its details are not available in this session.' : 'Your order reference is missing.'}</p>
+          <p>Keep your order number from the checkout confirmation, or contact us for help.</p>
         </div>
       )}
 
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
-        <Link
-          to={`/track-order?id=${orderId || ''}`}
-          className="w-full sm:w-auto px-6 py-3 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl shadow transition-all flex items-center justify-center gap-2"
-        >
-          <Package className="w-4 h-4" />
-          <span>Track Live Progress</span>
+      <div className="mo-confirmation-actions">
+        <Link to={`/track-order${orderId ? `?id=${encodeURIComponent(orderId)}` : ''}`} className="mo-interior-button">
+          <Package size={16} aria-hidden="true" />
+          Track your order
         </Link>
-
-        <Link
-          to="/"
-          className="w-full sm:w-auto px-6 py-3 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-xs font-bold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center justify-center gap-2"
-        >
-          <Home className="w-4 h-4" />
-          <span>Back to Home</span>
+        <Link to="/" className="mo-confirmation-home-link">
+          <Home size={16} aria-hidden="true" />
+          Continue browsing
         </Link>
       </div>
     </div>
