@@ -437,8 +437,8 @@
   .mo-product-grid { gap: 22px 9px; }
   .mo-product-card__badges { top: 7px; left: 7px; gap: 3px; }
   .mo-product-badge { min-height: 18px; padding: 0 5px; font-size: 7px; }
-  .mo-product-card__save { top: 7px; right: 7px; width: 29px; height: 29px; }
-  .mo-product-card__save svg { width: 15px; height: 15px; }
+  .mo-product-card__save { top: 6px; right: 6px; width: 25px; height: 25px; border-radius: 50%; }
+  .mo-product-card__save svg { width: 13px; height: 13px; }
   .mo-product-card__meta { margin-bottom: 5px; }
   .mo-product-card__name { min-height: 37px; font-size: 14px; }
   .mo-product-card__bottom { margin: 7px 0 8px; }

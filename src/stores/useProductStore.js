@@ -3,6 +3,12 @@ import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db, hasFirebaseConfig } from '../config/firebase';
 import { DEMO_PRODUCTS } from '../lib/constants';
 
+export const getMaxPriceFromProducts = (products) => {
+  if (!products || products.length === 0) return 500;
+  const max = Math.max(...products.map((p) => Number(p.price) || 0), 500);
+  return Math.ceil(max / 100) * 100;
+};
+
 export const useProductStore = create((set, get) => ({
   products: DEMO_PRODUCTS,
   loading: hasFirebaseConfig,
@@ -12,14 +18,15 @@ export const useProductStore = create((set, get) => ({
   selectedBrands: [],
   selectedShapes: [],
   selectedLensTypes: [],
-  priceRange: [0, 500],
+  priceRange: [0, getMaxPriceFromProducts(DEMO_PRODUCTS)],
   inStockOnly: false,
   sortBy: 'default',
   viewMode: 'grid', // 'grid' | 'list'
 
   fetchProducts: async () => {
     if (!hasFirebaseConfig || !db) {
-      set({ products: DEMO_PRODUCTS, loading: false });
+      const maxPrice = getMaxPriceFromProducts(DEMO_PRODUCTS);
+      set({ products: DEMO_PRODUCTS, priceRange: [0, maxPrice], loading: false });
       return;
     }
 
@@ -31,13 +38,17 @@ export const useProductStore = create((set, get) => ({
         id: doc.id,
         ...doc.data(),
       }));
+      const products = fetched.length > 0 ? fetched : DEMO_PRODUCTS;
+      const maxPrice = getMaxPriceFromProducts(products);
       set({
-        products: fetched.length > 0 ? fetched : DEMO_PRODUCTS,
+        products,
+        priceRange: [0, maxPrice],
         loading: false,
       });
     } catch (err) {
       console.warn('Using demo products fallback:', err.message);
-      set({ products: DEMO_PRODUCTS, loading: false, error: err.message });
+      const maxPrice = getMaxPriceFromProducts(DEMO_PRODUCTS);
+      set({ products: DEMO_PRODUCTS, priceRange: [0, maxPrice], loading: false, error: err.message });
     }
   },
 
@@ -84,13 +95,14 @@ export const useProductStore = create((set, get) => ({
   setViewMode: (viewMode) => set({ viewMode }),
 
   clearAllFilters: () => {
+    const maxPrice = getMaxPriceFromProducts(get().products);
     set({
       searchQuery: '',
       activeCategory: 'all',
       selectedBrands: [],
       selectedShapes: [],
       selectedLensTypes: [],
-      priceRange: [0, 500],
+      priceRange: [0, maxPrice],
       inStockOnly: false,
       sortBy: 'default',
     });
@@ -103,7 +115,17 @@ export const useProductStore = create((set, get) => ({
 
     // Category
     if (state.activeCategory && state.activeCategory !== 'all') {
-      result = result.filter((p) => p.category === state.activeCategory);
+      result = result.filter((p) => {
+        const cat = p.category?.toLowerCase() || '';
+        const target = state.activeCategory.toLowerCase();
+        if (cat === target) return true;
+        if (target === 'optical' && (cat === 'eyeglasses' || cat === 'frames')) return true;
+        if (target === 'eyeglasses' && cat === 'optical') return true;
+        if (target === 'blue-light' && (cat.includes('blue') || cat === 'blue-light')) return true;
+        if (target === 'reading' && cat.includes('read')) return true;
+        if (target === 'sports' && cat.includes('sport')) return true;
+        return false;
+      });
     }
 
     // Search
@@ -113,7 +135,7 @@ export const useProductStore = create((set, get) => ({
         (p) =>
           p.name.toLowerCase().includes(q) ||
           p.brand?.toLowerCase().includes(q) ||
-          p.category.toLowerCase().includes(q) ||
+          p.category?.toLowerCase().includes(q) ||
           p.description?.toLowerCase().includes(q)
       );
     }
@@ -129,13 +151,19 @@ export const useProductStore = create((set, get) => ({
     }
 
     // Price
-    result = result.filter(
-      (p) => p.price >= state.priceRange[0] && p.price <= state.priceRange[1]
-    );
+    result = result.filter((p) => {
+      const price = Number(p.price) || 0;
+      return price >= state.priceRange[0] && price <= state.priceRange[1];
+    });
 
     // In Stock
     if (state.inStockOnly) {
-      result = result.filter((p) => p.inStock);
+      result = result.filter(
+        (p) =>
+          p.inStock === true ||
+          (typeof p.stock === 'number' && p.stock > 0) ||
+          (p.inventory && p.inventory.stock > 0)
+      );
     }
 
     // Sorting

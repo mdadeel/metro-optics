@@ -36,7 +36,18 @@ const detailPanels = [
 function RelatedFrameCard({ product }) {
   return (
     <Link to={`/product/${product.id}`} className="mo-related-card">
-      <span className="mo-related-card__image"><img src={product.image || product.images?.[0]} alt={product.name} loading="lazy" /></span>
+      <span className="mo-related-card__image">
+        <img
+          src={product.image || product.images?.[0] || '/placeholder-glasses.svg'}
+          alt={product.name}
+          loading="lazy"
+          onError={(e) => {
+            if (!e.currentTarget.src.endsWith('/placeholder-glasses.svg')) {
+              e.currentTarget.src = '/placeholder-glasses.svg';
+            }
+          }}
+        />
+      </span>
       <span className="mo-related-card__brand">{product.brand || 'Metro Optics'}</span>
       <strong>{product.name}</strong>
       <span className="mo-related-card__price">{formatPrice(product.price)} <ArrowUpRight size={13} aria-hidden="true" /></span>
@@ -93,7 +104,7 @@ function ProductDetailsContent({ product, products }) {
   const images = useMemo(() => {
     if (product.images?.length) return product.images;
     if (product.image) return [product.image];
-    return [];
+    return ['/placeholder-glasses.svg'];
   }, [product]);
   const discount = calculateDiscount(product.originalPrice, product.price);
   const inWishlist = isInWishlist(product.id);
@@ -145,7 +156,15 @@ function ProductDetailsContent({ product, products }) {
         <section className="mo-detail-gallery" aria-label="Product images">
           <div className="mo-detail-main-image">
             {discount > 0 && <span className="mo-detail-sale">SAVE {discount}%</span>}
-            <img src={images[activeImageIndex] || images[0]} alt={product.name} />
+            <img
+              src={images[activeImageIndex] || images[0]}
+              alt={product.name}
+              onError={(e) => {
+                if (!e.currentTarget.src.endsWith('/placeholder-glasses.svg')) {
+                  e.currentTarget.src = '/placeholder-glasses.svg';
+                }
+              }}
+            />
             <span className="mo-detail-image-index">{String(activeImageIndex + 1).padStart(2, '0')} <i /> {String(images.length || 1).padStart(2, '0')}</span>
           </div>
           {images.length > 1 && (
@@ -159,7 +178,15 @@ function ProductDetailsContent({ product, products }) {
                   aria-label={`Show image ${index + 1}`}
                   aria-pressed={activeImageIndex === index}
                 >
-                  <img src={image} alt="" />
+                  <img
+                    src={image}
+                    alt=""
+                    onError={(e) => {
+                      if (!e.currentTarget.src.endsWith('/placeholder-glasses.svg')) {
+                        e.currentTarget.src = '/placeholder-glasses.svg';
+                      }
+                    }}
+                  />
                 </button>
               ))}
             </div>

@@ -38,7 +38,7 @@ const ProductCard = ({ product }) => {
                 <Link to={`/product/${product.id}`} className="mo-catalog-card__image" aria-label={`View ${product.name}`}>
                     {!imageLoaded && !imageError && <span className="mo-catalog-card__loader" aria-hidden="true" />}
                     {imageError || !image ? (
-                        <span className="mo-catalog-card__image-fallback"><XCircle size={28} /><span>Image unavailable</span></span>
+                        <img src="/placeholder-glasses.svg" alt={product.name} />
                     ) : (
                         <img
                             src={image}

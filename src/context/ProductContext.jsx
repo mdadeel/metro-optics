@@ -19,13 +19,14 @@ import {
 } from 'firebase/firestore';
 import { db, hasFirebaseConfig } from '../config/firebase';
 import { products as localProducts } from '../data/products';
-import { useProductStore } from '../stores/useProductStore';
+import { useProductStore, getMaxPriceFromProducts } from '../stores/useProductStore';
+import { DEMO_PRODUCTS } from '../lib/constants';
 import { toast } from 'sonner';
 
 const ProductContext = createContext(null);
 
 export function ProductProvider({ children }) {
-  const [products, setProducts] = useState(localProducts);
+  const [products, setProducts] = useState(DEMO_PRODUCTS);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const hasFetched = useRef(false);
@@ -40,9 +41,14 @@ export function ProductProvider({ children }) {
     async function fetchProducts() {
       if (!hasFirebaseConfig || !db) {
         if (!cancelled) {
-          setProducts(localProducts);
+          const maxPrice = getMaxPriceFromProducts(DEMO_PRODUCTS);
+          setProducts(DEMO_PRODUCTS);
           setLoading(false);
-          useProductStore.setState({ loading: false });
+          useProductStore.setState((prev) => ({
+            products: prev.products?.length > 0 ? prev.products : DEMO_PRODUCTS,
+            priceRange: [0, Math.max(prev.priceRange?.[1] || 500, maxPrice)],
+            loading: false,
+          }));
         }
         return;
       }
@@ -57,16 +63,29 @@ export function ProductProvider({ children }) {
             id: docSnap.id,
             ...docSnap.data(),
           }));
-          setProducts(fetched.length > 0 ? fetched : localProducts);
-          useProductStore.setState({ products: fetched, loading: false, error: null });
+          const resolved = fetched.length > 0 ? fetched : DEMO_PRODUCTS;
+          const maxPrice = getMaxPriceFromProducts(resolved);
+          setProducts(resolved);
+          useProductStore.setState((prev) => ({
+            products: resolved,
+            priceRange: [0, Math.max(prev.priceRange?.[1] || 500, maxPrice)],
+            loading: false,
+            error: null,
+          }));
           setLoading(false);
         }
       } catch (err) {
         console.error('Product fetch error:', err);
         if (!cancelled) {
           setError(err.message);
-          setProducts(localProducts);
-          useProductStore.setState({ products: [], loading: false, error: err.message });
+          setProducts(DEMO_PRODUCTS);
+          const maxPrice = getMaxPriceFromProducts(DEMO_PRODUCTS);
+          useProductStore.setState((prev) => ({
+            products: prev.products?.length > 0 ? prev.products : DEMO_PRODUCTS,
+            priceRange: [0, Math.max(prev.priceRange?.[1] || 500, maxPrice)],
+            loading: false,
+            error: err.message,
+          }));
           setLoading(false);
         }
       }

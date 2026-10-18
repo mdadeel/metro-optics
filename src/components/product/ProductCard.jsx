@@ -12,13 +12,22 @@ export default function ProductCard({ product, variant = 'grid' }) {
   if (!product) return null;
 
   const saved = isInWishlist(product.id);
-  const image = product.image || product.images?.[0];
+  const image = product.image || product.images?.[0] || '/placeholder-glasses.svg';
 
   return (
     <article className={`mo-catalog-card${variant === 'list' ? ' mo-catalog-card--list' : ''}`}>
       <div className="mo-catalog-card__media">
         <Link to={`/product/${product.id}`} className="mo-catalog-card__image" aria-label={`View ${product.name}`}>
-          {image && <img src={image} alt={product.name} loading="lazy" />}
+          <img
+            src={image}
+            alt={product.name}
+            loading="lazy"
+            onError={(e) => {
+              if (!e.currentTarget.src.endsWith('/placeholder-glasses.svg')) {
+                e.currentTarget.src = '/placeholder-glasses.svg';
+              }
+            }}
+          />
         </Link>
 
         <div className="mo-catalog-card__badges">

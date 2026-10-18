@@ -59,14 +59,23 @@ function PremiumProductCard({ product }) {
   const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
   const isInWishlist = useWishlistStore((state) => state.isInWishlist);
   const saved = isInWishlist(product.id);
-  const image = product.image || product.images?.[0];
+  const image = product.image || product.images?.[0] || '/placeholder-glasses.svg';
   const productCategory = product.category?.replaceAll('-', ' ') || 'Eyewear';
 
   return (
     <article className="mo-product-card">
       <div className="mo-product-card__visual">
         <Link to={`/product/${product.id}`} className="mo-product-card__image-link" aria-label={`View ${product.name}`}>
-          <img src={image} alt={product.name} loading="lazy" />
+          <img
+            src={image}
+            alt={product.name}
+            loading="lazy"
+            onError={(e) => {
+              if (!e.currentTarget.src.endsWith('/placeholder-glasses.svg')) {
+                e.currentTarget.src = '/placeholder-glasses.svg';
+              }
+            }}
+          />
         </Link>
         <div className="mo-product-card__badges">
           {product.tags?.includes('new') && <span className="mo-product-badge mo-product-badge--new">Just in</span>}
