@@ -8,7 +8,7 @@ const slides = [
     id: 1,
     title: 'Precision Prescription Eyewear',
     subtitle: '100% Digital Lens Accuracy',
-    description: 'Bespoke Italian acetate frames with high-index anti-reflective prescription lenses crafted in New York.',
+    description: 'Bespoke Italian acetate frames with high-index anti-reflective prescription lenses crafted with precision for all-day comfort.',
     image: 'https://images.unsplash.com/photo-1591076482161-42ce6da69f67?w=1400&auto=format&fit=crop&q=80',
     link: '/shop?category=optical',
     cta: 'Shop Optical Collection',

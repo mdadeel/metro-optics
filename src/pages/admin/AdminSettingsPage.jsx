@@ -12,10 +12,10 @@ const AdminSettingsPage = () => {
     const { addToast, ToastContainer } = useToast();
     const [formData, setFormData] = useState({
         siteName: settings.siteName || 'Metro Optics',
-        siteEmail: settings.siteEmail || 'info@metrooptics.com',
-        sitePhone: settings.sitePhone || '+880 1234-567890',
-        siteAddress: settings.siteAddress || 'Dhaka, Bangladesh',
-        businessHours: settings.businessHours || '9:00 AM - 8:00 PM',
+        siteEmail: settings.siteEmail || 'support@metrooptics.com',
+        sitePhone: settings.sitePhone || '01911-882582',
+        siteAddress: settings.siteAddress || '151, Shultan market, 9 Sheikh Mujib Rd, Chattogram 4000',
+        businessHours: settings.businessHours || 'Open · Closes 10 PM',
         currency: settings.currency || '৳',
         taxRate: settings.taxRate || 0,
         shippingFee: settings.shippingFee || 0,

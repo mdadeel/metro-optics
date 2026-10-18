@@ -32,7 +32,7 @@ export default function Footer() {
             <span className="mo-logo__mark"><LogoMark size={22} /></span>
             <span className="mo-logo__type"><strong>METRO</strong><span>OPTICS</span><small>SEE YOURSELF CLEARLY</small></span>
           </Link>
-          <p>Thoughtful eyewear, carefully selected. Frames for wherever the day takes you.</p>
+          <p>Optical wholesaler & precision eyewear. Frames for wherever the day takes you.</p>
           <Link to="/about" className="mo-footer__about">A little about us <ArrowUpRight size={14} aria-hidden="true" /></Link>
         </div>
 
@@ -50,7 +50,10 @@ export default function Footer() {
           <h2>Say hello</h2>
           <a href={`tel:${phone.replace(/[^+\d]/g, '')}`}><Phone size={15} aria-hidden="true" /><span>{phone}</span></a>
           <a href={`mailto:${email}`}><Mail size={15} aria-hidden="true" /><span>{email}</span></a>
-          <span className="mo-footer__location"><MapPin size={15} aria-hidden="true" /><span>Here when you need us.</span></span>
+          <a className="mo-footer__location" href={SITE_CONFIG.googleMapsUrl} target="_blank" rel="noreferrer" title="Find Metro Optics on Google Maps">
+            <MapPin size={15} aria-hidden="true" />
+            <span>151, Shultan market, Chattogram</span>
+          </a>
           <a className="mo-footer__social" href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Metro Optics on Instagram"><Instagram size={17} aria-hidden="true" /></a>
         </div>
       </div>

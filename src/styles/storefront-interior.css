@@ -68,7 +68,18 @@
 .contact-content { grid-template-columns: minmax(260px, 0.82fr) minmax(0, 1.18fr); align-items: start; gap: 18px; }
 .contact-info, .contact-form-wrapper { padding: clamp(20px, 3.2vw, 32px); background: var(--mo-surface); border: 1px solid var(--mo-line); border-radius: var(--mo-radius-card); box-shadow: none; }
 .contact-info-title, .contact-form-title { margin: 0 0 8px; color: var(--mo-ink); font-family: 'Iowan Old Style', Georgia, serif; font-size: 23px; font-weight: 400; letter-spacing: -0.035em; }
-.contact-info-desc { margin: 0 0 24px; color: var(--mo-muted); font-size: 10px; line-height: 1.8; }
+.contact-info-desc { margin: 0 0 18px; color: var(--mo-muted); font-size: 10px; line-height: 1.8; }
+.contact-profile-header { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.contact-badge-wholesale { display: inline-flex; align-items: center; padding: 4px 10px; background: #edf0e7; color: #2e4435; font-size: 8px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: var(--mo-radius-control); }
+.dark .contact-badge-wholesale { background: #28372d; color: #c9dbc9; }
+.contact-badge-status { display: inline-flex; align-items: center; padding: 4px 10px; background: #e8f3ea; color: #2a6a3b; font-size: 8px; font-weight: 700; border-radius: var(--mo-radius-control); }
+.dark .contact-badge-status { background: #1e3623; color: #72cf88; }
+.contact-quick-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; padding-bottom: 16px; border-bottom: 1px solid var(--mo-line); }
+.contact-action-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; color: var(--mo-ink); background: var(--mo-paper); border: 1px solid var(--mo-line); border-radius: var(--mo-radius-control); font-size: 9px; font-weight: 650; text-decoration: none; transition: border-color 150ms ease, background 150ms ease, color 150ms ease; }
+.contact-action-btn:hover { border-color: #7d917a; color: var(--mo-ink); background: var(--mo-soft); }
+.contact-action-btn--primary { color: #fff; background: var(--mo-action); border-color: var(--mo-action); }
+.contact-action-btn--primary:hover { background: #1f3025; border-color: #1f3025; color: #fff; }
+.contact-meta-sub { display: block; font-size: 8px; color: var(--mo-muted); margin-top: 3px; font-family: monospace; letter-spacing: 0.02em; }
 .contact-methods { gap: 17px; }
 .contact-method { align-items: flex-start; gap: 11px; }
 .contact-method-icon { width: 36px; height: 36px; color: #516d54; background: var(--mo-soft); border-radius: var(--mo-radius-circle); }

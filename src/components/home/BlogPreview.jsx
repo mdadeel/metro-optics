@@ -39,7 +39,7 @@ export default function BlogPreview() {
           <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">
             Optical Insights & Frame Guides
           </h3>
-          <p className="text-xs text-gray-500">Expert articles reviewed by licensed New York optometrists</p>
+          <p className="text-xs text-gray-500">Expert articles reviewed by licensed optometrists and optical specialists</p>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { Envelope as Mail, Phone, MapPin, Clock, PaperPlaneTilt as Send, WarningCircle as AlertCircle } from "@phosphor-icons/react";
+import { Envelope as Mail, Phone, MapPin, Clock, PaperPlaneTilt as Send, WarningCircle as AlertCircle, NavigationArrow, ArrowSquareOut, Buildings, Globe } from "@phosphor-icons/react";
 import { useState } from 'react';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import SEO from '../components/SEO';
@@ -14,7 +14,7 @@ const Contact = () => {
     const contactAddress = settings.siteAddress || SITE_CONFIG.address;
     const businessHours = settings.businessHours || SITE_CONFIG.workingHours;
     const contactPageTitle = pageContent?.title || 'Contact Metro Optics';
-    const contactDescription = 'Contact Metro Optics for help with eyewear, product questions or an order. Find current phone, email, business hours and support options.';
+    const contactDescription = 'Contact Metro Optics — Optical Wholesaler in Chattogram. Reach out for eyewear wholesale, frames, orders, address directions and customer service.';
     const contactPageSchema = {
         ...buildWebPageSchema({
             name: contactPageTitle,
@@ -23,12 +23,25 @@ const Contact = () => {
             type: 'ContactPage',
         }),
         mainEntity: {
-            '@type': 'Organization',
+            '@type': 'LocalBusiness',
             '@id': `${SITE_ORIGIN}/#organization`,
             name: 'Metro Optics',
+            description: 'Optical wholesaler and precision eyewear supplier located in Chattogram, Bangladesh.',
+            url: SITE_CONFIG.website,
+            telephone: SITE_CONFIG.phoneIntl,
+            email: supportEmail,
+            address: {
+                '@type': 'PostalAddress',
+                streetAddress: '151, Shultan market, 9 Sheikh Mujib Rd',
+                addressLocality: 'Chattogram',
+                postalCode: '4000',
+                addressCountry: 'BD',
+            },
+            hasMap: SITE_CONFIG.googleMapsUrl,
+            openingHours: 'Mo-Su 09:00-22:00',
             contactPoint: {
                 '@type': 'ContactPoint',
-                contactType: 'customer support',
+                contactType: 'customer support & wholesale inquiries',
                 telephone: contactPhone,
                 email: supportEmail,
             },
@@ -139,12 +152,67 @@ const Contact = () => {
                 <div className="contact-content">
                     {/* Contact Information */}
                     <div className="contact-info">
-                        <h2 className="contact-info-title">Contact Information</h2>
-                        <p className="contact-info-desc" style={{ whiteSpace: 'pre-wrap' }}>
-                            {pageContent.content}
+                        <div className="contact-profile-header">
+                            <span className="contact-badge-wholesale">Optical wholesaler</span>
+                            <span className="contact-badge-status">Open · Closes 10 PM</span>
+                        </div>
+                        <h2 className="contact-info-title">Metro Optics</h2>
+                        <p className="contact-info-desc">
+                            Optical wholesaler & precision eyewear supplier in Chattogram. Visit our wholesale showroom or reach out directly for frame distribution, optical lens orders, and business inquiries.
                         </p>
 
+                        <div className="contact-quick-actions">
+                            <a
+                                href={SITE_CONFIG.googleMapsUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="contact-action-btn contact-action-btn--primary"
+                            >
+                                <NavigationArrow size={16} weight="bold" />
+                                <span>Directions</span>
+                            </a>
+                            <a
+                                href={`tel:${contactPhone.replace(/[^+\d]/g, '')}`}
+                                className="contact-action-btn"
+                            >
+                                <Phone size={16} weight="bold" />
+                                <span>Call</span>
+                            </a>
+                            <a
+                                href={SITE_CONFIG.googleBusinessUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="contact-action-btn"
+                                title="Manage your Business Profile on Google"
+                            >
+                                <ArrowSquareOut size={16} weight="bold" />
+                                <span>Profile</span>
+                            </a>
+                        </div>
+
                         <div className="contact-methods">
+                            <div className="contact-method">
+                                <div className="contact-method-icon">
+                                    <MapPin size={24} />
+                                </div>
+                                <div className="contact-method-content">
+                                    <h3 className="contact-method-title">Address</h3>
+                                    <p className="contact-method-text">{contactAddress}</p>
+                                    <span className="contact-meta-sub">Plus Code: {SITE_CONFIG.plusCode}</span>
+                                </div>
+                            </div>
+
+                            <div className="contact-method">
+                                <div className="contact-method-icon">
+                                    <Clock size={24} />
+                                </div>
+                                <div className="contact-method-content">
+                                    <h3 className="contact-method-title">Business Hours</h3>
+                                    <p className="contact-method-text">{businessHours}</p>
+                                    <span className="contact-meta-sub">{SITE_CONFIG.fullHours}</span>
+                                </div>
+                            </div>
+
                             <div className="contact-method">
                                 <div className="contact-method-icon">
                                     <Phone size={24} />
@@ -157,33 +225,21 @@ const Contact = () => {
 
                             <div className="contact-method">
                                 <div className="contact-method-icon">
+                                    <Globe size={24} />
+                                </div>
+                                <div className="contact-method-content">
+                                    <h3 className="contact-method-title">Website</h3>
+                                    <a className="contact-method-text" href={SITE_CONFIG.website} target="_blank" rel="noreferrer">metro-optics.vercel.app</a>
+                                </div>
+                            </div>
+
+                            <div className="contact-method">
+                                <div className="contact-method-icon">
                                     <Mail size={24} />
                                 </div>
                                 <div className="contact-method-content">
                                     <h3 className="contact-method-title">Email</h3>
                                     <a className="contact-method-text" href={`mailto:${supportEmail}`}>{supportEmail}</a>
-                                </div>
-                            </div>
-
-                            <div className="contact-method">
-                                <div className="contact-method-icon">
-                                    <MapPin size={24} />
-                                </div>
-                                <div className="contact-method-content">
-                                    <h3 className="contact-method-title">Address</h3>
-                                    <p className="contact-method-text">
-                                        {contactAddress}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="contact-method">
-                                <div className="contact-method-icon">
-                                    <Clock size={24} />
-                                </div>
-                                <div className="contact-method-content">
-                                    <h3 className="contact-method-title">Business Hours</h3>
-                                    <p className="contact-method-text">{businessHours}</p>
                                 </div>
                             </div>
                         </div>

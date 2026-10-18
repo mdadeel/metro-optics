@@ -5,17 +5,30 @@
 
 export const SITE_CONFIG = {
   name: 'Metro Optics',
-  tagline: 'Precision Vision & Designer Frames',
-  phone: '+1 (212) 555-0199',
+  tagline: 'Optical Wholesaler & Precision Eyewear',
+  businessType: 'Optical wholesaler',
+  phone: '01911-882582',
+  phoneIntl: '+880 1911-882582',
   email: 'support@metrooptics.com',
-  address: '145 Optical Plaza, Suite 400, New York, NY 10001',
-  workingHours: 'Mon - Sat: 9:00 AM - 8:00 PM EST',
+  address: '151, Shultan market, 9 Sheikh Mujib Rd, Chattogram 4000',
+  plusCode: '8RH7+G2 Chattogram',
+  workingHours: 'Open · Closes 10 PM',
+  fullHours: 'Mon - Sun: 9:00 AM - 10:00 PM',
+  website: 'https://metro-optics.vercel.app/',
+  googleBusinessUrl: 'https://www.google.com/search?sca_esv=acc8fdfa88894b2b&authuser=0&hl=en&gl=bd&output=search&q=Metro+optics&ludocid=2519317878591552052&lsig=AB86z5WfRAEqDSfTZAJUb__Vvvnt',
+  googleMapsUrl: 'https://www.google.com/search?sca_esv=acc8fdfa88894b2b&authuser=0&hl=en&gl=bd&output=search&q=Metro+optics&ludocid=2519317878591552052&lsig=AB86z5WfRAEqDSfTZAJUb__Vvvnt',
 };
 
 export const STORE_LOCATIONS = [
-  { id: 'loc-1', city: 'New York (Flagship)', address: '145 Optical Plaza, Manhattan', phone: '(212) 555-0199' },
-  { id: 'loc-2', city: 'Brooklyn Optics', address: '482 Atlantic Ave, Brooklyn', phone: '(718) 555-0142' },
-  { id: 'loc-3', city: 'Jersey City Hub', address: '70 Hudson St, Jersey City', phone: '(201) 555-0188' },
+  {
+    id: 'loc-1',
+    city: 'Chattogram (Main Wholesale Hub & Showroom)',
+    address: '151, Shultan market, 9 Sheikh Mujib Rd, Chattogram 4000',
+    plusCode: '8RH7+G2 Chattogram',
+    phone: '01911-882582',
+    hours: 'Open · Closes 10 PM',
+    mapsUrl: 'https://www.google.com/search?sca_esv=acc8fdfa88894b2b&authuser=0&hl=en&gl=bd&output=search&q=Metro+optics&ludocid=2519317878591552052&lsig=AB86z5WfRAEqDSfTZAJUb__Vvvnt',
+  },
 ];
 
 export const CATEGORIES = [
@@ -80,7 +93,7 @@ export const CATEGORIES = [
     icon: 'Sparkles',
     description: 'Ultrasonic Cleaners, Premium Hard Cases, Microfiber & Cords',
     subcategories: ['Hard Cases', 'Lens Cleaners', 'Eyewear Chains', 'Repair Kits'],
-    featuredImage: 'https://images.unsplash.com/photo-1614715838608-dd527c46131d?w=500&auto=format&fit=crop&q=60',
+    featuredImage: 'https://images.unsplash.com/photo-1582142407894-ec85a1260a46?w=500&auto=format&fit=crop&q=60',
   },
 ];
 
