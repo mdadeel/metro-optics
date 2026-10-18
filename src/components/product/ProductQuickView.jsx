@@ -1,15 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { X, Star, Heart, ShoppingBag, Minus, Plus, ShieldCheck, Check } from 'lucide-react';
+import { X, Star, ShoppingBag, Minus, Plus, ShieldCheck, Check } from 'lucide-react';
 import { useUIStore } from '../../stores/useUIStore';
 import { useCartStore } from '../../stores/useCartStore';
-import { useWishlistStore } from '../../stores/useWishlistStore';
 import { formatPrice, calculateDiscount } from '../../lib/utils';
 
 export default function ProductQuickView() {
   const { quickViewProduct, closeQuickView } = useUIStore();
   const addToCart = useCartStore((state) => state.addToCart);
-  const { toggleWishlist, isInWishlist } = useWishlistStore();
 
   const [selectedColor, setSelectedColor] = useState(
     () => quickViewProduct?.colors?.[0] || 'Standard'
@@ -25,7 +23,6 @@ export default function ProductQuickView() {
     quickViewProduct.originalPrice,
     quickViewProduct.price
   );
-  const inWishlist = isInWishlist(quickViewProduct.id);
 
   const handleAddToCart = () => {
     addToCart(quickViewProduct, quantity, { selectedColor, selectedSize });
@@ -196,18 +193,6 @@ export default function ProductQuickView() {
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>Add to Cart</span>
-              </button>
-
-              <button
-                onClick={() => toggleWishlist(quickViewProduct)}
-                className={`p-3 border rounded-xl transition-colors ${
-                  inWishlist
-                    ? 'border-accent text-accent bg-accent/10'
-                    : 'border-gray-200 dark:border-gray-700 text-gray-500 hover:text-accent'
-                }`}
-                aria-label="Wishlist"
-              >
-                <Heart className={`w-4 h-4 ${inWishlist ? 'fill-current' : ''}`} />
               </button>
 
               <Link

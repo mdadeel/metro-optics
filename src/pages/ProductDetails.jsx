@@ -5,7 +5,6 @@ import {
   ArrowUpRight,
   Check,
   ChevronRight,
-  Heart,
   Minus,
   Plus,
   RotateCcw,
@@ -17,7 +16,6 @@ import {
 } from 'lucide-react';
 import { useProductStore } from '../stores/useProductStore';
 import { useCartStore } from '../stores/useCartStore';
-import { useWishlistStore } from '../stores/useWishlistStore';
 import { formatPrice, calculateDiscount } from '../lib/utils';
 import { LENS_TYPES } from '../lib/constants';
 import SEO from '../components/SEO';
@@ -91,8 +89,6 @@ export default function ProductDetails() {
 function ProductDetailsContent({ product, products }) {
   const navigate = useNavigate();
   const addToCart = useCartStore((state) => state.addToCart);
-  const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
-  const isInWishlist = useWishlistStore((state) => state.isInWishlist);
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || 'Standard');
@@ -107,7 +103,6 @@ function ProductDetailsContent({ product, products }) {
     return ['/placeholder-glasses.svg'];
   }, [product]);
   const discount = calculateDiscount(product.originalPrice, product.price);
-  const inWishlist = isInWishlist(product.id);
   const relatedProducts = products
     .filter((item) => item.id !== product.id && item.category === product.category)
     .slice(0, 4);
@@ -255,9 +250,6 @@ function ProductDetailsContent({ product, products }) {
             </div>
             <button type="button" className="mo-detail-add" onClick={handleAddToCart} disabled={isOutOfStock}><ShoppingBag size={16} /> Add to bag</button>
             <button type="button" className="mo-detail-buy" onClick={handleBuyNow} disabled={isOutOfStock}><Zap size={15} /> Buy now</button>
-          </div>
-          <div className="mo-detail-utility">
-            <button type="button" onClick={() => toggleWishlist(product)} aria-pressed={inWishlist} className={inWishlist ? 'is-active' : ''}><Heart size={16} fill={inWishlist ? 'currentColor' : 'none'} /> {inWishlist ? 'Saved to wishlist' : 'Save to wishlist'}</button>
           </div>
 
           <div className="mo-detail-promises">

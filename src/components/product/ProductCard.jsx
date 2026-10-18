@@ -1,17 +1,13 @@
 import { Link } from 'react-router-dom';
-import { Heart, ShoppingBag } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import { useCartStore } from '../../stores/useCartStore';
-import { useWishlistStore } from '../../stores/useWishlistStore';
 import { formatPrice } from '../../lib/utils';
 
 export default function ProductCard({ product, variant = 'grid' }) {
   const addToCart = useCartStore((state) => state.addToCart);
-  const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
-  const isInWishlist = useWishlistStore((state) => state.isInWishlist);
 
   if (!product) return null;
 
-  const saved = isInWishlist(product.id);
   const image = product.image || product.images?.[0] || '/placeholder-glasses.svg';
 
   return (
@@ -34,16 +30,6 @@ export default function ProductCard({ product, variant = 'grid' }) {
           {product.tags?.includes('bestseller') && <span className="mo-catalog-card__badge mo-catalog-card__badge--quiet">Bestseller</span>}
           {product.tags?.includes('new') && <span className="mo-catalog-card__badge mo-catalog-card__badge--new">New</span>}
         </div>
-
-        <button
-          type="button"
-          className={`mo-catalog-card__save${saved ? ' is-active' : ''}`}
-          onClick={() => toggleWishlist(product)}
-          aria-label={saved ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
-          aria-pressed={saved}
-        >
-          <Heart size={16} fill={saved ? 'currentColor' : 'none'} aria-hidden="true" />
-        </button>
       </div>
 
       <div className="mo-catalog-card__details">

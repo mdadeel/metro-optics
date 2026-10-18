@@ -6,7 +6,6 @@ import {
   BadgeCheck,
   ChevronRight,
   Glasses,
-  Heart,
   RotateCcw,
   ShieldCheck,
   ShoppingBag,
@@ -17,7 +16,6 @@ import { CATEGORIES, BRANDS } from '../lib/constants';
 import { formatPrice } from '../lib/utils';
 import { useProductStore } from '../stores/useProductStore';
 import { useCartStore } from '../stores/useCartStore';
-import { useWishlistStore } from '../stores/useWishlistStore';
 import NewsletterSection from '../components/home/NewsletterSection';
 import SEO from '../components/SEO';
 import { buildWebPageSchema, isDemoCatalog } from '../lib/seo';
@@ -56,9 +54,6 @@ function SectionHeading({ eyebrow, title, description, action, actionLabel = 'Sh
 
 function PremiumProductCard({ product }) {
   const addToCart = useCartStore((state) => state.addToCart);
-  const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
-  const isInWishlist = useWishlistStore((state) => state.isInWishlist);
-  const saved = isInWishlist(product.id);
   const image = product.image || product.images?.[0] || '/placeholder-glasses.svg';
   const productCategory = product.category?.replaceAll('-', ' ') || 'Eyewear';
 
@@ -81,15 +76,6 @@ function PremiumProductCard({ product }) {
           {product.tags?.includes('new') && <span className="mo-product-badge mo-product-badge--new">Just in</span>}
           {product.tags?.includes('bestseller') && <span className="mo-product-badge">Bestseller</span>}
         </div>
-        <button
-          type="button"
-          className={`mo-product-card__save${saved ? ' is-saved' : ''}`}
-          onClick={() => toggleWishlist(product)}
-          aria-label={saved ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
-          aria-pressed={saved}
-        >
-          <Heart size={17} fill={saved ? 'currentColor' : 'none'} />
-        </button>
       </div>
 
       <div className="mo-product-card__details">

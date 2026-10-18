@@ -1,29 +1,20 @@
 import { Link } from 'react-router-dom';
-import { Heart, ShoppingCart, XCircle } from '@phosphor-icons/react';
+import { ShoppingCart, XCircle } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { useWishlist } from '../context/WishlistContext';
 import { motion } from 'motion/react';
 import { formatPrice } from '../lib/utils';
 
 const ProductCard = ({ product }) => {
     const { addToCart } = useCart();
-    const { toggleWishlist, isInWishlist } = useWishlist();
     const [imageError, setImageError] = useState(false);
     const [imageLoaded, setImageLoaded] = useState(false);
-    const saved = isInWishlist(product.id);
     const image = product.image || product.images?.[0];
 
     const handleAddToCartClick = (event) => {
         event.preventDefault();
         event.stopPropagation();
         addToCart({ ...product, quantity: 1 });
-    };
-
-    const handleWishlist = (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        toggleWishlist(product);
     };
 
     return (
@@ -53,15 +44,6 @@ const ProductCard = ({ product }) => {
                     {product.isNew && <span className="mo-catalog-card__badge mo-catalog-card__badge--new">New</span>}
                     {product.tags?.includes('bestseller') && <span className="mo-catalog-card__badge mo-catalog-card__badge--quiet">Bestseller</span>}
                 </div>
-                <button
-                    type="button"
-                    className={`mo-catalog-card__save${saved ? ' is-active' : ''}`}
-                    onClick={handleWishlist}
-                    aria-label={saved ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
-                    aria-pressed={saved}
-                >
-                    <Heart size={17} weight={saved ? 'fill' : 'regular'} />
-                </button>
             </div>
 
             <div className="mo-catalog-card__details">
