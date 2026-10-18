@@ -21,7 +21,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '../components/ui/accordion';
-import { useProductStore } from '../stores/useProductStore';
+import { useProductStore, getMaxPriceFromProducts } from '../stores/useProductStore';
 import { BRANDS, CATEGORIES, FRAME_SHAPES, SORT_OPTIONS } from '../lib/constants';
 import { formatPrice } from '../lib/utils';
 import { buildBreadcrumbSchema, buildItemListSchema, isDemoCatalog } from '../lib/seo';
@@ -39,6 +39,7 @@ function FilterPanel({
   toggleShape,
   priceRange,
   setPriceRange,
+  maxPrice,
   inStockOnly,
   setInStockOnly,
   onClear,
@@ -73,7 +74,17 @@ function FilterPanel({
                 <span>All eyewear</span><small>{products.length}</small>
               </button>
               {CATEGORIES.map((category) => {
-                const count = products.filter((product) => product.category === category.slug).length;
+                const count = products.filter((product) => {
+                  const cat = product.category?.toLowerCase() || '';
+                  const target = category.slug.toLowerCase();
+                  if (cat === target) return true;
+                  if (target === 'optical' && (cat === 'eyeglasses' || cat === 'frames')) return true;
+                  if (target === 'eyeglasses' && cat === 'optical') return true;
+                  if (target === 'blue-light' && (cat.includes('blue') || cat === 'blue-light')) return true;
+                  if (target === 'reading' && cat.includes('read')) return true;
+                  if (target === 'sports' && cat.includes('sport')) return true;
+                  return false;
+                }).length;
                 return (
                   <button
                     type="button"
@@ -94,7 +105,14 @@ function FilterPanel({
           <AccordionTrigger>Price range</AccordionTrigger>
           <AccordionContent>
             <div className="mo-shop-price-filter">
-              <Slider value={priceRange} min={0} max={500} step={10} onValueChange={setPriceRange} aria-label="Price range" />
+              <Slider
+                value={priceRange}
+                min={0}
+                max={maxPrice}
+                step={maxPrice > 1000 ? 50 : 10}
+                onValueChange={setPriceRange}
+                aria-label="Price range"
+              />
               <div><span>{formatPrice(priceRange[0])}</span><span>{formatPrice(priceRange[1])}</span></div>
             </div>
           </AccordionContent>
@@ -198,8 +216,20 @@ export default function Shop() {
     getFilteredProducts,
   } = useProductStore();
 
+  const maxPrice = useMemo(() => getMaxPriceFromProducts(products), [products]);
+
+  useEffect(() => {
+    if (priceRange[1] < maxPrice && priceRange[1] === 500) {
+      setPriceRange([priceRange[0], maxPrice]);
+    }
+  }, [maxPrice, priceRange, setPriceRange]);
+
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, [currentPage]);
 
   useEffect(() => {
     if (appliedParams.current.category !== categoryParam) {
@@ -375,6 +405,7 @@ export default function Shop() {
               toggleShape={toggleShape}
               priceRange={priceRange}
               setPriceRange={setPriceRange}
+              maxPrice={maxPrice}
               inStockOnly={inStockOnly}
               setInStockOnly={setInStockOnly}
               onClear={handleClearFilters}

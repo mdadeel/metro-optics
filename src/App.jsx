@@ -4,6 +4,7 @@ import { Toaster } from 'sonner';
 import ErrorBoundary from './components/ErrorBoundary';
 import StoreLayout from './layouts/StoreLayout';
 import SkipLink from './components/SkipLink';
+import ScrollToTop from './components/ScrollToTop';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 import { useAuthStore } from './stores/useAuthStore';
@@ -62,6 +63,7 @@ const DashboardRedirect = () => {
 function App() {
   return (
     <ErrorBoundary>
+      <ScrollToTop />
       <SkipLink />
       <Toaster position="top-right" richColors />
       <Suspense fallback={<RouteFallback />}>
