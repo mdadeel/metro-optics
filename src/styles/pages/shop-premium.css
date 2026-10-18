@@ -110,8 +110,8 @@
 .mo-shop-clear-all { min-height: 25px; padding: 0 4px; color: var(--shop-muted); background: transparent; border: 0; font-size: 8px; text-decoration: underline; text-underline-offset: 2px; }
 .mo-shop-clear-all:hover { color: var(--shop-ink); }
 
-.mo-shop-product-grid { min-width: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); align-items: stretch; gap: 14px; }
-.mo-shop-product-grid.is-list { grid-template-columns: minmax(0, 1fr); gap: 11px; }
+.mo-shop-product-grid { min-width: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: stretch; gap: 14px; }
+.mo-shop-product-grid.is-list { grid-template-columns: minmax(0, 1fr) !important; gap: 11px; }
 .mo-shop-empty { min-height: 300px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 34px; background: var(--shop-surface); border: 1px solid var(--shop-line); }
 .mo-shop-empty h2 { margin: 0 0 9px; color: var(--shop-ink); font-family: 'Iowan Old Style', Georgia, serif; font-size: 31px; font-weight: 400; letter-spacing: -0.04em; }
 .mo-shop-empty > p:not(.mo-shop-eyebrow) { margin: 0 0 18px; color: var(--shop-muted); font-size: 10px; }
@@ -167,6 +167,11 @@
   .mo-shop-toolbar__controls { gap: 7px; }
   .mo-shop-sort select { width: 128px; }
   .mo-shop-view-toggle { display: none; }
+  .mo-shop-product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 820px) {
+  .mo-shop-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 }
 
 @media (max-width: 1023px) {
@@ -209,6 +214,8 @@
   .mo-shop-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .mo-shop-product-grid.is-list { grid-template-columns: minmax(0, 1fr); }
   .mo-catalog-card__media { aspect-ratio: 0.95 / 1; }
+  .mo-catalog-card__save { top: 6px; right: 6px; width: 25px; height: 25px; border-radius: 50%; }
+  .mo-catalog-card__save svg { width: 13px; height: 13px; }
   .mo-catalog-card__details { padding: 9px 9px 10px; }
   .mo-catalog-card__meta { align-items: flex-start; flex-direction: column; gap: 3px; font-size: 7px; }
   .mo-catalog-card__name { min-height: 34px; font-size: 14px; }
